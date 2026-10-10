@@ -78,7 +78,7 @@ export const actions = {
     if (coins > state.user.available) return "Not enough coins";
     const cash = items.reduce((t, i) => t + i.cashKsh, 0);
     const b: Booking = {
-      id: "b" + Date.now(), customer: state.user.name, serviceIds, vendor: items[0].vendor, when,
+      id: "b" + Date.now(), customer: state.user.name, serviceIds, vendor: items[0]?.vendor ?? "", when,
       coins, cashKsh: cash, payoutKsh: vendorPayout(cash, state.rules), pin: pin(), status: "upcoming", addOns: adds.map((a) => a.label),
     };
     set((s) => ({ ...s, bookings: [b, ...s.bookings], user: { ...s.user, available: s.user.available - coins, escrow: s.user.escrow + coins } }));

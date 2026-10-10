@@ -8,3 +8,4 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+- Demo data lives in an in-memory store (src/lib/store.ts) and pricing math in src/lib/pricing.ts — keeps all three portals in sync without a backend until Cloud is added.

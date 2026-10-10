@@ -1,0 +1,10 @@
+{
+  "name": "Beauty Wallet",
+  "short_name": "Beauty Wallet",
+  "description": "Curated beauty & grooming, styled securely.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f1ea",
+  "theme_color": "#2b2826",
+  "icons": [{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }]
+}

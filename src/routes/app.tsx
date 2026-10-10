@@ -125,7 +125,7 @@ function Subscriber() {
             <p className="text-xs text-muted-foreground">Authorizing places an escrow hold of {total} coins. They move to the vendor only after your service is marked complete.</p>
             <button onClick={() => {
               const r = actions.book(cart, addOns, when);
-              if (typeof r === "string") return toast.error(r);
+              if (typeof r === "string") return void toast.error(r);
               setCart([]); setAddOns([]); setOpen(false); setPass(r.id); toast.success("Escrow hold authorized");
             }} className="w-full rounded-full bg-primary py-3 font-semibold text-primary-foreground">Authorize escrow hold</button>
           </div>

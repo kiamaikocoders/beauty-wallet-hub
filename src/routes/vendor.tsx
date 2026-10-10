@@ -34,7 +34,7 @@ function VendorBoard() {
     e.preventDefault();
     const c = code.trim().toUpperCase();
     const b = bookings.find((x) => x.status === "upcoming" && (x.pin === c || x.id.slice(-6).toUpperCase() === c));
-    if (!b) return toast.error("No upcoming booking matches that code");
+    if (!b) return void toast.error("No upcoming booking matches that code");
     actions.start(b.id); setCode(""); toast.success(`Verified ${b.customer} — service started`);
   };
 

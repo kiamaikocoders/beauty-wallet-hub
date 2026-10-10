@@ -26,7 +26,7 @@ const steps = [
   { icon: KeyRound, t: "Arrive with your 4-digit pass", d: "Show your PIN or QR. Coins release only after your service is complete." },
 ];
 
-const faqs = [
+const faqs: [string, string][] = [
   ["Are coins the same as cash?", "No. Coins are an internal unit for services, priority and convenience, anchored to a visible Ksh value so you always know what you're saving."],
   ["What happens if a service doesn't go well?", "Your coins sit in escrow until the vendor marks it complete. Raise a dispute and our team reviews it before any payout."],
   ["Do unused coins roll over?", "Intermediate members keep 25% of unused coins and Premium members keep 50%. Basic coins reset monthly."],
@@ -118,7 +118,7 @@ function Landing() {
           </div>
           <form className="space-y-3 rounded-3xl border bg-card p-8" onSubmit={(e) => {
             e.preventDefault();
-            if (!form.name || !form.owner || !form.area) return toast.error("Please fill in business, owner and area");
+            if (!form.name || !form.owner || !form.area) return void toast.error("Please fill in business, owner and area");
             actions.addVendor({ ...form, cls: "basic", kyc: ["Business permit"], payoutMethod: form.payoutMethod || "M-Pesa" });
             setForm({ name: "", owner: "", area: "", payoutMethod: "" });
             toast.success("Application received — you'll appear in the Admin vetting queue.");

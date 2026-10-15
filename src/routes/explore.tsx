@@ -136,7 +136,7 @@ function ExplorePage() {
   return (
     <SitePage>
       <section className="w-full border-b border-border bg-card">
-        <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-5 pb-6 pt-3 lg:gap-7 lg:px-16 lg:pb-8 lg:pt-12">
+        <div className="flex w-full flex-col gap-5 px-5 pb-6 pt-3 lg:gap-7 lg:px-16 lg:pb-8 lg:pt-12">
           <div className="hidden items-end gap-6 lg:flex">
             <div className="flex min-w-0 flex-1 flex-col gap-2.5">
               <p className="type-eyebrow text-burgundy">Explore</p>
@@ -249,7 +249,7 @@ function ExplorePage() {
       </section>
 
       <section className="w-full">
-        <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-5 pb-16 pt-5 lg:gap-6 lg:px-16 lg:pb-24 lg:pt-10">
+        <div className="flex w-full flex-col gap-5 px-5 pb-16 pt-5 lg:gap-6 lg:px-16 lg:pb-24 lg:pt-10">
           <div className="hidden items-center lg:flex">
             <div className="flex items-center gap-2">
               <p className="type-body-s-medium text-muted-foreground">Provider tier</p>

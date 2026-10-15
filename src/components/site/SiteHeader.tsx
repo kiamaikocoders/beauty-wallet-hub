@@ -17,7 +17,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
     <header className="w-full border-b border-border bg-background">
-      <div className="mx-auto flex h-[60px] max-w-[1440px] items-center justify-between py-2 pl-5 pr-2.5 lg:h-[100px] lg:px-16 lg:py-5">
+      <div className="flex h-[60px] w-full items-center justify-between py-2 pl-5 pr-2.5 lg:h-[100px] lg:px-16 lg:py-5">
         <Link to="/" aria-label="Beauty Wallet home">
           <Logo />
         </Link>

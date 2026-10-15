@@ -21,7 +21,7 @@ export function CoveragePage({ areas }: { areas: AreaCount[] }) {
           className="absolute inset-0 size-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[rgba(22,20,23,0.8)] to-[rgba(22,20,23,0.15)] to-70%" />
-        <div className="relative mx-auto flex min-h-[320px] w-full max-w-[1440px] flex-col justify-center gap-[18px] px-5 py-14 lg:min-h-[480px] lg:px-16 lg:py-0">
+        <div className="relative flex min-h-[320px] w-full flex-col justify-center gap-[18px] px-5 py-14 lg:min-h-[480px] lg:px-16 lg:py-0">
           <p className="type-eyebrow text-gold">Where we are</p>
           <h1 className="type-display-m max-w-[720px] text-primary-foreground lg:type-display-l">
             Now in Nairobi. Mombasa and Kisumu next.

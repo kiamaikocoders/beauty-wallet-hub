@@ -17,7 +17,7 @@ function Column({ title, children }: { title: string; children: ReactNode }) {
 export function SiteFooter() {
   return (
     <footer className="w-full bg-primary">
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-8 px-5 pb-[calc(58px+env(safe-area-inset-bottom))] pt-10 lg:gap-10 lg:px-16 lg:pb-10 lg:pt-16">
+      <div className="flex w-full flex-col gap-8 px-5 pb-[calc(58px+env(safe-area-inset-bottom))] pt-10 lg:gap-10 lg:px-16 lg:pb-10 lg:pt-16">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex flex-col gap-3.5 lg:w-[300px]">
             <Link to="/" aria-label="Beauty Wallet home">

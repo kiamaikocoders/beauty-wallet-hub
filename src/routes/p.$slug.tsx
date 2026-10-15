@@ -123,7 +123,7 @@ function ProviderPage() {
   return (
     <SitePage>
       <section className="w-full">
-        <div className="mx-auto w-full max-w-[1440px] px-5 pt-3 lg:px-16 lg:pt-7">
+        <div className="w-full px-5 pt-3 lg:px-16 lg:pt-7">
           <nav className="mb-4 hidden type-body-s text-muted-foreground lg:flex lg:gap-2">
             <Link to="/explore" className="text-muted-foreground hover:text-foreground">
               Explore
@@ -170,7 +170,7 @@ function ProviderPage() {
       </section>
 
       <section className="w-full pb-28 lg:pb-24">
-        <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-10 px-5 pt-5 lg:flex-row lg:gap-16 lg:px-16 lg:pt-10">
+        <div className="flex w-full flex-col gap-10 px-5 pt-5 lg:flex-row lg:gap-16 lg:px-16 lg:pt-10">
           <div className="flex min-w-0 flex-1 flex-col gap-8 lg:max-w-[828px]">
             <div className="flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2">

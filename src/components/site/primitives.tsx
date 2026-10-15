@@ -32,7 +32,7 @@ export function buttonClass({
   );
 }
 
-/** Section wrapper: full-bleed background, 1440 max content width, 20px / 64px side padding. */
+/** Section wrapper: full-bleed background and content, 20px / 64px side padding. */
 export function Section({
   className,
   inner,
@@ -46,7 +46,7 @@ export function Section({
 }) {
   return (
     <section id={id} className={cn("w-full", className)}>
-      <div className={cn("mx-auto w-full max-w-[1440px] px-5 lg:px-16", inner)}>{children}</div>
+      <div className={cn("w-full px-5 lg:px-16", inner)}>{children}</div>
     </section>
   );
 }

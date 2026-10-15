@@ -10,13 +10,31 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CoverageRouteImport } from './routes/coverage'
+import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as GiftRouteImport } from './routes/gift'
+import { Route as HelpRouteImport } from './routes/help'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as TeamsRouteImport } from './routes/teams'
 import { Route as VendorRouteImport } from './routes/vendor'
+import { Route as LegalDocRouteImport } from './routes/legal.$doc'
+import { Route as PSlugRouteImport } from './routes/p.$slug'
+import { Route as ProvidersIndexRouteImport } from './routes/providers.index'
+import { Route as ProvidersApplyRouteImport } from './routes/providers.apply'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -29,44 +47,208 @@ const AppRoute = AppRouteImport.update({
   path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoverageRoute = CoverageRouteImport.update({
+  id: '/coverage',
+  path: '/coverage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreRoute = ExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GiftRoute = GiftRouteImport.update({
+  id: '/gift',
+  path: '/gift',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamsRoute = TeamsRouteImport.update({
+  id: '/teams',
+  path: '/teams',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VendorRoute = VendorRouteImport.update({
   id: '/vendor',
   path: '/vendor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalDocRoute = LegalDocRouteImport.update({
+  id: '/legal/$doc',
+  path: '/legal/$doc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PSlugRoute = PSlugRouteImport.update({
+  id: '/p/$slug',
+  path: '/p/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProvidersIndexRoute = ProvidersIndexRouteImport.update({
+  id: '/providers/',
+  path: '/providers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProvidersApplyRoute = ProvidersApplyRouteImport.update({
+  id: '/providers/apply',
+  path: '/providers/apply',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/app': typeof AppRoute
+  '/contact': typeof ContactRoute
+  '/coverage': typeof CoverageRoute
+  '/explore': typeof ExploreRoute
+  '/gift': typeof GiftRoute
+  '/help': typeof HelpRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/pricing': typeof PricingRoute
+  '/teams': typeof TeamsRoute
   '/vendor': typeof VendorRoute
+  '/legal/$doc': typeof LegalDocRoute
+  '/p/$slug': typeof PSlugRoute
+  '/providers/apply': typeof ProvidersApplyRoute
+  '/providers/': typeof ProvidersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/app': typeof AppRoute
+  '/contact': typeof ContactRoute
+  '/coverage': typeof CoverageRoute
+  '/explore': typeof ExploreRoute
+  '/gift': typeof GiftRoute
+  '/help': typeof HelpRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/pricing': typeof PricingRoute
+  '/teams': typeof TeamsRoute
   '/vendor': typeof VendorRoute
+  '/legal/$doc': typeof LegalDocRoute
+  '/p/$slug': typeof PSlugRoute
+  '/providers/apply': typeof ProvidersApplyRoute
+  '/providers': typeof ProvidersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/app': typeof AppRoute
+  '/contact': typeof ContactRoute
+  '/coverage': typeof CoverageRoute
+  '/explore': typeof ExploreRoute
+  '/gift': typeof GiftRoute
+  '/help': typeof HelpRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/pricing': typeof PricingRoute
+  '/teams': typeof TeamsRoute
   '/vendor': typeof VendorRoute
+  '/legal/$doc': typeof LegalDocRoute
+  '/p/$slug': typeof PSlugRoute
+  '/providers/apply': typeof ProvidersApplyRoute
+  '/providers/': typeof ProvidersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/app' | '/vendor'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/app'
+    | '/contact'
+    | '/coverage'
+    | '/explore'
+    | '/gift'
+    | '/help'
+    | '/how-it-works'
+    | '/pricing'
+    | '/teams'
+    | '/vendor'
+    | '/legal/$doc'
+    | '/p/$slug'
+    | '/providers/apply'
+    | '/providers/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/app' | '/vendor'
-  id: '__root__' | '/' | '/admin' | '/app' | '/vendor'
+  to:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/app'
+    | '/contact'
+    | '/coverage'
+    | '/explore'
+    | '/gift'
+    | '/help'
+    | '/how-it-works'
+    | '/pricing'
+    | '/teams'
+    | '/vendor'
+    | '/legal/$doc'
+    | '/p/$slug'
+    | '/providers/apply'
+    | '/providers'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/app'
+    | '/contact'
+    | '/coverage'
+    | '/explore'
+    | '/gift'
+    | '/help'
+    | '/how-it-works'
+    | '/pricing'
+    | '/teams'
+    | '/vendor'
+    | '/legal/$doc'
+    | '/p/$slug'
+    | '/providers/apply'
+    | '/providers/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AppRoute: typeof AppRoute
+  ContactRoute: typeof ContactRoute
+  CoverageRoute: typeof CoverageRoute
+  ExploreRoute: typeof ExploreRoute
+  GiftRoute: typeof GiftRoute
+  HelpRoute: typeof HelpRoute
+  HowItWorksRoute: typeof HowItWorksRoute
+  PricingRoute: typeof PricingRoute
+  TeamsRoute: typeof TeamsRoute
   VendorRoute: typeof VendorRoute
+  LegalDocRoute: typeof LegalDocRoute
+  PSlugRoute: typeof PSlugRoute
+  ProvidersApplyRoute: typeof ProvidersApplyRoute
+  ProvidersIndexRoute: typeof ProvidersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -76,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -92,6 +281,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coverage': {
+      id: '/coverage'
+      path: '/coverage'
+      fullPath: '/coverage'
+      preLoaderRoute: typeof CoverageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore': {
+      id: '/explore'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof ExploreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gift': {
+      id: '/gift'
+      path: '/gift'
+      fullPath: '/gift'
+      preLoaderRoute: typeof GiftRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teams': {
+      id: '/teams'
+      path: '/teams'
+      fullPath: '/teams'
+      preLoaderRoute: typeof TeamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vendor': {
       id: '/vendor'
       path: '/vendor'
@@ -99,14 +344,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/$doc': {
+      id: '/legal/$doc'
+      path: '/legal/$doc'
+      fullPath: '/legal/$doc'
+      preLoaderRoute: typeof LegalDocRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/$slug': {
+      id: '/p/$slug'
+      path: '/p/$slug'
+      fullPath: '/p/$slug'
+      preLoaderRoute: typeof PSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/providers/': {
+      id: '/providers/'
+      path: '/providers'
+      fullPath: '/providers/'
+      preLoaderRoute: typeof ProvidersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/providers/apply': {
+      id: '/providers/apply'
+      path: '/providers/apply'
+      fullPath: '/providers/apply'
+      preLoaderRoute: typeof ProvidersApplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AppRoute: AppRoute,
+  ContactRoute: ContactRoute,
+  CoverageRoute: CoverageRoute,
+  ExploreRoute: ExploreRoute,
+  GiftRoute: GiftRoute,
+  HelpRoute: HelpRoute,
+  HowItWorksRoute: HowItWorksRoute,
+  PricingRoute: PricingRoute,
+  TeamsRoute: TeamsRoute,
   VendorRoute: VendorRoute,
+  LegalDocRoute: LegalDocRoute,
+  PSlugRoute: PSlugRoute,
+  ProvidersApplyRoute: ProvidersApplyRoute,
+  ProvidersIndexRoute: ProvidersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

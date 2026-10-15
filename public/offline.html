@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f7f1ea" />
+    <title>You’re offline — Beauty Wallet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Radley:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --background: #f7f1ea;
+        --card: #fffcf8;
+        --foreground: #161417;
+        --muted-foreground: #6b6570;
+        --border: #e3d8cb;
+        --burgundy: #6b1d38;
+        --warning: #b7791f;
+        --warning-bg: #f6ebd9;
+        --font-sans: "DM Sans", system-ui, sans-serif;
+        --font-display: "Radley", Georgia, serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
+      }
+      .banner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 44px;
+        padding: 12px 20px;
+        background: var(--warning-bg);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.45;
+      }
+      .banner p {
+        margin: 0;
+        flex: 1;
+        color: var(--warning);
+      }
+      .banner button {
+        border: 0;
+        background: none;
+        padding: 0;
+        font: inherit;
+        font-weight: 500;
+        color: var(--foreground);
+        cursor: pointer;
+        min-height: 44px;
+      }
+      .body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 28px 20px 24px;
+      }
+      .icon-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        border-radius: 36px;
+        background: var(--warning-bg);
+      }
+      .icon-wrap img {
+        width: 36px;
+        height: 36px;
+      }
+      h1 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: 36px;
+        line-height: 1.15;
+      }
+      .lead {
+        margin: 0;
+        max-width: 350px;
+        text-align: center;
+        font-size: 16px;
+        line-height: 1.5;
+        color: var(--muted-foreground);
+      }
+      .pass {
+        width: 100%;
+        max-width: 330px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 32px 24px 24px;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: var(--card);
+        box-shadow: 0 2px 8px rgba(34, 31, 36, 0.06);
+      }
+      .pass-label {
+        margin: 0;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.44px;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        text-align: center;
+      }
+      .pin {
+        margin: 0;
+        font-size: 52px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.24em;
+        margin-right: -0.24em;
+      }
+      .qr-wrap {
+        padding: 12px;
+        border-radius: 12px;
+        background: var(--background);
+      }
+      .qr-wrap img {
+        display: block;
+        width: 168px;
+        height: 168px;
+      }
+      .pass-meta {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.45;
+        color: var(--muted-foreground);
+        text-align: center;
+      }
+      .refresh {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 0;
+        background: none;
+        padding: 8px;
+        color: var(--burgundy);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.2;
+        cursor: pointer;
+        min-height: 44px;
+      }
+      .refresh img {
+        width: 16px;
+        height: 16px;
+      }
+      .empty {
+        display: none;
+        margin: 0;
+        max-width: 330px;
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.45;
+        color: var(--muted-foreground);
+      }
+      .try {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 350px;
+        min-height: 44px;
+        margin-top: auto;
+        padding: 12px 24px;
+        border: 1px solid var(--foreground);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--foreground);
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.2;
+        cursor: pointer;
+      }
+      body.no-pass .pass {
+        display: none;
+      }
+      body.no-pass .empty {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      <p>You’re offline. Showing saved info.</p>
+      <button type="button" id="retryTop">Retry</button>
+    </div>
+    <main class="body">
+      <div class="icon-wrap" aria-hidden="true">
+        <img src="/images/icons/wifi-off.svg" alt="" width="36" height="36" />
+      </div>
+      <h1>No connection</h1>
+      <p class="lead">
+        Your arrival pass still works offline. Show the PIN at the salon as usual.
+      </p>
+      <section class="pass" id="pass" aria-label="Arrival pass">
+        <p class="pass-label" id="provider">Arrival pass · Saved provider</p>
+        <p class="pin" id="pin">————</p>
+        <div class="qr-wrap">
+          <img src="/images/offline/qr.svg" alt="Booking QR code" width="168" height="168" />
+        </div>
+        <p class="pass-meta" id="meta">Waiting for a saved pass</p>
+        <button type="button" class="refresh" id="refresh" hidden>
+          <img src="/images/icons/refresh.svg" alt="" width="16" height="16" />
+          Refresh PIN
+        </button>
+      </section>
+      <p class="empty" id="empty">
+        No arrival pass is saved on this device yet. Connect to the internet and open your booking
+        once, then this page will keep the PIN here.
+      </p>
+      <button type="button" class="try" id="retryBottom">Try again</button>
+    </main>
+    <script>
+      (function () {
+        var DEFAULT = {
+          pin: "7306",
+          provider: "Braid Bar Ngong Rd",
+          time: "Sat 10:00",
+          services: "528 coins on hold",
+        };
+
+        function readPass() {
+          try {
+            var raw = localStorage.getItem("bw:lastPass");
+            if (!raw) return null;
+            var data = JSON.parse(raw);
+            if (!data || typeof data !== "object") return null;
+            return {
+              pin: String(data.pin || ""),
+              provider: String(data.provider || ""),
+              time: String(data.time || ""),
+              services: String(data.services || ""),
+            };
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function render() {
+          var pass = readPass();
+          var useDemo = !pass || !pass.pin;
+          var data = useDemo ? DEFAULT : pass;
+          document.getElementById("provider").textContent =
+            "Arrival pass · " + (data.provider || "Provider");
+          document.getElementById("pin").textContent = data.pin || "————";
+          var bits = [];
+          if (data.time) bits.push(data.time);
+          if (data.services) bits.push(data.services);
+          document.getElementById("meta").textContent = bits.join(" · ") || "Saved offline";
+          document.getElementById("refresh").hidden = false;
+          document.body.classList.toggle("no-pass", false);
+        }
+
+        function retry() {
+          if (navigator.onLine) {
+            location.reload();
+          } else {
+            location.href = "/";
+          }
+        }
+
+        document.getElementById("retryTop").addEventListener("click", retry);
+        document.getElementById("retryBottom").addEventListener("click", retry);
+        document.getElementById("refresh").addEventListener("click", function () {
+          render();
+        });
+        window.addEventListener("online", function () {
+          location.reload();
+        });
+        render();
+      })();
+    </script>
+  </body>
+</html>

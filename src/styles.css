@@ -5,14 +5,16 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "Cormorant Garamond", serif;
-  --font-sans: "Karla", system-ui, sans-serif;
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
+  --font-display: "Radley", Georgia, serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 28px;
+  --radius-3xl: 32px;
+  --shadow-soft: 0 2px 8px 0 rgb(34 31 36 / 0.06);
+  --shadow-raised: 0 12px 32px -4px rgb(34 31 36 / 0.12);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -21,17 +23,29 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-raised: var(--primary-raised);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-disabled: var(--disabled);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-rose: var(--rose);
+  --color-burgundy: var(--burgundy);
+  --color-burgundy-hover: var(--burgundy-hover);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
+  --color-blush: var(--blush);
+  --color-blush-subtle: var(--blush-subtle);
+  --color-rose: var(--rose);
   --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
   --color-destructive: var(--destructive);
+  --color-destructive-bg: var(--destructive-bg);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -52,48 +66,92 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Figma "Color" collection (Light). Names follow the file's code syntax. */
 :root {
-  --radius: 0.75rem;
-  --background: oklch(0.97 0.012 75);
-  --foreground: oklch(0.24 0.008 50);
-  --card: oklch(0.99 0.006 75);
-  --card-foreground: oklch(0.24 0.008 50);
-  --popover: oklch(0.99 0.006 75);
-  --popover-foreground: oklch(0.24 0.008 50);
-  --primary: oklch(0.26 0.006 50);
-  --primary-foreground: oklch(0.97 0.012 75);
-  --secondary: oklch(0.92 0.03 30);
-  --secondary-foreground: oklch(0.3 0.03 20);
-  --muted: oklch(0.93 0.014 70);
-  --muted-foreground: oklch(0.5 0.015 50);
-  --accent: oklch(0.86 0.05 25);
-  --accent-foreground: oklch(0.28 0.03 20);
-  --rose: oklch(0.72 0.07 20);
-  --gold: oklch(0.8 0.09 80);
-  --gold-foreground: oklch(0.42 0.07 70);
-  --success: oklch(0.55 0.1 155);
-  --destructive: oklch(0.5 0.16 20);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.88 0.015 65);
-  --input: oklch(0.88 0.015 65);
-  --ring: oklch(0.72 0.07 20);
-  --chart-1: oklch(0.72 0.07 20);
-  --chart-2: oklch(0.8 0.09 80);
-  --chart-3: oklch(0.26 0.006 50);
-  --chart-4: oklch(0.55 0.1 155);
-  --chart-5: oklch(0.6 0.05 50);
-  --sidebar: oklch(0.99 0.006 75);
-  --sidebar-foreground: oklch(0.24 0.008 50);
-  --sidebar-primary: oklch(0.26 0.006 50);
-  --sidebar-primary-foreground: oklch(0.97 0.012 75);
-  --sidebar-accent: oklch(0.93 0.014 70);
-  --sidebar-accent-foreground: oklch(0.24 0.008 50);
-  --sidebar-border: oklch(0.88 0.015 65);
-  --sidebar-ring: oklch(0.72 0.07 20);
+  --radius: 16px;
+  --background: #f7f1ea;
+  --foreground: #161417;
+  --card: #fffcf8;
+  --card-foreground: #161417;
+  --popover: #fffcf8;
+  --popover-foreground: #161417;
+  --primary: #161417;
+  --primary-foreground: #f7f1ea;
+  --primary-raised: #3a363c;
+  --secondary: #efe6db;
+  --secondary-foreground: #161417;
+  --muted: #efe6db;
+  --muted-foreground: #6b6570;
+  --disabled: #a39da6;
+  --accent: #ebc9be;
+  --accent-foreground: #161417;
+  --burgundy: #6b1d38;
+  --burgundy-hover: #561630;
+  --gold: #c6a15b;
+  --gold-foreground: #7e5f24;
+  --blush: #ebc9be;
+  --blush-subtle: #f5e3dd;
+  --rose: #c48b88;
+  --success: #2f7a57;
+  --success-bg: #e3f0e9;
+  --warning: #b7791f;
+  --warning-bg: #f6ebd9;
+  --info: #2f6286;
+  --info-bg: #e0e9f1;
+  --destructive: #b3332b;
+  --destructive-bg: #f6e1df;
+  --destructive-foreground: #ffffff;
+  --border: #e3d8cb;
+  --input: #e3d8cb;
+  --ring: #6b1d38;
+  --chart-1: #c48b88;
+  --chart-2: #c6a15b;
+  --chart-3: #161417;
+  --chart-4: #2f7a57;
+  --chart-5: #6b1d38;
+  --sidebar: #fffcf8;
+  --sidebar-foreground: #161417;
+  --sidebar-primary: #161417;
+  --sidebar-primary-foreground: #f7f1ea;
+  --sidebar-accent: #efe6db;
+  --sidebar-accent-foreground: #161417;
+  --sidebar-border: #e3d8cb;
+  --sidebar-ring: #6b1d38;
 }
+
+/* Figma text styles. */
+@utility type-display-xl { font-family: var(--font-display); font-weight: 400; font-size: 72px; line-height: 1.04; }
+@utility type-display-l { font-family: var(--font-display); font-weight: 400; font-size: 56px; line-height: 1.06; }
+@utility type-display-m { font-family: var(--font-display); font-weight: 400; font-size: 40px; line-height: 1.1; }
+@utility type-h1 { font-family: var(--font-display); font-weight: 400; font-size: 36px; line-height: 1.15; }
+@utility type-h2 { font-family: var(--font-display); font-weight: 400; font-size: 28px; line-height: 1.2; }
+@utility type-h3 { font-family: var(--font-display); font-weight: 400; font-size: 22px; line-height: 1.25; }
+@utility type-h4 { font-family: var(--font-display); font-weight: 400; font-size: 18px; line-height: 1.3; }
+@utility type-body-l { font-family: var(--font-sans); font-weight: 400; font-size: 18px; line-height: 1.55; }
+@utility type-body-m { font-family: var(--font-sans); font-weight: 400; font-size: 16px; line-height: 1.5; }
+@utility type-body-m-medium { font-family: var(--font-sans); font-weight: 500; font-size: 16px; line-height: 1.5; }
+@utility type-body-s { font-family: var(--font-sans); font-weight: 400; font-size: 14px; line-height: 1.45; }
+@utility type-body-s-medium { font-family: var(--font-sans); font-weight: 500; font-size: 14px; line-height: 1.45; }
+@utility type-body-s-semibold { font-family: var(--font-sans); font-weight: 600; font-size: 14px; line-height: 1.45; }
+@utility type-caption { font-family: var(--font-sans); font-weight: 400; font-size: 12px; line-height: 1.4; }
+@utility type-button-m { font-family: var(--font-sans); font-weight: 600; font-size: 15px; line-height: 1.2; }
+@utility type-button-s { font-family: var(--font-sans); font-weight: 600; font-size: 13px; line-height: 1.2; }
+@utility type-coin-xl { font-family: var(--font-sans); font-weight: 500; font-size: 44px; line-height: 1.05; letter-spacing: -0.44px; }
+@utility type-pin { font-family: var(--font-sans); font-weight: 500; font-size: 52px; line-height: 1; letter-spacing: 0.24em; }
+@utility type-stat { font-family: var(--font-sans); font-weight: 500; font-size: 28px; line-height: 1.15; letter-spacing: -0.14px; }
+@utility type-eyebrow { font-family: var(--font-sans); font-weight: 700; font-size: 12px; line-height: 1.3; letter-spacing: 1.44px; text-transform: uppercase; }
+@utility type-label-s { font-family: var(--font-sans); font-weight: 700; font-size: 11px; line-height: 1.3; letter-spacing: 0.88px; text-transform: uppercase; }
 
 @layer base {
   * { border-color: var(--color-border); }
-  body { background-color: var(--color-background); color: var(--color-foreground); font-family: var(--font-sans); }
-  h1, h2, h3, .font-display { font-family: var(--font-display); font-weight: 500; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+    font-variation-settings: "opsz" 14;
+  }
+  h1, h2, h3, h4, .font-display { font-family: var(--font-display); font-weight: 400; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 }

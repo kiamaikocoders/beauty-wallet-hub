@@ -1,8 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SitePage } from "@/components/site/SitePage";
-import { TeamsPage } from "@/components/site/teams/TeamsPage";
-import { fetchRules } from "@/lib/catalog";
-import { DEFAULT_RULES } from "@/lib/pricing";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/teams")({
   head: () => ({
@@ -15,21 +11,9 @@ export const Route = createFileRoute("/teams")({
       },
     ],
   }),
-  loader: async () => {
-    try {
-      return { rules: await fetchRules() };
-    } catch {
-      return { rules: DEFAULT_RULES };
-    }
-  },
-  component: TeamsRoute,
+  component: TeamsLayout,
 });
 
-function TeamsRoute() {
-  const { rules } = Route.useLoaderData();
-  return (
-    <SitePage>
-      <TeamsPage rules={rules} />
-    </SitePage>
-  );
+function TeamsLayout() {
+  return <Outlet />;
 }

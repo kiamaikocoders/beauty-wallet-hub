@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth/AuthSplit";
 import { AuthCheckbox, OtpInput } from "@/components/site/auth/auth-fields";
 import { Icon, buttonClass } from "@/components/site/primitives";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/2fa")({
   head: () => ({
@@ -22,7 +23,14 @@ function Admin2faPage() {
   const [code, setCode] = useState("");
   const [trust, setTrust] = useState(true);
   const [busy, setBusy] = useState(false);
-  const email = "faith.njeri@beautywallet.co.ke";
+  const [email, setEmail] = useState("beautywalletke@gmail.com");
+
+  useEffect(() => {
+    void supabase.auth.getUser().then(({ data }) => {
+      const next = data.user?.email?.trim();
+      if (next) setEmail(next);
+    });
+  }, []);
 
   function onSubmit(e?: FormEvent) {
     e?.preventDefault();

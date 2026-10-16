@@ -21,6 +21,20 @@ export async function signInWithEmail(email: string, password: string) {
   return supabase.auth.signInWithPassword({ email: email.trim(), password });
 }
 
+export async function fetchSignedInRole(): Promise<"member" | "provider" | "admin" | "hr" | null> {
+  const { data: auth } = await supabase.auth.getUser();
+  const user = auth.user;
+  if (!user) return null;
+  const { data } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  const role = data?.role;
+  if (role === "member" || role === "provider" || role === "admin" || role === "hr") return role;
+  return null;
+}
+
 export async function signUpWithEmail(email: string, password: string, fullName: string) {
   return supabase.auth.signUp({
     email: email.trim(),

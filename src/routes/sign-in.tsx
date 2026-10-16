@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth/AuthSplit";
 import { Field, OtpInput, Segmented, TextInput } from "@/components/site/auth/auth-fields";
 import { buttonClass } from "@/components/site/primitives";
-import { sendPhoneOtp, signInWithEmail, verifyPhoneOtp } from "@/lib/auth";
+import { fetchSignedInRole, sendPhoneOtp, signInWithEmail, verifyPhoneOtp } from "@/lib/auth";
 import { displayPhone, saveOnboarding } from "@/lib/onboarding";
 
 export const Route = createFileRoute("/sign-in")({
@@ -27,9 +27,10 @@ export const Route = createFileRoute("/sign-in")({
 function SignInPage() {
   const navigate = useNavigate();
   const search = Route.useSearch();
-  const [mode, setMode] = useState<"phone" | "email">("phone");
+  const preferAdmin = search.as === "admin";
+  const [mode, setMode] = useState<"phone" | "email">(preferAdmin ? "email" : "phone");
   const [phone, setPhone] = useState("0712 345 678");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(preferAdmin ? "beautywalletke@gmail.com" : "");
   const [password, setPassword] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [code, setCode] = useState("");
@@ -73,16 +74,22 @@ function SignInPage() {
     e.preventDefault();
     setBusy(true);
     const { error } = await signInWithEmail(email, password);
-    setBusy(false);
     if (error) {
+      setBusy(false);
       toast.error(error.message);
       return;
     }
-    if (email.toLowerCase().includes("@beautywallet.co.ke")) {
+    const role = await fetchSignedInRole();
+    setBusy(false);
+    if (role === "admin" || preferAdmin || email.toLowerCase().includes("@beautywallet.co.ke")) {
       void navigate({ to: "/admin/2fa" });
       return;
     }
-    window.location.href = search.as === "provider" ? "/vendor" : "/app";
+    if (role === "provider" || search.as === "provider") {
+      window.location.href = "/provider";
+      return;
+    }
+    window.location.href = "/app";
   }
 
   const phoneForm = !otpSent ? (

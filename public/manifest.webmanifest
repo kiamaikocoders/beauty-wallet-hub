@@ -4,7 +4,26 @@
   "description": "Curated beauty & grooming, styled securely.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f6f1ea",
-  "theme_color": "#2b2826",
-  "icons": [{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }]
+  "background_color": "#f7f1ea",
+  "theme_color": "#161417",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }

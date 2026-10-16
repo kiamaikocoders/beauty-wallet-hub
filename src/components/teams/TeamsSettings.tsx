@@ -1,4 +1,3 @@
-import { buttonClass } from "@/components/site/primitives";
 import { TEAMS_DEMO } from "@/lib/teams-demo";
 import { TeamsShell, initialsAvatar } from "./TeamsShell";
 
@@ -43,9 +42,6 @@ export function TeamsSettings() {
         <section className="rounded-lg border border-border bg-card p-5">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="type-h4">Company</h2>
-            <button type="button" className="type-body-s-semibold text-burgundy">
-              Edit
-            </button>
           </div>
           <Row label="Name" value={d.companyLegal} />
           <Row label="Billing email" value={d.billingEmail} />
@@ -57,9 +53,6 @@ export function TeamsSettings() {
         <section className="rounded-lg border border-border bg-card p-5">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="type-h4">HR admins</h2>
-            <button type="button" className={buttonClass({ variant: "secondary", size: "s" })}>
-              Add admin
-            </button>
           </div>
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3">
@@ -87,9 +80,6 @@ export function TeamsSettings() {
         <section className="rounded-lg border border-border bg-card p-5">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="type-h4">Payment</h2>
-            <button type="button" className="type-body-s-semibold text-burgundy">
-              Change
-            </button>
           </div>
           <Row label="M-Pesa" value={`${d.hrPhone} · default`} />
           <Row label="Card" value="Visa ending 4410" />

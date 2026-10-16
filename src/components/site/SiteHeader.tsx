@@ -16,7 +16,7 @@ export const NAV_LINKS = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="w-full border-b border-border bg-background">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur">
       <div className="flex h-[60px] w-full items-center justify-between py-2 pl-5 pr-2.5 lg:h-[100px] lg:px-16 lg:py-5">
         <Link to="/" aria-label="Beauty Wallet home">
           <Logo />

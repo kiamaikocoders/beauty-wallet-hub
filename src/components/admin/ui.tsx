@@ -114,25 +114,33 @@ export function SearchField({
   className,
   value,
   onChange,
+  readOnly,
+  title,
 }: {
   placeholder: string;
   className?: string;
   value?: string;
   onChange?: (v: string) => void;
+  readOnly?: boolean;
+  title?: string;
 }) {
   return (
     <label
       className={cn(
         "flex h-12 w-full items-center gap-2.5 rounded-full border border-border bg-white px-4 lg:w-[300px]",
+        readOnly && "cursor-not-allowed opacity-70",
         className,
       )}
+      title={title}
     >
       <AdminIcon name="search" size={20} />
       <input
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
         placeholder={placeholder}
-        className="min-w-0 flex-1 bg-transparent type-body-m text-foreground outline-none placeholder:text-muted-foreground"
+        readOnly={readOnly}
+        aria-disabled={readOnly || undefined}
+        className="min-w-0 flex-1 bg-transparent type-body-m text-foreground outline-none placeholder:text-muted-foreground read-only:cursor-not-allowed"
       />
     </label>
   );

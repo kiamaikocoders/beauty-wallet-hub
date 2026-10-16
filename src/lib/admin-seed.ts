@@ -9,7 +9,7 @@ export const ADMIN_USER = {
 
 export const OVERVIEW = {
   marginPct: "9.1%",
-  marginWarning: "1 warning",
+  marginWarning: "3 warnings",
   warningTitle: "3 plan and class pairs are under your 5% margin floor",
   warningBody: "Premium members at Basic-class providers lose 3.7% on every visit.",
   stats: [
@@ -154,17 +154,17 @@ export const RATE_BANDS = {
     {
       tier: "basic" as TierId,
       price: "Ksh 7,000 a month",
-      detail: "700 coins · 0% off · 612 members",
+      detail: "700 coins · list price on services · 612 members",
     },
     {
       tier: "intermediate" as TierId,
       price: "Ksh 15,000 a month",
-      detail: "1,500 coins · 12% off · 498 members",
+      detail: "1,500 coins · 12% fewer coins on services · 498 members",
     },
     {
       tier: "premium" as TierId,
       price: "Ksh 20,000 a month",
-      detail: "2,000 coins · 18% off · 174 members",
+      detail: "2,000 coins · 18% fewer coins on services · 174 members",
     },
   ],
   rules: [

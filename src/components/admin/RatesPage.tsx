@@ -34,24 +34,48 @@ export function RatesPage() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap gap-2">
-        <button type="button" className={buttonClass({ variant: "secondary", size: "s" })}>
+        <button
+          type="button"
+          disabled
+          title="Change history is not available yet"
+          className={buttonClass({ variant: "secondary", size: "s", className: "opacity-60" })}
+        >
           Change history
         </button>
-        <button type="button" className={buttonClass({ variant: "secondary", size: "s" })}>
+        <button
+          type="button"
+          className={buttonClass({ variant: "secondary", size: "s" })}
+          onClick={() => setEditOpen(true)}
+        >
           Simulate a change
         </button>
       </div>
 
       <Panel className="flex flex-col gap-4">
-        <SectionTitle title="Margin per visit" />
+        <SectionTitle
+          title="Margin per visit"
+          action={
+            <button
+              type="button"
+              className={buttonClass({ size: "s" })}
+              onClick={() => setEditOpen(true)}
+            >
+              Fix rate bands
+            </button>
+          }
+        />
+        <p className="type-caption text-muted-foreground">
+          Rows are member plans. Columns are provider classes. Cells under the 5% floor need a payout
+          or plan change.
+        </p>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px]">
             <thead>
               <tr>
-                <th className="pb-3 text-left type-label-s text-muted-foreground" />
+                <th className="pb-3 text-left type-label-s text-muted-foreground">Member plan</th>
                 {(["basic", "intermediate", "premium"] as TierId[]).map((t) => (
                   <th key={t} className="pb-3 text-left type-label-s text-muted-foreground">
-                    {tierName[t]} class
+                    {tierName[t]} provider
                   </th>
                 ))}
               </tr>
@@ -64,18 +88,23 @@ export function RatesPage() {
                     <td key={i} className="py-4">
                       <p className="type-h4">{cell.value}</p>
                       {cell.note && (
-                        <StatusPill
-                          tone={
-                            cell.tone === "bad"
-                              ? "error"
-                              : cell.tone === "warn"
-                                ? "warning"
-                                : "neutral"
-                          }
-                          className="mt-1"
+                        <button
+                          type="button"
+                          onClick={() => setEditOpen(true)}
+                          className="mt-1 text-left"
                         >
-                          {cell.note}
-                        </StatusPill>
+                          <StatusPill
+                            tone={
+                              cell.tone === "bad"
+                                ? "error"
+                                : cell.tone === "warn"
+                                  ? "warning"
+                                  : "neutral"
+                            }
+                          >
+                            {cell.note} · Fix
+                          </StatusPill>
+                        </button>
                       )}
                     </td>
                   ))}
@@ -133,14 +162,7 @@ export function RatesPage() {
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Panel className="flex flex-col gap-3">
-          <SectionTitle
-            title="Plans"
-            action={
-              <button type="button" className={buttonClass({ variant: "ghost", size: "s" })}>
-                Edit
-              </button>
-            }
-          />
+          <SectionTitle title="Plans" />
           {RATE_BANDS.plans.map((p) => (
             <CardPanel key={p.tier} className="flex items-start justify-between gap-3">
               <div>
@@ -152,14 +174,7 @@ export function RatesPage() {
           ))}
         </Panel>
         <Panel className="flex flex-col gap-3">
-          <SectionTitle
-            title="Rules"
-            action={
-              <button type="button" className={buttonClass({ variant: "ghost", size: "s" })}>
-                Edit
-              </button>
-            }
-          />
+          <SectionTitle title="Rules" />
           {RATE_BANDS.rules.map((r) => (
             <div
               key={r.label}

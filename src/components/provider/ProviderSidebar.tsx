@@ -25,7 +25,7 @@ export function ProviderSidebar({
   active: string;
 }) {
   return (
-    <aside className="hidden h-dvh w-[264px] shrink-0 flex-col bg-primary text-primary-foreground lg:flex">
+    <aside className="sticky top-0 hidden h-dvh w-[264px] shrink-0 flex-col bg-primary text-primary-foreground lg:flex">
       <div className="px-6 pt-7 pb-6">
         <Logo tone="light" />
         <p className="mt-1 type-body-s text-gold">Provider</p>

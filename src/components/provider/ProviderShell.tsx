@@ -45,22 +45,28 @@ export function ProviderShell({
         <header className="sticky top-0 z-30 hidden h-[88px] items-center gap-3 border-b border-border bg-background px-5 lg:flex lg:px-10">
           <h1 className="min-w-0 flex-1 font-display text-[28px] leading-none">{pageTitle}</h1>
           {!hideSearch && (
-            <label className="flex h-12 w-[300px] items-center gap-2 rounded-full border border-border bg-card px-4">
+            <label
+              className="flex h-12 w-[300px] cursor-not-allowed items-center gap-2 rounded-full border border-border bg-card px-4 opacity-70"
+              title="Search is not connected yet"
+            >
               <Search className="size-5 text-muted-foreground" />
               <input
                 placeholder="Search bookings or members"
-                className="w-full bg-transparent type-body-s outline-none placeholder:text-muted-foreground"
+                readOnly
+                aria-disabled
+                className="w-full cursor-not-allowed bg-transparent type-body-s outline-none placeholder:text-muted-foreground"
               />
             </label>
           )}
-          <button
-            type="button"
+          <Link
+            to="/provider/settings"
             className="relative grid size-11 place-items-center rounded-full border border-border bg-card"
-            aria-label="Notifications"
+            aria-label="Settings"
+            title="Settings"
           >
             <Bell className="size-[22px]" />
             <span className="absolute top-2.5 right-2.5 size-2 rounded-full bg-burgundy" />
-          </button>
+          </Link>
           {topAction}
           <div
             className="size-10 shrink-0 rounded-full bg-blush bg-cover bg-center"
@@ -72,13 +78,14 @@ export function ProviderShell({
         <header className="sticky top-0 z-30 border-b border-border bg-background px-5 pt-3 pb-3 lg:hidden">
           <div className="flex items-center gap-3">
             <h1 className="min-w-0 flex-1 font-display text-[28px] leading-none">{pageTitle}</h1>
-            <button
-              type="button"
+            <Link
+              to="/provider/settings"
               className="grid size-11 place-items-center rounded-full border border-border bg-card"
-              aria-label="Notifications"
+              aria-label="Settings"
+              title="Settings"
             >
               <Bell className="size-5" />
-            </button>
+            </Link>
           </div>
           {mobileSub && <div className="mt-2 type-body-s text-muted-foreground">{mobileSub}</div>}
         </header>

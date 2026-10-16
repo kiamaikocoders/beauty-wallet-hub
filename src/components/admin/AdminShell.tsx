@@ -1,10 +1,19 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/site/primitives";
 import { ADMIN_USER, OVERVIEW } from "@/lib/admin-seed";
+import { fetchAdminSession } from "@/lib/auth";
 import { ADMIN_NAV, navKeyFromPath, PAGE_TITLES, type AdminNavKey } from "./nav";
 import { AdminIcon, SearchField } from "./ui";
+
+type AdminIdentity = {
+  name: string;
+  role: string;
+  avatar: string;
+  headerAvatar: string;
+  email?: string | null;
+};
 
 function SidebarItem({
   href,
@@ -33,9 +42,15 @@ function SidebarItem({
   );
 }
 
-function AdminSidebar({ active }: { active: AdminNavKey }) {
+function AdminSidebar({
+  active,
+  identity,
+}: {
+  active: AdminNavKey;
+  identity: AdminIdentity;
+}) {
   return (
-    <aside className="hidden h-dvh w-[264px] shrink-0 flex-col bg-primary px-4 pb-5 pt-7 lg:flex">
+    <aside className="sticky top-0 hidden h-dvh w-[264px] shrink-0 flex-col bg-primary px-4 pb-5 pt-7 lg:flex">
       <div className="flex min-h-0 flex-1 flex-col gap-8 overflow-hidden">
         <div className="flex shrink-0 flex-col gap-1.5 pl-2">
           <Logo tone="light" />
@@ -54,23 +69,26 @@ function AdminSidebar({ active }: { active: AdminNavKey }) {
         </nav>
       </div>
       <div className="mt-4 flex w-full shrink-0 flex-col gap-4">
-        <div className="rounded-[14px] bg-primary-raised p-3.5 text-primary-foreground">
+        <Link
+          to="/admin/rates"
+          className="rounded-[14px] bg-primary-raised p-3.5 text-primary-foreground transition-colors hover:bg-primary-raised/80"
+        >
           <p className="type-body-s-semibold">Margin this month</p>
           <p className="type-caption opacity-70">
             {OVERVIEW.marginPct} · {OVERVIEW.marginWarning}
           </p>
-        </div>
+        </Link>
         <div className="flex items-center gap-2.5 border-t border-primary-raised pt-4">
           <img
-            src={ADMIN_USER.avatar}
+            src={identity.avatar}
             alt=""
             width={36}
             height={36}
             className="size-9 rounded-full object-cover"
           />
           <div className="min-w-0">
-            <p className="type-body-s-semibold text-primary-foreground">{ADMIN_USER.name}</p>
-            <p className="type-caption text-gold">{ADMIN_USER.role}</p>
+            <p className="truncate type-body-s-semibold text-primary-foreground">{identity.name}</p>
+            <p className="type-caption text-gold">{identity.role}</p>
           </div>
         </div>
       </div>
@@ -82,22 +100,30 @@ function AdminTopBar({
   title,
   searchPlaceholder,
   actions,
+  identity,
 }: {
   title: string;
   searchPlaceholder: string;
   actions?: ReactNode;
+  identity: AdminIdentity;
 }) {
   return (
-    <header className="flex h-[72px] shrink-0 items-center gap-3 border-b border-border px-5 lg:h-[88px] lg:gap-3.5 lg:px-10">
+    <header className="sticky top-0 z-30 flex h-[72px] shrink-0 items-center gap-3 border-b border-border bg-background px-5 lg:h-[88px] lg:gap-3.5 lg:px-10">
       <h1 className="min-w-0 flex-1 font-display text-[22px] leading-[1.2] text-foreground lg:text-[28px]">
         {title}
       </h1>
-      <SearchField placeholder={searchPlaceholder} className="hidden lg:flex" />
+      <SearchField
+        placeholder={searchPlaceholder}
+        className="hidden lg:flex"
+        readOnly
+        title="Search is not connected yet"
+      />
       {actions}
-      <button
-        type="button"
+      <Link
+        to="/admin/settings"
         className="relative flex size-11 items-center justify-center rounded-[22px] border border-border bg-white"
-        aria-label="Notifications"
+        aria-label="Settings and alerts"
+        title="Settings"
       >
         <AdminIcon name="bell" size={22} />
         <img
@@ -105,13 +131,14 @@ function AdminTopBar({
           alt=""
           className="absolute left-[26px] top-[9px] size-2"
         />
-      </button>
+      </Link>
       <img
-        src={ADMIN_USER.headerAvatar}
+        src={identity.headerAvatar}
         alt=""
         width={40}
         height={40}
         className="hidden size-10 rounded-full object-cover lg:block"
+        title={identity.email ?? identity.name}
       />
     </header>
   );
@@ -214,17 +241,36 @@ export function AdminShell({
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const active = navKeyFromPath(pathname);
   const pageTitle = title ?? PAGE_TITLES[active];
+  const [identity, setIdentity] = useState<AdminIdentity>(ADMIN_USER);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchAdminSession().then((session) => {
+      if (cancelled || !session) return;
+      setIdentity({
+        name: session.fullName,
+        role: session.roleLabel,
+        avatar: session.avatarUrl || ADMIN_USER.avatar,
+        headerAvatar: session.avatarUrl || ADMIN_USER.headerAvatar,
+        email: session.email,
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="flex min-h-dvh w-full bg-background">
-      <AdminSidebar active={active} />
+      <AdminSidebar active={active} identity={identity} />
       <div className="flex min-w-0 flex-1 flex-col">
         <AdminTopBar
           title={pageTitle}
           searchPlaceholder={SEARCH_PLACEHOLDERS[active] ?? "Search everything"}
           actions={actions}
+          identity={identity}
         />
-        <div className="flex-1 overflow-y-auto px-5 pb-28 pt-5 lg:px-10 lg:pb-8 lg:pt-7">
+        <div className="flex-1 px-5 pb-28 pt-5 lg:px-10 lg:pb-8 lg:pt-7">
           {children ?? <Outlet />}
         </div>
       </div>

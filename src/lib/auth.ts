@@ -35,6 +35,36 @@ export async function fetchSignedInRole(): Promise<"member" | "provider" | "admi
   return null;
 }
 
+export async function fetchAdminSession(): Promise<{
+  fullName: string;
+  email: string | null;
+  avatarUrl: string | null;
+  roleLabel: string;
+} | null> {
+  const { data: auth } = await supabase.auth.getUser();
+  const user = auth.user;
+  if (!user) return null;
+  const { data } = await supabase
+    .from("profiles")
+    .select("full_name, email, avatar_url, role")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!data || data.role !== "admin") return null;
+  const email = data.email ?? user.email ?? null;
+  const metaName = user.user_metadata?.["full_name"];
+  const fullName =
+    data.full_name?.trim() ||
+    (typeof metaName === "string" ? metaName : null) ||
+    email?.split("@")[0] ||
+    "Admin";
+  return {
+    fullName,
+    email,
+    avatarUrl: data.avatar_url,
+    roleLabel: "Operations admin",
+  };
+}
+
 export async function signUpWithEmail(email: string, password: string, fullName: string) {
   return supabase.auth.signUp({
     email: email.trim(),

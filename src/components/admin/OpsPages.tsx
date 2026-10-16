@@ -486,14 +486,7 @@ export function SettingsPage() {
       </Panel>
 
       <Panel>
-        <SectionTitle
-          title="Platform rules"
-          action={
-            <button type="button" className={buttonClass({ variant: "ghost", size: "s" })}>
-              Edit
-            </button>
-          }
-        />
+        <SectionTitle title="Platform rules" />
         {SETTINGS.rules.map((r) => (
           <div
             key={r.label}

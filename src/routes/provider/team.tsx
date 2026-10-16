@@ -65,9 +65,6 @@ function TeamPage() {
           <section className="rounded-[20px] border border-border bg-card p-5">
             <div className="flex items-center justify-between">
               <h3 className="type-body-m-medium">Opening hours</h3>
-              <button type="button" className="type-body-s-medium text-burgundy">
-                Edit
-              </button>
             </div>
             <ul className="mt-4 space-y-3">
               {hours.map((h) => (

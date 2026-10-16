@@ -86,8 +86,7 @@ export function AppShell() {
         <Logo tone="dark" />
         <h1 className="mt-8 type-h1 text-foreground">Sign in to your wallet</h1>
         <p className="mt-3 max-w-md text-center type-body-m text-muted-foreground">
-          Phone OTP and email sign-in are coming. For now, open the seeded Intermediate member to
-          walk the app.
+          Use email sign-in, or open a seeded demo member to walk the app without an account.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
@@ -145,7 +144,7 @@ export function AppShell() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col pb-20 lg:pb-0">
-        <header className="flex h-[60px] items-center justify-between gap-3 border-b border-border bg-background px-5 lg:h-[88px] lg:px-10">
+        <header className="sticky top-0 z-30 flex h-[60px] items-center justify-between gap-3 border-b border-border bg-background px-5 lg:h-[88px] lg:px-10">
           <h1 className="type-h3 lg:type-h2 text-foreground">{title}</h1>
           <div className="flex items-center gap-2 lg:gap-3">
             <label className="hidden items-center gap-2 rounded-full border border-border bg-card px-4 py-2 md:flex">

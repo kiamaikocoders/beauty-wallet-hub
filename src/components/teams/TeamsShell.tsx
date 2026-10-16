@@ -1,4 +1,4 @@
-import { useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { Icon, TierBadge, buttonClass } from "@/components/site/primitives";
 import { TEAMS_DEMO, setTeamsHrSession } from "@/lib/teams-demo";
@@ -45,7 +45,7 @@ export function TeamsShell({
 
   return (
     <div className="flex min-h-dvh w-full bg-background">
-      <aside className="hidden w-[264px] shrink-0 flex-col justify-between bg-primary px-4 pb-5 pt-7 text-primary-foreground lg:flex">
+      <aside className="sticky top-0 hidden h-dvh w-[264px] shrink-0 flex-col justify-between bg-primary px-4 pb-5 pt-7 text-primary-foreground lg:flex">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-1.5 pl-2">
             <div className="flex items-center gap-2.5">
@@ -60,9 +60,9 @@ export function TeamsShell({
                 ? pathname === "/teams" || pathname === "/teams/"
                 : pathname.startsWith(item.to);
               return (
-                <a
+                <Link
                   key={item.to}
-                  href={item.to}
+                  to={item.to}
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2.5 type-body-s transition-colors",
                     active
@@ -72,7 +72,7 @@ export function TeamsShell({
                 >
                   <Icon name={item.icon} size={20} className="opacity-90" />
                   {item.label}
-                </a>
+                </Link>
               );
             })}
           </nav>
@@ -107,64 +107,72 @@ export function TeamsShell({
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex flex-wrap items-center gap-3 border-b border-border px-5 py-4 lg:px-8">
-          <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-center">
-            <h1 className="type-h2 shrink-0 text-foreground">{title}</h1>
-            <label className="flex min-h-11 flex-1 items-center gap-2 rounded-full bg-muted px-4">
-              <Icon name="search" size={18} />
-              <input
-                className="w-full bg-transparent type-body-m outline-none placeholder:text-muted-foreground"
-                placeholder={searchPlaceholder}
-              />
-            </label>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="inline-flex size-11 items-center justify-center rounded-full border border-border bg-card"
-              aria-label="Notifications"
-            >
-              <Icon name="bell" size={20} />
-            </button>
-            {onInvite ? (
-              <button
-                type="button"
-                onClick={onInvite}
-                className={buttonClass({ variant: "emphasis", size: "s" })}
+        <header className="sticky top-0 z-30 border-b border-border bg-background">
+          <div className="flex flex-wrap items-center gap-3 px-5 py-4 lg:px-8">
+            <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-center">
+              <h1 className="type-h2 shrink-0 text-foreground">{title}</h1>
+              <label
+                className="flex min-h-11 flex-1 cursor-not-allowed items-center gap-2 rounded-full bg-muted px-4 opacity-70"
+                title="Search is not connected yet"
               >
-                Invite staff
-              </button>
-            ) : (
-              <a
-                href="/teams/staff?invite=1"
-                className={buttonClass({ variant: "emphasis", size: "s" })}
+                <Icon name="search" size={18} />
+                <input
+                  className="w-full cursor-not-allowed bg-transparent type-body-m outline-none placeholder:text-muted-foreground"
+                  placeholder={searchPlaceholder}
+                  readOnly
+                  aria-disabled
+                />
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <Link
+                to="/teams/settings"
+                className="inline-flex size-11 items-center justify-center rounded-full border border-border bg-card"
+                aria-label="Settings"
+                title="Settings"
               >
-                Invite staff
-              </a>
-            )}
-            {initialsAvatar("LN", "hidden sm:inline-flex")}
+                <Icon name="bell" size={20} />
+              </Link>
+              {onInvite ? (
+                <button
+                  type="button"
+                  onClick={onInvite}
+                  className={buttonClass({ variant: "emphasis", size: "s" })}
+                >
+                  Invite staff
+                </button>
+              ) : (
+                <Link
+                  to="/teams/staff"
+                  search={{ invite: "1" }}
+                  className={buttonClass({ variant: "emphasis", size: "s" })}
+                >
+                  Invite staff
+                </Link>
+              )}
+              {initialsAvatar("LN", "hidden sm:inline-flex")}
+            </div>
           </div>
+          <nav className="flex gap-1 overflow-x-auto px-5 pb-2 lg:hidden">
+            {NAV.map((item) => {
+              const active = item.end
+                ? pathname === "/teams" || pathname === "/teams/"
+                : pathname.startsWith(item.to);
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={cn(
+                    "rounded-full px-3 py-2 type-body-s whitespace-nowrap",
+                    active ? "bg-primary text-primary-foreground" : "bg-muted text-foreground",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
         </header>
-
-        <nav className="flex gap-1 overflow-x-auto border-b border-border px-5 py-2 lg:hidden">
-          {NAV.map((item) => {
-            const active = item.end
-              ? pathname === "/teams" || pathname === "/teams/"
-              : pathname.startsWith(item.to);
-            return (
-              <a
-                key={item.to}
-                href={item.to}
-                className={cn(
-                  "rounded-full px-3 py-2 type-body-s whitespace-nowrap",
-                  active ? "bg-primary text-primary-foreground" : "bg-muted text-foreground",
-                )}
-              >
-                {item.label}
-              </a>
-            );
-          })}
-        </nav>
 
         <main className="flex-1 px-5 py-6 lg:px-8 lg:py-8">{children}</main>
       </div>

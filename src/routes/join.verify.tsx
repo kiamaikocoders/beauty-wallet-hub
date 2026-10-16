@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth/AuthSplit";
 import { OtpInput, useResendTimer } from "@/components/site/auth/auth-fields";
 import { Icon, buttonClass } from "@/components/site/primitives";
-import { upsertProfileMetadata } from "@/lib/auth";
+import { signUpWithEmail, upsertProfileMetadata } from "@/lib/auth";
 import { firstName, loadOnboarding, saveOnboarding } from "@/lib/onboarding";
 import { sendEmailCode, verifyEmailCode } from "@/lib/resend";
 import { cn } from "@/lib/utils";
@@ -75,11 +75,37 @@ function VerifyPhonePage() {
       return;
     }
 
-    saveOnboarding({ emailVerified: true, step: "email" });
+    if (onboarding.password.length < 8) {
+      toast.error("Go back and choose a password before continuing.");
+      void navigate({ to: "/join" });
+      return;
+    }
+    const signedUp = await signUpWithEmail(
+      email,
+      onboarding.password,
+      onboarding.fullName,
+      onboarding.phone,
+      onboarding.gender,
+    );
+    if (signedUp.error) {
+      const msg = signedUp.error.message.toLowerCase();
+      if (msg.includes("already")) {
+        toast.error("That email already has an account. Sign in with your password.");
+      } else if (msg.includes("confirm")) {
+        toast.message("Confirm your email", {
+          description: "Open the confirmation link, then sign in with this password.",
+        });
+      } else {
+        toast.error(signedUp.error.message);
+      }
+      return;
+    }
+    saveOnboarding({ emailVerified: true, password: "", step: "email" });
     await upsertProfileMetadata({
       full_name: onboarding.fullName,
       phone: onboarding.phone,
       email,
+      gender: onboarding.gender,
       onboarding_step: "email",
     });
     void navigate({ to: "/join/email" });

@@ -17,7 +17,7 @@ export const Route = createFileRoute("/join/email")({
 function VerifyEmailPage() {
   const navigate = useNavigate();
   const onboarding = loadOnboarding();
-  const email = onboarding.email || "amani@example.com";
+  const email = onboarding.email || "your email";
   const confirmed = onboarding.emailVerified;
 
   function continueOnboarding() {

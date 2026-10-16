@@ -3,18 +3,35 @@ import { toast } from "sonner";
 import { buttonClass, TierBadge } from "@/components/site/primitives";
 import { APPLICATION, PROVIDERS } from "@/lib/admin-seed";
 import { adminReviewProvider } from "@/lib/admin-api";
+import { fetchAdminDirectory, type LiveProvider } from "@/lib/admin-live";
 import { statusTone } from "./nav";
 import { FilterChips, Panel, StatusPill, Td, Th } from "./ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function ProvidersPage() {
-  const [tab, setTab] = useState("Live · 68");
+  const [tab, setTab] = useState("All");
+  const [live, setLive] = useState<LiveProvider[] | null>(null);
+
+  useEffect(() => {
+    void fetchAdminDirectory().then((dir) => {
+      if (dir) setLive(dir.providers);
+    });
+  }, []);
+
+  const source = live ?? PROVIDERS;
+  const rows = source.filter((p) => {
+    const status = p.status.toLowerCase();
+    if (tab === "Live") return status === "live";
+    if (tab === "Applications") return status === "applied" || status.includes("application");
+    if (tab === "Paused") return status === "paused";
+    return true;
+  });
 
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <FilterChips
-          items={["Live · 68", "Applications · 9", "Paused · 2"]}
+          items={["All", "Live", "Applications", "Paused"]}
           active={tab}
           onChange={setTab}
         />
@@ -49,7 +66,7 @@ export function ProvidersPage() {
               </tr>
             </thead>
             <tbody>
-              {PROVIDERS.map((p) => (
+              {rows.map((p) => (
                 <tr key={p.slug} className="border-t border-border">
                   <Td>
                     <Link
@@ -76,7 +93,7 @@ export function ProvidersPage() {
           </table>
         </div>
         <p className="border-t border-border px-5 py-3 type-caption text-muted-foreground">
-          Showing 7 of 68 · sorted by issues first
+          {live ? `Showing ${rows.length} providers from the database` : "Showing sample providers"}
         </p>
       </Panel>
 

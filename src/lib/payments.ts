@@ -36,6 +36,15 @@ export async function createPaymentIntent(args: {
   return asIntent(data);
 }
 
+/** Demo subscription: grants the plan's monthly coins. No card or M-Pesa charge. */
+export async function activateDemoPlan(tier: TierId) {
+  const { data, error } = await supabase.rpc("activate_demo_plan" as never, {
+    p_tier: tier,
+  } as never);
+  if (error) throw new Error(error.message);
+  return data as { ok: boolean; coins: number; priceKsh: number };
+}
+
 export async function updatePaymentStatus(
   id: string,
   status: "pending" | "processing" | "succeeded" | "failed" | "cancelled",

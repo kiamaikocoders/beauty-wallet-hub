@@ -35,8 +35,11 @@ const AREAS = ["Westlands", "Kilimani", "Karen", "Lavington", "Kileleshwa", "CBD
 function PreferencesPage() {
   const navigate = useNavigate();
   const existing = loadOnboarding();
-  const [services, setServices] = useState<string[]>(existing.services);
-  const [areas, setAreas] = useState<string[]>(existing.areas);
+  const savedServices =
+    existing.services.join("|") === "Braids and locs|Nails|Skin and facials" ? [] : existing.services;
+  const savedAreas = existing.areas.join("|") === "Kilimani" ? [] : existing.areas;
+  const [services, setServices] = useState<string[]>(savedServices);
+  const [areas, setAreas] = useState<string[]>(savedAreas);
   const [bookingSms, setBookingSms] = useState(existing.reminders.bookingSms);
   const [coinsAlerts, setCoinsAlerts] = useState(existing.reminders.coinsAlerts);
   const [offers, setOffers] = useState(existing.reminders.offers);

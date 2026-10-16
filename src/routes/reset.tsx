@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth/AuthSplit";
 import { Field, TextInput } from "@/components/site/auth/auth-fields";
 import { Icon, buttonClass } from "@/components/site/primitives";
 import { updatePassword } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/reset")({
@@ -25,6 +26,7 @@ function ResetPage() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [busy, setBusy] = useState(false);
+  const [sessionReady, setSessionReady] = useState<boolean | null>(null);
 
   const rules = useMemo(
     () => [
@@ -35,8 +37,33 @@ function ResetPage() {
     [password, confirm],
   );
 
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const accessToken = hash.get("access_token");
+      const refreshToken = hash.get("refresh_token");
+      if (code) {
+        await supabase.auth.exchangeCodeForSession(code);
+      } else if (accessToken && refreshToken) {
+        await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+      }
+      const { data } = await supabase.auth.getSession();
+      if (!cancelled) setSessionReady(Boolean(data.session));
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!sessionReady) {
+      toast.error("Open the reset link from your email. This page has no recovery session.");
+      return;
+    }
     if (!rules.every((r) => r.ok)) {
       toast.error("Meet all password rules first.");
       return;
@@ -56,7 +83,11 @@ function ResetPage() {
     <form onSubmit={onSubmit} className="flex flex-col gap-[22px]">
       <AuthHeading
         title="Choose a new password"
-        body="Use at least 8 characters. You’ll be signed out on other devices."
+        body={
+          sessionReady
+            ? "Use at least 8 characters. You’ll be signed out on other devices."
+            : "Open the reset link in the Supabase email. A direct visit to this page cannot change a password."
+        }
       />
       <Field label="New password">
         <TextInput

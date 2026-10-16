@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { Logo, buttonClass } from "@/components/site/primitives";
+import { signUpWithEmail } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { setTeamsHrSession } from "@/lib/teams-demo";
 import { ksh, type TierId } from "@/lib/pricing";
@@ -17,10 +18,11 @@ const TIER_META: Record<TierId, { coins: number; price: number }> = {
 export function TeamsSignup() {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>("company");
-  const [company, setCompany] = useState("Savannah Logistics Ltd");
-  const [hrName, setHrName] = useState("Lucy Njambi");
-  const [phone, setPhone] = useState("0722 456 789");
-  const [email, setEmail] = useState("hr@savannahlogistics.co.ke");
+  const [company, setCompany] = useState("");
+  const [hrName, setHrName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [agreed, setAgreed] = useState(true);
   const [seats, setSeats] = useState({ basic: 6, intermediate: 8, premium: 2 });
   const [payMethod, setPayMethod] = useState<"mpesa" | "card">("mpesa");
@@ -39,6 +41,11 @@ export function TeamsSignup() {
     setBusy(true);
     setError("");
     try {
+      if (password.length < 8 || !/\d/.test(password)) {
+        throw new Error("Use a password with at least 8 characters and one number.");
+      }
+      const signedUp = await signUpWithEmail(email, password, hrName, phone);
+      if (signedUp.error) throw signedUp.error;
       const { error: rpcError } = await supabase.rpc(
         "teams_signup_company" as never,
         {
@@ -49,10 +56,10 @@ export function TeamsSignup() {
         } as never,
       );
       if (rpcError) throw rpcError;
+      setTeamsHrSession(true);
       setStep("seats");
-    } catch {
-      // Demo path: continue even if RPC fails (e.g. duplicate)
-      setStep("seats");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not create the company account");
     } finally {
       setBusy(false);
     }
@@ -75,8 +82,7 @@ export function TeamsSignup() {
                   type="button"
                   className="type-body-s-semibold text-burgundy"
                   onClick={() => {
-                    setTeamsHrSession(true);
-                    void navigate({ to: "/teams", search: { hr: "1" } });
+                    void navigate({ to: "/sign-in" });
                   }}
                 >
                   Sign in
@@ -91,8 +97,8 @@ export function TeamsSignup() {
               <div>
                 <h1 className="type-h1">Set up your team</h1>
                 <p className="type-body-l mt-2.5 text-muted-foreground">
-                  For companies paying for staff. Takes about three minutes. We text a code to
-                  confirm your phone.
+                  For companies paying for staff. You sign in with this work email and password.
+                  The first invoice stays a demo until M-Pesa billing is live.
                 </p>
               </div>
               {(
@@ -101,6 +107,7 @@ export function TeamsSignup() {
                   ["Your name", hrName, setHrName],
                   ["Your phone number", phone, setPhone],
                   ["Work email", email, setEmail],
+                  ["Password", password, setPassword],
                 ] as const
               ).map(([label, value, set]) => (
                 <label key={label} className="flex flex-col gap-2">
@@ -109,7 +116,18 @@ export function TeamsSignup() {
                     required
                     value={value}
                     onChange={(e) => set(e.target.value)}
-                    type={label.includes("email") ? "email" : "text"}
+                    type={label.includes("email") ? "email" : label === "Password" ? "password" : "text"}
+                    placeholder={
+                      label === "Company name"
+                        ? "Savannah Logistics Ltd"
+                        : label === "Your name"
+                          ? "Lucy Njambi"
+                          : label === "Your phone number"
+                            ? "0722 456 789"
+                            : label === "Work email"
+                              ? "hr@savannahlogistics.co.ke"
+                              : "At least 8 characters and a number"
+                    }
                     className="min-h-[52px] rounded-md border border-border bg-card px-4 type-body-m outline-none focus:border-foreground"
                   />
                 </label>
@@ -288,7 +306,7 @@ export function TeamsSignup() {
                 <label className="mt-6 flex flex-col gap-2">
                   <span className="type-body-s-medium">M-Pesa phone number</span>
                   <input
-                    defaultValue="0712 345 678"
+                    placeholder="0712 345 678"
                     className="min-h-[52px] rounded-md border border-border bg-card px-4 type-body-m outline-none"
                   />
                   <span className="type-caption text-muted-foreground">

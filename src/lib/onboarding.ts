@@ -2,10 +2,14 @@ import type { TierId } from "./pricing";
 
 const KEY = "bw_onboarding";
 
+export type Gender = "male" | "female" | "rather_not_say";
+
 export type OnboardingState = {
   fullName: string;
   phone: string;
   email: string;
+  password: string;
+  gender: Gender | "";
   phoneVerified: boolean;
   emailVerified: boolean;
   emailCodeToken: string;
@@ -30,13 +34,15 @@ export const DEFAULT_ONBOARDING: OnboardingState = {
   fullName: "",
   phone: "",
   email: "",
+  password: "",
+  gender: "",
   phoneVerified: false,
   emailVerified: false,
   emailCodeToken: "",
   emailCodeExp: 0,
   tier: "intermediate",
-  services: ["Braids and locs", "Nails", "Skin and facials"],
-  areas: ["Kilimani"],
+  services: [],
+  areas: [],
   reminders: {
     bookingSms: true,
     coinsAlerts: true,

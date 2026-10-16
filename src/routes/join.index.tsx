@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth/AuthSplit";
 import { AuthCheckbox, Field, TextInput } from "@/components/site/auth/auth-fields";
+import type { Gender } from "@/lib/onboarding";
 import { buttonClass } from "@/components/site/primitives";
 import { firstName, loadOnboarding, saveOnboarding } from "@/lib/onboarding";
 import { sendEmailCode } from "@/lib/resend";
@@ -28,10 +29,16 @@ function JoinPage() {
   const navigate = useNavigate();
   const search = Route.useSearch();
   const existing = loadOnboarding();
-  const [fullName, setFullName] = useState(existing.fullName || "Amani Wanjiru");
-  const [phone, setPhone] = useState(existing.phone || "0712 345 678");
-  const [email, setEmail] = useState(existing.email || "amani@example.com");
-  const [agreed, setAgreed] = useState(true);
+  const [fullName, setFullName] = useState(
+    existing.fullName === "Amani Wanjiru" ? "" : existing.fullName,
+  );
+  const [phone, setPhone] = useState(existing.phone === "0712 345 678" ? "" : existing.phone);
+  const [email, setEmail] = useState(
+    existing.email === "amani@example.com" ? "" : existing.email,
+  );
+  const [password, setPassword] = useState("");
+  const [gender, setGender] = useState<Gender | "">(existing.gender);
+  const [agreed, setAgreed] = useState(false);
   const [busy, setBusy] = useState(false);
 
   async function onSubmit(e: FormEvent) {
@@ -52,6 +59,14 @@ function JoinPage() {
       toast.error("Enter a valid email.");
       return;
     }
+    if (password.length < 8 || !/\d/.test(password)) {
+      toast.error("Use a password with at least 8 characters and one number.");
+      return;
+    }
+    if (gender !== "male" && gender !== "female" && gender !== "rather_not_say") {
+      toast.error("Choose a gender option.");
+      return;
+    }
 
     setBusy(true);
     const tier =
@@ -64,6 +79,8 @@ function JoinPage() {
       fullName: fullName.trim(),
       phone: phone.trim(),
       email: trimmedEmail,
+      password,
+      gender,
       mpesaPhone: phone.trim(),
       tier: tier ?? "intermediate",
       step: "verify",
@@ -96,6 +113,7 @@ function JoinPage() {
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           autoComplete="name"
+          placeholder="Amani Wanjiru"
         />
       </Field>
       <Field label="Phone number">
@@ -104,6 +122,7 @@ function JoinPage() {
           onChange={(e) => setPhone(e.target.value)}
           inputMode="tel"
           autoComplete="tel"
+          placeholder="0712 345 678"
         />
       </Field>
       <Field label="Email">
@@ -112,6 +131,43 @@ function JoinPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
+          placeholder="amani@example.com"
+        />
+      </Field>
+      <fieldset className="flex flex-col gap-2">
+        <legend className="type-body-s-medium text-foreground">Gender</legend>
+        <div className="grid gap-2 sm:grid-cols-3">
+          {(
+            [
+              ["male", "Male"],
+              ["female", "Female"],
+              ["rather_not_say", "Rather not say"],
+            ] as const
+          ).map(([value, label]) => (
+            <label
+              key={value}
+              className="flex min-h-11 cursor-pointer items-center gap-2 rounded-md border border-border bg-card px-3"
+            >
+              <input
+                type="radio"
+                name="gender"
+                value={value}
+                checked={gender === value}
+                onChange={() => setGender(value)}
+                className="accent-burgundy"
+              />
+              <span className="type-body-s">{label}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <Field label="Password">
+        <TextInput
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="new-password"
+          placeholder="At least 8 characters and a number"
         />
       </Field>
       <AuthCheckbox checked={agreed} onChange={setAgreed}>

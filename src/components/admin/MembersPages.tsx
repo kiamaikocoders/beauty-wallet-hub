@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { buttonClass, TierBadge } from "@/components/site/primitives";
 import { MEMBER_DETAIL, MEMBERS } from "@/lib/admin-seed";
 import { adminAdjustCoins } from "@/lib/admin-api";
+import { fetchAdminDirectory, type LiveMember } from "@/lib/admin-live";
 import { statusTone } from "./nav";
 import {
   CardPanel,
@@ -19,6 +20,30 @@ import {
 
 export function MembersPage() {
   const [filter, setFilter] = useState("All");
+  const [live, setLive] = useState<LiveMember[] | null>(null);
+
+  useEffect(() => {
+    void fetchAdminDirectory().then((dir) => {
+      if (dir) setLive(dir.members);
+    });
+  }, []);
+
+  const rows = (live ?? MEMBERS.map((m) => ({
+    id: m.id,
+    name: m.name,
+    area: m.area,
+    plan: m.plan,
+    available: Number(String(m.available).replace(/,/g, "")) || 0,
+    onHold: Number(String(m.onHold).replace(/,/g, "")) || 0,
+    visits: Number(m.visits) || 0,
+    renews: m.renews,
+    status: m.status,
+    email: null,
+  }))).filter((m) => {
+    if (filter === "All") return true;
+    if (filter === "Renewal issues") return m.status.includes("fail") || m.status.toLowerCase().includes("renewal");
+    return m.plan === filter.toLowerCase();
+  });
 
   return (
     <div className="flex flex-col gap-5">
@@ -62,11 +87,15 @@ export function MembersPage() {
               </tr>
             </thead>
             <tbody>
-              {MEMBERS.map((m) => (
+              {rows.map((m) => (
                 <tr key={m.id} className="border-t border-border">
                   <Td>
                     <Link to="/admin/members/$id" params={{ id: m.id }}>
-                      <MemberCell name={m.name} area={m.area} initials={m.initials} />
+                      <MemberCell
+                      name={m.name}
+                      area={m.area}
+                      initials={m.name.slice(0, 2).toUpperCase()}
+                    />
                     </Link>
                   </Td>
                   <Td>
@@ -91,7 +120,15 @@ export function MembersPage() {
 
 export function MemberDetailPage({ id }: { id: string }) {
   const m = MEMBER_DETAIL;
+  const [liveName, setLiveName] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    void fetchAdminDirectory().then((dir) => {
+      const row = dir?.members.find((member) => member.id === id);
+      if (row) setLiveName(`${row.name} · ${row.email ?? "no email"} · ${row.available} coins · ${row.status}`);
+    });
+  }, [id]);
   const [mode, setMode] = useState<"add" | "remove">("add");
   const [coins, setCoins] = useState(String(m.adjust.coins));
   const [reason, setReason] = useState(m.adjust.reason);
@@ -120,6 +157,9 @@ export function MemberDetailPage({ id }: { id: string }) {
       <Link to="/admin/members" className="type-body-s-semibold text-burgundy">
         ← Members
       </Link>
+      {liveName ? (
+        <p className="type-body-s text-foreground">Live account: {liveName}</p>
+      ) : null}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-2">

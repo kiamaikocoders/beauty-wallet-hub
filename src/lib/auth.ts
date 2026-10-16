@@ -65,12 +65,29 @@ export async function fetchAdminSession(): Promise<{
   };
 }
 
-export async function signUpWithEmail(email: string, password: string, fullName: string) {
-  return supabase.auth.signUp({
+export async function signUpWithEmail(
+  email: string,
+  password: string,
+  fullName: string,
+  phone?: string,
+  gender?: string,
+) {
+  const { data, error } = await supabase.auth.signUp({
     email: email.trim(),
     password,
-    options: { data: { full_name: fullName } },
+    options: {
+      data: {
+        full_name: fullName,
+        ...(phone ? { phone } : {}),
+        ...(gender ? { gender } : {}),
+      },
+    },
   });
+  if (error) return { data, error };
+  if (!data.session) {
+    return supabase.auth.signInWithPassword({ email: email.trim(), password });
+  }
+  return { data, error: null };
 }
 
 export async function sendEmailVerification(email: string) {

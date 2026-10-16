@@ -42,7 +42,7 @@ function BookTime() {
   }, []);
   const [dayIdx, setDayIdx] = useState(5);
   const [time, setTime] = useState("10:00");
-  const [stylist, setStylist] = useState("Wanjiku");
+  const [stylist, setStylist] = useState("Any stylist");
   const [addons, setAddons] = useState<string[]>([]);
   const [slotTaken, setSlotTaken] = useState(false);
 

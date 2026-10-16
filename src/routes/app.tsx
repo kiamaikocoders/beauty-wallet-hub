@@ -45,6 +45,15 @@ function AppLayout() {
     };
   }, [demo, tick]);
 
+  if (member && !member.tier && !demo) {
+    if (typeof window !== "undefined") window.location.href = "/join/plan";
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-background">
+        <p className="type-body-m text-muted-foreground">Choose a plan to open your wallet…</p>
+      </main>
+    );
+  }
+
   if (member === undefined) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-background">

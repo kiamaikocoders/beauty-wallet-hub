@@ -32,7 +32,9 @@ function TopUpPage() {
     search.coins && PACKS.includes(search.coins) ? search.coins : 250,
   );
   const [method, setMethod] = useState<"mpesa" | "card">("mpesa");
-  const [phone, setPhone] = useState(member?.phone ?? "0712 345 678");
+  const [phone, setPhone] = useState(
+    member?.phone && member.phone !== "0712 345 678" ? member.phone : "",
+  );
   const [busy, setBusy] = useState(false);
 
   if (!member) return null;
@@ -88,6 +90,7 @@ function TopUpPage() {
           <input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            placeholder="0712 345 678"
             className="mt-2 w-full rounded-xl border border-border bg-card px-4 py-3 type-body-m"
           />
         </label>

@@ -1,8 +1,11 @@
 import { useState, type FormEvent } from "react";
+import { toast } from "sonner";
 import { buttonClass } from "@/components/site/primitives";
+import { supabase } from "@/integrations/supabase/client";
 import type { TeamsSeat } from "@/lib/teams-demo";
 import type { TierId } from "@/lib/pricing";
 import { ksh } from "@/lib/pricing";
+import { notifyEmail } from "@/lib/resend";
 import { cn } from "@/lib/utils";
 import { initialsAvatar } from "./TeamsShell";
 
@@ -38,9 +41,43 @@ const TIERS: { id: TierId; label: string; detail: string }[] = [
 export function InviteSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [tier, setTier] = useState<TierId>("intermediate");
   const [sent, setSent] = useState(false);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [team, setTeam] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  function onSubmit(e: FormEvent) {
+  async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    setBusy(true);
+    const { data, error } = await supabase.rpc(
+      "teams_invite_seat" as never,
+      {
+        p_full_name: name,
+        p_phone: phone,
+        p_tier: tier,
+        p_team_name: team || null,
+      } as never,
+    );
+    setBusy(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    const code = (data as { code?: string } | null)?.code;
+    if (email.includes("@") && code) {
+      notifyEmail({
+        to: email.trim(),
+        template: "welcome",
+        data: {
+          firstName: name.split(" ")[0] || name,
+          fullName: name,
+          email,
+          ctaUrl: `${window.location.origin}/join/${code}`,
+          message: "Your company invited you to Beauty Wallet. Open the link and join with your phone.",
+        },
+      });
+    }
     setSent(true);
   }
 
@@ -48,7 +85,7 @@ export function InviteSheet({ open, onClose }: { open: boolean; onClose: () => v
     <Sheet open={open} title="Invite staff" onClose={onClose}>
       {sent ? (
         <div className="flex flex-col gap-4">
-          <p className="type-body-m">Invite sent. They’ll get an SMS with a join link.</p>
+          <p className="type-body-m">Invite saved. We emailed a join link. Text invites start when SMS is connected.</p>
           <button
             type="button"
             className={buttonClass({ variant: "primary", full: true })}
@@ -60,8 +97,7 @@ export function InviteSheet({ open, onClose }: { open: boolean; onClose: () => v
       ) : (
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           <p className="type-body-s text-muted-foreground">
-            We text them a link. They join with their phone and their coins are ready. No card
-            needed.
+            We email a join link. They confirm with their phone. Coins start when the company invoice is marked paid.
           </p>
           <label className="flex flex-col gap-2">
             <span className="type-body-s-medium">Phone number</span>
@@ -71,6 +107,8 @@ export function InviteSheet({ open, onClose }: { open: boolean; onClose: () => v
               </span>
               <input
                 required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 className="min-h-[52px] flex-1 rounded-md border border-border bg-card px-4 type-body-m outline-none focus:border-foreground"
                 placeholder="0727 614 090"
               />
@@ -80,13 +118,28 @@ export function InviteSheet({ open, onClose }: { open: boolean; onClose: () => v
             <span className="type-body-s-medium">Full name</span>
             <input
               required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="min-h-[52px] rounded-md border border-border bg-card px-4 type-body-m outline-none focus:border-foreground"
               placeholder="Ruth Chepkoech"
             />
           </label>
           <label className="flex flex-col gap-2">
+            <span className="type-body-s-medium">Email</span>
+            <input
+              required
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="min-h-[52px] rounded-md border border-border bg-card px-4 type-body-m outline-none focus:border-foreground"
+              placeholder="ruth@company.co.ke"
+            />
+          </label>
+          <label className="flex flex-col gap-2">
             <span className="type-body-s-medium">Team (optional)</span>
             <input
+              value={team}
+              onChange={(e) => setTeam(e.target.value)}
               className="min-h-[52px] rounded-md border border-border bg-card px-4 type-body-m outline-none focus:border-foreground"
               placeholder="Customer care"
             />
@@ -127,7 +180,7 @@ export function InviteSheet({ open, onClose }: { open: boolean; onClose: () => v
             >
               Cancel
             </button>
-            <button type="submit" className={buttonClass({ variant: "emphasis", full: true })}>
+            <button type="submit" disabled={busy} className={buttonClass({ variant: "emphasis", full: true })}>
               Send invite
             </button>
           </div>

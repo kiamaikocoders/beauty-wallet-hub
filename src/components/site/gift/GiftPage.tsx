@@ -54,7 +54,7 @@ export function GiftPage({ rules }: { rules: CoinRules }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("Happy birthday! Book something lovely on me.");
+  const [message, setMessage] = useState("");
   const [when, setWhen] = useState<"now" | "date">("now");
   const [from, setFrom] = useState("");
   const [payWith, setPayWith] = useState<"mpesa" | "card">("mpesa");
@@ -184,6 +184,7 @@ export function GiftPage({ rules }: { rules: CoinRules }) {
                 value={message}
                 maxLength={160}
                 onChange={(e) => setMessage(e.target.value)}
+                placeholder="Happy birthday! Book something lovely on me."
                 rows={3}
                 className="min-h-[112px] w-full resize-none rounded-md bg-transparent px-[17px] py-[17px] type-body-m text-foreground outline-none"
               />

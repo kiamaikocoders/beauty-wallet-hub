@@ -12,7 +12,7 @@ import {
   renewalDate,
   saveOnboarding,
 } from "@/lib/onboarding";
-import { createPaymentIntent, updatePaymentStatus } from "@/lib/payments";
+import { activateDemoPlan, createPaymentIntent, updatePaymentStatus } from "@/lib/payments";
 import { ksh, num, type TierId } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +42,7 @@ function PayPage() {
 
   const [method, setMethod] = useState<"mpesa" | "card">(onboarding.paymentMethod);
   const [mpesaPhone, setMpesaPhone] = useState(
-    onboarding.mpesaPhone || onboarding.phone || "0712 345 678",
+    onboarding.mpesaPhone || onboarding.phone || "",
   );
   const [cardName, setCardName] = useState(onboarding.fullName || "");
   const [cardNumber, setCardNumber] = useState("");
@@ -77,6 +77,7 @@ function PayPage() {
   async function completeSuccess(id: string) {
     try {
       const row = await updatePaymentStatus(id, "succeeded");
+      await activateDemoPlan(tier);
       saveOnboarding({
         paymentStatus: "succeeded",
         paymentRef: row.reference,
@@ -286,6 +287,7 @@ function PayPage() {
                   value={mpesaPhone}
                   onChange={(e) => setMpesaPhone(e.target.value)}
                   inputMode="tel"
+                  placeholder="0712 345 678"
                 />
               </Field>
               <div className="flex items-start gap-3 rounded-md bg-info-bg px-3.5 py-3.5">

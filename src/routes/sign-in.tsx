@@ -6,6 +6,7 @@ import { Field, OtpInput, Segmented, TextInput } from "@/components/site/auth/au
 import { buttonClass } from "@/components/site/primitives";
 import { fetchSignedInRole, signInWithEmail, verifyPhoneOtp } from "@/lib/auth";
 import { displayPhone } from "@/lib/onboarding";
+import { setTeamsHrSession } from "@/lib/teams-demo";
 
 export const Route = createFileRoute("/sign-in")({
   validateSearch: (s: Record<string, unknown>): { as?: string } => {
@@ -28,9 +29,9 @@ function SignInPage() {
   const navigate = useNavigate();
   const search = Route.useSearch();
   const preferAdmin = search.as === "admin";
-  const [mode, setMode] = useState<"phone" | "email">(preferAdmin ? "email" : "phone");
-  const [phone, setPhone] = useState("0712 345 678");
-  const [email, setEmail] = useState(preferAdmin ? "beautywalletke@gmail.com" : "");
+  const [mode, setMode] = useState<"phone" | "email">("email");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [code, setCode] = useState("");
@@ -77,6 +78,11 @@ function SignInPage() {
       void navigate({ to: "/admin/2fa" });
       return;
     }
+    if (role === "hr") {
+      setTeamsHrSession(true);
+      window.location.href = "/teams?hr=1";
+      return;
+    }
     if (role === "provider" || search.as === "provider") {
       window.location.href = "/provider";
       return;
@@ -109,7 +115,12 @@ function SignInPage() {
       ) : (
         <>
           <Field label="Email">
-            <TextInput type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <TextInput
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder={preferAdmin ? "beautywalletke@gmail.com" : "you@email.com"}
+            />
           </Field>
           <Field label="Password">
             <TextInput
@@ -246,6 +257,7 @@ function SignInPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    placeholder={preferAdmin ? "beautywalletke@gmail.com" : "you@email.com"}
                   />
                 </Field>
                 <Field label="Password">

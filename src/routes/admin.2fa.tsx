@@ -5,6 +5,7 @@ import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth
 import { AuthCheckbox, OtpInput } from "@/components/site/auth/auth-fields";
 import { Icon, buttonClass } from "@/components/site/primitives";
 import { supabase } from "@/integrations/supabase/client";
+import { sendEmailCode, verifyEmailCode } from "@/lib/resend";
 
 export const Route = createFileRoute("/admin/2fa")({
   head: () => ({
@@ -12,7 +13,7 @@ export const Route = createFileRoute("/admin/2fa")({
       { title: "Two-step verification — Beauty Wallet Admin" },
       {
         name: "description",
-        content: "Enter the 6-digit code from your authenticator app.",
+        content: "Enter the 6-digit code we emailed to your admin account.",
       },
     ],
   }),
@@ -23,30 +24,56 @@ function Admin2faPage() {
   const [code, setCode] = useState("");
   const [trust, setTrust] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [email, setEmail] = useState("beautywalletke@gmail.com");
+  const [email, setEmail] = useState("");
+  const [ticket, setTicket] = useState<{ token: string; exp: number } | null>(null);
 
   useEffect(() => {
-    void supabase.auth.getUser().then(({ data }) => {
-      const next = data.user?.email?.trim();
-      if (next) setEmail(next);
-    });
+    let cancelled = false;
+    void (async () => {
+      const { data } = await supabase.auth.getUser();
+      const next = data.user?.email?.trim() ?? "";
+      if (!next || cancelled) {
+        if (!cancelled && !next) window.location.href = "/sign-in?as=admin";
+        return;
+      }
+      setEmail(next);
+      const sent = await sendEmailCode({ data: { email: next, firstName: "Admin" } });
+      if (cancelled) return;
+      if (!sent.ok || !sent.token || !sent.exp) {
+        toast.error(sent.error ?? "Could not email your admin code");
+        return;
+      }
+      setTicket({ token: sent.token, exp: sent.exp });
+      toast.success(`Code sent to ${next}`);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  function onSubmit(e?: FormEvent) {
+  async function onSubmit(e?: FormEvent) {
     e?.preventDefault();
+    if (!ticket || !email) {
+      toast.error("Wait for the email code, or sign in again.");
+      return;
+    }
     if (code.length < 6) {
-      toast.error("Enter the 6-digit authenticator code.");
+      toast.error("Enter the 6-digit code from your email.");
       return;
     }
     setBusy(true);
-    // Admin TOTP is not wired to a real MFA factor yet — accept any 6 digits for the UI flow.
-    window.setTimeout(() => {
-      setBusy(false);
-      if (trust && typeof window !== "undefined") {
-        localStorage.setItem("bw_admin_trusted", "1");
-      }
-      window.location.href = "/admin";
-    }, 600);
+    const result = await verifyEmailCode({
+      data: { email, code, token: ticket.token, exp: ticket.exp },
+    });
+    setBusy(false);
+    if (!result.ok) {
+      toast.error(result.error === "expired" ? "That code expired. Refresh to send a new one." : "That code didn’t match.");
+      return;
+    }
+    if (trust && typeof window !== "undefined") {
+      localStorage.setItem("bw_admin_trusted", "1");
+    }
+    window.location.href = "/admin";
   }
 
   const form = (
@@ -56,7 +83,11 @@ function Admin2faPage() {
       </div>
       <AuthHeading
         title="Two-step verification"
-        body={`Enter the 6-digit code from your authenticator app for ${email}.`}
+        body={
+          email
+            ? `Enter the 6-digit code we emailed to ${email}. Authenticator apps come later.`
+            : "Sending a code to your admin email."
+        }
       />
       <OtpInput value={code} onChange={setCode} />
       <AuthCheckbox checked={trust} onChange={setTrust}>
@@ -109,7 +140,7 @@ function Admin2faPage() {
         </div>
         <AuthHeading
           title="Two-step verification"
-          body={`Enter the code from your authenticator for ${email}.`}
+          body={email ? `Enter the code we emailed to ${email}.` : "Sending your admin code."}
         />
         <OtpInput value={code} onChange={setCode} />
         <AuthCheckbox checked={trust} onChange={setTrust}>

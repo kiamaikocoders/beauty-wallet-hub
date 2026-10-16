@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { buttonClass } from "@/components/site/primitives";
 import { TierBadge } from "@/components/site/primitives";
 import { OVERVIEW } from "@/lib/admin-seed";
+import { fetchAdminDirectory } from "@/lib/admin-live";
 import { AdminIcon, CardPanel, Panel, SectionTitle, StatCard } from "./ui";
 
 const attentionIcons: Record<string, string> = {
@@ -12,6 +14,17 @@ const attentionIcons: Record<string, string> = {
 };
 
 export function OverviewPage() {
+  const [liveMembers, setLiveMembers] = useState<number | null>(null);
+  const [liveBookings, setLiveBookings] = useState<number | null>(null);
+
+  useEffect(() => {
+    void fetchAdminDirectory().then((dir) => {
+      if (!dir) return;
+      setLiveMembers(dir.stats.members);
+      setLiveBookings(dir.stats.bookingsThisMonth);
+    });
+  }, []);
+
   const maxVisits = Math.max(...OVERVIEW.visitsPerDay.map((d) => d.count));
   const maxPlan = Math.max(...OVERVIEW.membersByPlan.map((p) => p.count));
 
@@ -47,7 +60,13 @@ export function OverviewPage() {
           <StatCard
             key={s.label}
             label={s.label}
-            value={s.value}
+            value={
+              s.label === "Active members" && liveMembers !== null
+                ? liveMembers.toLocaleString("en-KE")
+                : s.label.startsWith("Visits") && liveBookings !== null
+                  ? liveBookings.toLocaleString("en-KE")
+                  : s.value
+            }
             delta={s.delta}
             deltaTone={s.deltaTone}
           />

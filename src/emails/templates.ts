@@ -158,19 +158,22 @@ export function renderEmail(name: EmailName, input?: TemplateInput): EmailPayloa
 
     case "verify":
       return {
-        subject: "Confirm your email address",
+        subject: `${d.code} is your Beauty Wallet code`,
         html: emailShell({
-          title: "Confirm your email",
+          eyebrow: "YOUR CODE",
+          title: "Enter this code to continue",
           bodyHtml:
-            p(`Tap the button to confirm ${d.email} for your Beauty Wallet account.`) +
+            p(`Use this code for ${d.email}. Text messages aren’t live yet, so we email it instead.`) +
             pHtml(
               `<span style="font-family:Georgia,serif;font-size:32px;letter-spacing:4px;color:#161417;">${d.code}</span>`,
             ) +
-            small("Or enter this code in the app. It expires in 30 minutes."),
-          cta: { label: "Confirm email", href: d.ctaUrl },
-          afterCtaHtml: small("Didn’t sign up? You can ignore this email."),
+            small("It expires in 10 minutes. Never share it, not even with our staff."),
+          afterCtaHtml: small("Didn’t ask for this? You can ignore this email."),
         }),
-        text: textFrom([`Confirm ${d.email}`, `Code: ${d.code}`, d.ctaUrl]),
+        text: textFrom([
+          `${d.code} is your Beauty Wallet code for ${d.email}.`,
+          "It expires in 10 minutes. Never share it.",
+        ]),
       };
 
     case "password-reset":

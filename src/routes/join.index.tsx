@@ -4,8 +4,8 @@ import { toast } from "sonner";
 import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth/AuthSplit";
 import { AuthCheckbox, Field, TextInput } from "@/components/site/auth/auth-fields";
 import { buttonClass } from "@/components/site/primitives";
-import { sendPhoneOtp } from "@/lib/auth";
-import { loadOnboarding, saveOnboarding } from "@/lib/onboarding";
+import { firstName, loadOnboarding, saveOnboarding } from "@/lib/onboarding";
+import { sendEmailCode } from "@/lib/resend";
 
 export const Route = createFileRoute("/join/")({
   validateSearch: (s: Record<string, unknown>): { plan?: string } => {
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/join/")({
       { title: "Create your account — Beauty Wallet" },
       {
         name: "description",
-        content: "It takes about two minutes. We text a code to confirm your phone.",
+        content: "It takes about two minutes. We email a code to confirm your address.",
       },
     ],
   }),
@@ -59,21 +59,32 @@ function JoinPage() {
         ? search.plan
         : existing.tier;
 
+    const trimmedEmail = email.trim().toLowerCase();
     saveOnboarding({
       fullName: fullName.trim(),
       phone: phone.trim(),
-      email: email.trim(),
+      email: trimmedEmail,
       mpesaPhone: phone.trim(),
       tier: tier ?? "intermediate",
       step: "verify",
+      emailVerified: false,
     });
 
-    const { error } = await sendPhoneOtp(phone);
+    const sent = await sendEmailCode({
+      data: { email: trimmedEmail, firstName: firstName(fullName) },
+    });
     setBusy(false);
-    if (error) {
-      toast.message("We couldn’t send an SMS yet", {
-        description: `${error.message}. You can still continue — enter any 6-digit code to keep going in this demo.`,
+    if (!sent.ok || !sent.token || !sent.exp) {
+      toast.error(sent.error ?? "We couldn’t email your code. Try again.");
+      return;
+    }
+    saveOnboarding({ emailCodeToken: sent.token, emailCodeExp: sent.exp });
+    if (sent.skipped) {
+      toast.message("Email isn’t configured on this server", {
+        description: "Add RESEND_API_KEY so the code can be delivered.",
       });
+    } else {
+      toast.success(`Code sent to ${trimmedEmail}`);
     }
     void navigate({ to: "/join/verify" });
   }
@@ -137,7 +148,7 @@ function JoinPage() {
             <AuthHeading
               eyebrow="Step 1 of 4 · Account"
               title="Create your account"
-              body="It takes about two minutes. We text a code to confirm your phone."
+              body="It takes about two minutes. We email a 6-digit code to confirm your address."
             />
             {formFields}
             <button
@@ -175,7 +186,7 @@ function JoinPage() {
       >
         <AuthHeading
           title="Create your account"
-          body="It takes about two minutes. We text a code to confirm your phone."
+          body="It takes about two minutes. We email a 6-digit code to confirm your address."
           mobileBody="It takes about two minutes."
         />
         <form onSubmit={onSubmit} className="flex flex-col gap-5">

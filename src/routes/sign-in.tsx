@@ -4,8 +4,8 @@ import { toast } from "sonner";
 import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth/AuthSplit";
 import { Field, OtpInput, Segmented, TextInput } from "@/components/site/auth/auth-fields";
 import { buttonClass } from "@/components/site/primitives";
-import { fetchSignedInRole, sendPhoneOtp, signInWithEmail, verifyPhoneOtp } from "@/lib/auth";
-import { displayPhone, saveOnboarding } from "@/lib/onboarding";
+import { fetchSignedInRole, signInWithEmail, verifyPhoneOtp } from "@/lib/auth";
+import { displayPhone } from "@/lib/onboarding";
 
 export const Route = createFileRoute("/sign-in")({
   validateSearch: (s: Record<string, unknown>): { as?: string } => {
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/sign-in")({
       { title: "Sign in — Beauty Wallet" },
       {
         name: "description",
-        content: "Sign in with your phone and we’ll text you a code.",
+        content: "Sign in with email and password. Text codes aren’t live yet.",
       },
     ],
   }),
@@ -38,18 +38,10 @@ function SignInPage() {
 
   async function sendCode(e?: FormEvent) {
     e?.preventDefault();
-    setBusy(true);
-    const { error } = await sendPhoneOtp(phone);
-    setBusy(false);
-    if (error) {
-      toast.message("Couldn’t send SMS", {
-        description: `${error.message}. You can still enter a code to continue in this demo.`,
-      });
-    } else {
-      toast.success("Code sent");
-    }
-    saveOnboarding({ phone });
-    setOtpSent(true);
+    toast.message("Text codes aren’t live yet", {
+      description: "Sign in with the email and password on your account.",
+    });
+    setMode("email");
   }
 
   async function verify(e?: FormEvent) {
@@ -104,19 +96,15 @@ function SignInPage() {
       />
       {mode === "phone" ? (
         <>
-          <Field label="Phone number">
-            <TextInput value={phone} onChange={(e) => setPhone(e.target.value)} inputMode="tel" />
-          </Field>
+          <p className="type-body-m text-muted-foreground">
+            Text codes aren’t connected yet. Sign in with the email and password on your account.
+          </p>
           <button
             type="submit"
-            disabled={busy}
             className={buttonClass({ variant: "emphasis", full: true })}
           >
-            {busy ? "Sending…" : "Send code"}
+            Use email sign-in
           </button>
-          <p className="text-center type-body-s text-muted-foreground">
-            Use email instead to sign in with a password.
-          </p>
         </>
       ) : (
         <>
@@ -188,7 +176,7 @@ function SignInPage() {
             <div className="flex flex-col gap-[22px]">
               <AuthHeading
                 title="Welcome back"
-                body="Sign in with your phone and we’ll text you a code."
+                body="Sign in with email and password. We’ll add text codes when SMS is live."
               />
               {phoneForm}
             </div>
@@ -218,7 +206,7 @@ function SignInPage() {
               onClick={() => void sendCode()}
               className={buttonClass({ variant: "emphasis", full: true })}
             >
-              {busy ? "Sending…" : "Send code"}
+              Use email sign-in
             </button>
           ) : (
             <button
@@ -236,8 +224,8 @@ function SignInPage() {
           <>
             <AuthHeading
               title="Welcome back"
-              body="Sign in with your phone and we’ll text you a code."
-              mobileBody="Sign in with your phone."
+              body="Sign in with email and password. Text codes aren’t live yet."
+              mobileBody="Use email until text codes are live."
             />
             <Segmented
               value={mode}
@@ -248,13 +236,9 @@ function SignInPage() {
               ]}
             />
             {mode === "phone" ? (
-              <Field label="Phone number">
-                <TextInput
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  inputMode="tel"
-                />
-              </Field>
+              <p className="type-body-m text-muted-foreground">
+                Text codes aren’t connected yet. Sign in with the email and password on your account.
+              </p>
             ) : (
               <>
                 <Field label="Email">

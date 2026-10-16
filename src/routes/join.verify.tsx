@@ -4,15 +4,16 @@ import { toast } from "sonner";
 import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth/AuthSplit";
 import { OtpInput, useResendTimer } from "@/components/site/auth/auth-fields";
 import { Icon, buttonClass } from "@/components/site/primitives";
-import { sendPhoneOtp, upsertProfileMetadata, verifyPhoneOtp } from "@/lib/auth";
-import { displayPhone, loadOnboarding, saveOnboarding } from "@/lib/onboarding";
+import { upsertProfileMetadata } from "@/lib/auth";
+import { firstName, loadOnboarding, saveOnboarding } from "@/lib/onboarding";
+import { sendEmailCode, verifyEmailCode } from "@/lib/resend";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/join/verify")({
   head: () => ({
     meta: [
-      { title: "Verify your phone — Beauty Wallet" },
-      { name: "description", content: "Enter the 6-digit code we sent to your phone." },
+      { title: "Verify your email — Beauty Wallet" },
+      { name: "description", content: "Enter the 6-digit code we emailed you." },
     ],
   }),
   component: VerifyPhonePage,
@@ -21,70 +22,88 @@ export const Route = createFileRoute("/join/verify")({
 function VerifyPhonePage() {
   const navigate = useNavigate();
   const onboarding = loadOnboarding();
-  const phone = onboarding.phone || "0712 345 678";
+  const email = onboarding.email;
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [triesLeft, setTriesLeft] = useState(3);
-  const [otpError, setOtpError] = useState<"wrong" | "expired" | null>(null);
+  const [ticket, setTicket] = useState({
+    token: onboarding.emailCodeToken,
+    exp: onboarding.emailCodeExp,
+  });
+  const [otpError, setOtpError] = useState<"wrong" | "expired" | null>(
+    ticket.exp > 0 && Date.now() > ticket.exp ? "expired" : null,
+  );
   const timer = useResendTimer(42);
 
   async function onVerify(e?: FormEvent) {
     e?.preventDefault();
+    if (!email.includes("@") || !ticket.token) {
+      toast.error("Start again so we can email you a code.");
+      void navigate({ to: "/join" });
+      return;
+    }
+    if (otpError === "expired" || Date.now() > ticket.exp) {
+      setOtpError("expired");
+      await onResend();
+      return;
+    }
     if (code.length < 6) {
       toast.error("Enter the 6-digit code.");
       return;
     }
-    if (otpError === "expired") {
-      toast.error("This code expired. Send a new one to continue.");
-      return;
-    }
 
     setBusy(true);
-    const { error } = await verifyPhoneOtp(phone, code);
+    const result = await verifyEmailCode({
+      data: {
+        email,
+        code,
+        token: ticket.token,
+        exp: ticket.exp,
+      },
+    });
     setBusy(false);
 
-    if (error) {
-      const msg = error.message.toLowerCase();
-      if (msg.includes("expired")) {
+    if (!result.ok) {
+      if (result.error === "expired") {
         setOtpError("expired");
         return;
       }
       const next = triesLeft - 1;
       setTriesLeft(next);
       setOtpError("wrong");
-      if (next <= 0) {
-        toast.error("Too many attempts. Request a new code.");
-      }
-      // Demo fallback: allow continuing when SMS provider isn't configured
-      if (msg.includes("sms") || msg.includes("provider") || msg.includes("disabled")) {
-        saveOnboarding({ phoneVerified: true, step: "email" });
-        void navigate({ to: "/join/email" });
-      }
+      if (next <= 0) toast.error("Too many attempts. Send a new code.");
       return;
     }
 
-    saveOnboarding({ phoneVerified: true, step: "email" });
+    saveOnboarding({ emailVerified: true, step: "email" });
     await upsertProfileMetadata({
       full_name: onboarding.fullName,
-      phone,
-      email: onboarding.email,
+      phone: onboarding.phone,
+      email,
       onboarding_step: "email",
     });
     void navigate({ to: "/join/email" });
   }
 
   async function onResend() {
+    if (!email.includes("@")) return;
     if (!timer.ready && otpError !== "expired") return;
+    setBusy(true);
+    const sent = await sendEmailCode({
+      data: { email, firstName: firstName(onboarding.fullName) },
+    });
+    setBusy(false);
+    if (!sent.ok || !sent.token || !sent.exp) {
+      toast.error(sent.error ?? "Couldn’t email a new code");
+      return;
+    }
+    saveOnboarding({ emailCodeToken: sent.token, emailCodeExp: sent.exp });
+    setTicket({ token: sent.token, exp: sent.exp });
     setOtpError(null);
     setTriesLeft(3);
     setCode("");
     timer.restart();
-    const { error } = await sendPhoneOtp(phone);
-    if (error) {
-      toast.message("Couldn’t resend SMS", { description: error.message });
-    } else {
-      toast.success("Code sent");
-    }
+    toast.success(`New code sent to ${email}`);
   }
 
   const errorBanner =
@@ -139,7 +158,7 @@ function VerifyPhonePage() {
         <AuthSplit
           topRight={
             <Link to="/join" className="type-body-s-semibold text-burgundy">
-              Change number
+              Change email
             </Link>
           }
           panelImage="/images/auth/verify-panel.jpg"
@@ -149,8 +168,8 @@ function VerifyPhonePage() {
           <div className="flex flex-col gap-[22px]">
             <AuthHeading
               eyebrow="Step 1 of 4 · Account"
-              title="Verify your phone"
-              body={`Enter the 6-digit code we sent to ${displayPhone(phone)}.`}
+              title="Check your email"
+              body={`Enter the 6-digit code we sent to ${email || "your email"}. Text messages aren’t live yet.`}
             />
             {form}
           </div>
@@ -175,7 +194,7 @@ function VerifyPhonePage() {
             </button>
             {otpError === "expired" ? (
               <Link to="/join" className="text-center type-body-s-semibold text-burgundy">
-                Change number
+                Change email
               </Link>
             ) : (
               <button
@@ -190,9 +209,9 @@ function VerifyPhonePage() {
         }
       >
         <AuthHeading
-          title="Verify your phone"
-          body={`Enter the 6-digit code we sent to ${displayPhone(phone)}.`}
-          mobileBody={`Enter the code we sent to ${displayPhone(phone)}.`}
+          title="Check your email"
+          body={`Enter the 6-digit code we sent to ${email || "your email"}.`}
+          mobileBody={`Code sent to ${email || "your email"}.`}
         />
         <OtpInput value={code} onChange={setCode} error={otpError === "wrong"} />
         {errorBanner}

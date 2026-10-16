@@ -8,6 +8,8 @@ export type OnboardingState = {
   email: string;
   phoneVerified: boolean;
   emailVerified: boolean;
+  emailCodeToken: string;
+  emailCodeExp: number;
   tier: TierId | null;
   services: string[];
   areas: string[];
@@ -30,6 +32,8 @@ export const DEFAULT_ONBOARDING: OnboardingState = {
   email: "",
   phoneVerified: false,
   emailVerified: false,
+  emailCodeToken: "",
+  emailCodeExp: 0,
   tier: "intermediate",
   services: ["Braids and locs", "Nails", "Skin and facials"],
   areas: ["Kilimani"],

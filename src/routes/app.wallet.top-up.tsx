@@ -4,7 +4,9 @@ import { toast } from "sonner";
 import { useMember } from "@/components/app/MemberContext";
 import { buttonClass } from "@/components/site/primitives";
 import { topUpCoins } from "@/lib/app-data";
+import { firstName } from "@/lib/onboarding";
 import { ksh, num } from "@/lib/pricing";
+import { notifyEmail } from "@/lib/resend";
 import { cn } from "@/lib/utils";
 
 const PACKS = [100, 250, 500];
@@ -113,7 +115,21 @@ function TopUpPage() {
         onClick={async () => {
           setBusy(true);
           try {
-            await topUpCoins({ coins: pack, method, phone, demo });
+            const result = await topUpCoins({ coins: pack, method, phone, demo });
+            if (member.email) {
+              notifyEmail({
+                to: member.email,
+                template: "top-up",
+                data: {
+                  firstName: firstName(member.fullName),
+                  coinsAdded: num(result.coins),
+                  amount: ksh(result.priceKsh),
+                  paidWith: method === "card" ? "Card" : `M-Pesa ${phone}`,
+                  walletNow: num(result.available),
+                  ctaUrl: `${window.location.origin}/app/wallet${demo ? `?demo=${demo}` : ""}`,
+                },
+              });
+            }
             refresh();
             toast.success(`${pack} coins added`);
             void navigate({

@@ -1,10 +1,11 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth/AuthSplit";
 import { Icon, buttonClass } from "@/components/site/primitives";
 import { sendEmailVerification, upsertProfileMetadata } from "@/lib/auth";
-import { loadOnboarding, saveOnboarding } from "@/lib/onboarding";
+import { firstName, loadOnboarding, saveOnboarding } from "@/lib/onboarding";
+import { notifyEmail } from "@/lib/resend";
 
 export const Route = createFileRoute("/join/email")({
   head: () => ({
@@ -16,11 +17,33 @@ export const Route = createFileRoute("/join/email")({
   component: VerifyEmailPage,
 });
 
+function sendVerifyMail(email: string, fullName: string) {
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  notifyEmail({
+    to: email,
+    template: "verify",
+    data: {
+      firstName: firstName(fullName),
+      email,
+      code,
+      ctaUrl: `${window.location.origin}/join/email`,
+    },
+  });
+}
+
 function VerifyEmailPage() {
   const navigate = useNavigate();
   const onboarding = loadOnboarding();
   const email = onboarding.email || "amani@example.com";
   const [busy, setBusy] = useState(false);
+  const mailed = useRef(false);
+
+  useEffect(() => {
+    if (mailed.current || !email.includes("@")) return;
+    mailed.current = true;
+    sendVerifyMail(email, onboarding.fullName);
+    void sendEmailVerification(email);
+  }, [email, onboarding.fullName]);
 
   function continueOnboarding() {
     saveOnboarding({ step: "plan" });
@@ -30,13 +53,13 @@ function VerifyEmailPage() {
 
   async function resend() {
     setBusy(true);
+    sendVerifyMail(email, onboarding.fullName);
     const { error } = await sendEmailVerification(email);
     setBusy(false);
     if (error) {
-      toast.message("Couldn’t resend email", { description: error.message });
-      return;
+      toast.message("Couldn’t resend Supabase mail", { description: error.message });
     }
-    toast.success("Verification link sent");
+    toast.success("Verification email sent");
   }
 
   const body = (

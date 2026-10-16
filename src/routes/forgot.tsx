@@ -5,6 +5,7 @@ import { AuthHeading, AuthSplit, MobileAuthChrome } from "@/components/site/auth
 import { Field, TextInput } from "@/components/site/auth/auth-fields";
 import { Icon, buttonClass } from "@/components/site/primitives";
 import { sendPasswordReset } from "@/lib/auth";
+import { notifyEmail } from "@/lib/resend";
 
 export const Route = createFileRoute("/forgot")({
   head: () => ({
@@ -32,6 +33,14 @@ function ForgotPage() {
     }
     setBusy(true);
     const { error } = await sendPasswordReset(email);
+    notifyEmail({
+      to: email.trim(),
+      template: "password-reset",
+      data: {
+        email: email.trim(),
+        ctaUrl: `${window.location.origin}/reset`,
+      },
+    });
     setBusy(false);
     if (error) {
       toast.error(error.message);

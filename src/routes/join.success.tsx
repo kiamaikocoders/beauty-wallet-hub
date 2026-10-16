@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import { OnboardingShell } from "@/components/site/auth/OnboardingShell";
 import { Icon, TierBadge, buttonClass } from "@/components/site/primitives";
 import { fetchRules } from "@/lib/catalog";
@@ -9,7 +10,8 @@ import {
   loadOnboarding,
   renewalDate,
 } from "@/lib/onboarding";
-import { ksh, num, type TierId } from "@/lib/pricing";
+import { ksh, num, pct, type TierId } from "@/lib/pricing";
+import { notifyEmail } from "@/lib/resend";
 
 export const Route = createFileRoute("/join/success")({
   loader: async () => ({ rules: await fetchRules() }),
@@ -29,6 +31,48 @@ function SuccessPage() {
   const t = rules.tiers[tier];
   const renews = renewalDate();
   const methodLabel = onboarding.paymentMethod === "card" ? "Paid by card" : "Paid by M-Pesa";
+  const mailed = useRef(false);
+
+  useEffect(() => {
+    if (mailed.current) return;
+    const to = onboarding.email?.trim();
+    if (!to || !to.includes("@")) return;
+    mailed.current = true;
+    const origin = window.location.origin;
+    const name = firstName(onboarding.fullName);
+    notifyEmail({
+      to,
+      template: "welcome",
+      data: {
+        firstName: name,
+        fullName: onboarding.fullName,
+        email: to,
+        tier: t.name,
+        planPrice: ksh(t.priceKsh),
+        coins: num(t.monthlyCoins),
+        discount: pct(t.discount),
+        renewalDate: formatRenewal(renews),
+        ctaUrl: `${origin}/app`,
+      },
+    });
+    notifyEmail({
+      to,
+      template: "plan-receipt",
+      data: {
+        firstName: name,
+        tier: t.name,
+        amount: ksh(t.priceKsh),
+        receiptId: onboarding.paymentRef ?? "BW-PAY",
+        paidWith: methodLabel,
+        mpesaRef: onboarding.paymentRef ?? "—",
+        date: formatRenewal(new Date()),
+        coinsAdded: num(t.monthlyCoins),
+        rolledOver: "0",
+        walletNow: num(t.monthlyCoins),
+        ctaUrl: `${origin}/app/wallet`,
+      },
+    });
+  }, [methodLabel, onboarding, renews, t]);
 
   return (
     <OnboardingShell step="payment" hideSaveExit>

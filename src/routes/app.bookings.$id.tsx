@@ -13,6 +13,9 @@ import {
   relativeInHours,
 } from "@/lib/app-data";
 import { coinsLabel } from "@/lib/app-data";
+import { firstName } from "@/lib/onboarding";
+import { num } from "@/lib/pricing";
+import { notifyEmail } from "@/lib/resend";
 
 export const Route = createFileRoute("/app/bookings/$id")({
   validateSearch: (raw: Record<string, unknown>) => ({
@@ -158,7 +161,25 @@ function BookingDetail() {
         onConfirm={async () => {
           setBusy(true);
           try {
-            await cancelBooking(booking.id, demo);
+            const result = await cancelBooking(booking.id, demo);
+            if (member.email) {
+              notifyEmail({
+                to: member.email,
+                template: "booking-cancelled",
+                data: {
+                  firstName: firstName(member.fullName),
+                  service: booking.serviceName,
+                  provider: booking.providerName,
+                  when,
+                  cancelBy: when,
+                  coinsReturned: result.late
+                    ? `+${num(result.returned)} (${num(result.toProvider)} to provider)`
+                    : `+${num(result.returned)}`,
+                  available: num(member.wallet.available + result.returned),
+                  ctaUrl: `${window.location.origin}/app/explore${demo ? `?demo=${demo}` : ""}`,
+                },
+              });
+            }
             toast.success("Booking cancelled");
             refresh();
             setCancelOpen(false);

@@ -4,7 +4,9 @@ import { toast } from "sonner";
 import { useMember } from "@/components/app/MemberContext";
 import { buttonClass } from "@/components/site/primitives";
 import { createBooking, loadAppProvider } from "@/lib/app-data";
+import { firstName } from "@/lib/onboarding";
 import { ksh, num } from "@/lib/pricing";
+import { notifyEmail } from "@/lib/resend";
 
 export const Route = createFileRoute("/app/book/review")({
   loaderDeps: ({ search }) => search,
@@ -107,6 +109,30 @@ function BookReview() {
                 stylist: search.stylist ?? null,
                 demo,
               });
+              if (member.email) {
+                const cancelBy = new Date(when.getTime() - 24 * 60 * 60_000);
+                notifyEmail({
+                  to: member.email,
+                  template: "booking-confirmed",
+                  data: {
+                    firstName: firstName(member.fullName),
+                    service: r.serviceName,
+                    provider: r.providerName,
+                    stylist: r.stylist ?? "Any available",
+                    when: whenLabel,
+                    coinsHeld: num(r.coins),
+                    pin: r.pin,
+                    cancelBy: cancelBy.toLocaleString("en-GB", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }),
+                    ctaUrl: `${window.location.origin}/app/bookings/${r.id}${demo ? `?demo=${demo}` : ""}`,
+                  },
+                });
+              }
               refresh();
               void navigate({
                 to: "/app/book/done",

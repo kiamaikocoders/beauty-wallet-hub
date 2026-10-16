@@ -16,16 +16,77 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CoverageRouteImport } from './routes/coverage'
 import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as ForgotRouteImport } from './routes/forgot'
 import { Route as GiftRouteImport } from './routes/gift'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as JoinRouteImport } from './routes/join'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as ProviderRouteImport } from './routes/provider'
+import { Route as ResetRouteImport } from './routes/reset'
+import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as TeamsRouteImport } from './routes/teams'
 import { Route as VendorRouteImport } from './routes/vendor'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as Admin2faRouteImport } from './routes/admin.2fa'
+import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
+import { Route as AdminDisputesRouteImport } from './routes/admin.disputes'
+import { Route as AdminFinanceRouteImport } from './routes/admin.finance'
+import { Route as AdminPayoutsRouteImport } from './routes/admin.payouts'
+import { Route as AdminRatesRouteImport } from './routes/admin.rates'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppBookRouteImport } from './routes/app.book'
+import { Route as AppBookingsRouteImport } from './routes/app.bookings'
+import { Route as AppExploreRouteImport } from './routes/app.explore'
+import { Route as AppNotificationsRouteImport } from './routes/app.notifications'
+import { Route as AppPlanRouteImport } from './routes/app.plan'
+import { Route as AppProfileRouteImport } from './routes/app.profile'
+import { Route as AppWalletRouteImport } from './routes/app.wallet'
+import { Route as JoinIndexRouteImport } from './routes/join.index'
+import { Route as JoinCodeRouteImport } from './routes/join.$code'
+import { Route as JoinEmailRouteImport } from './routes/join.email'
+import { Route as JoinPayRouteImport } from './routes/join.pay'
+import { Route as JoinPlanRouteImport } from './routes/join.plan'
+import { Route as JoinPreferencesRouteImport } from './routes/join.preferences'
+import { Route as JoinSuccessRouteImport } from './routes/join.success'
+import { Route as JoinVerifyRouteImport } from './routes/join.verify'
 import { Route as LegalDocRouteImport } from './routes/legal.$doc'
 import { Route as PSlugRouteImport } from './routes/p.$slug'
+import { Route as ProviderIndexRouteImport } from './routes/provider/index'
+import { Route as ProviderCalendarRouteImport } from './routes/provider/calendar'
+import { Route as ProviderCheckInRouteImport } from './routes/provider/check-in'
+import { Route as ProviderEarningsRouteImport } from './routes/provider/earnings'
+import { Route as ProviderReviewsRouteImport } from './routes/provider/reviews'
+import { Route as ProviderServicesRouteImport } from './routes/provider/services'
+import { Route as ProviderSettingsRouteImport } from './routes/provider/settings'
+import { Route as ProviderTeamRouteImport } from './routes/provider/team'
 import { Route as ProvidersIndexRouteImport } from './routes/providers.index'
 import { Route as ProvidersApplyRouteImport } from './routes/providers.apply'
+import { Route as ProvidersStatusRouteImport } from './routes/providers.status'
+import { Route as TeamsIndexRouteImport } from './routes/teams/index'
+import { Route as TeamsInvoicesRouteImport } from './routes/teams/invoices'
+import { Route as TeamsSettingsRouteImport } from './routes/teams/settings'
+import { Route as TeamsSignupRouteImport } from './routes/teams/signup'
+import { Route as TeamsStaffRouteImport } from './routes/teams/staff'
+import { Route as AdminCompaniesIndexRouteImport } from './routes/admin.companies.index'
+import { Route as AdminCompaniesIdRouteImport } from './routes/admin.companies.$id'
+import { Route as AdminGiftsIndexRouteImport } from './routes/admin.gifts.index'
+import { Route as AdminGiftsIdRouteImport } from './routes/admin.gifts.$id'
+import { Route as AdminMembersIndexRouteImport } from './routes/admin.members.index'
+import { Route as AdminMembersIdRouteImport } from './routes/admin.members.$id'
+import { Route as AdminProvidersIndexRouteImport } from './routes/admin.providers.index'
+import { Route as AdminProvidersSlugRouteImport } from './routes/admin.providers.$slug'
+import { Route as AppBookIndexRouteImport } from './routes/app.book.index'
+import { Route as AppBookDoneRouteImport } from './routes/app.book.done'
+import { Route as AppBookReviewRouteImport } from './routes/app.book.review'
+import { Route as AppBookingsIndexRouteImport } from './routes/app.bookings.index'
+import { Route as AppBookingsIdRouteImport } from './routes/app.bookings.$id'
+import { Route as AppPSlugRouteImport } from './routes/app.p.$slug'
+import { Route as AppWalletIndexRouteImport } from './routes/app.wallet.index'
+import { Route as AppWalletTopUpRouteImport } from './routes/app.wallet.top-up'
+import { Route as ProviderBookingsIdRouteImport } from './routes/provider/bookings.$id'
+import { Route as AppBookingsIdRateRouteImport } from './routes/app.bookings.$id.rate'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -62,6 +123,11 @@ const ExploreRoute = ExploreRouteImport.update({
   path: '/explore',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotRoute = ForgotRouteImport.update({
+  id: '/forgot',
+  path: '/forgot',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GiftRoute = GiftRouteImport.update({
   id: '/gift',
   path: '/gift',
@@ -77,9 +143,29 @@ const HowItWorksRoute = HowItWorksRouteImport.update({
   path: '/how-it-works',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JoinRoute = JoinRouteImport.update({
+  id: '/join',
+  path: '/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProviderRoute = ProviderRouteImport.update({
+  id: '/provider',
+  path: '/provider',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetRoute = ResetRouteImport.update({
+  id: '/reset',
+  path: '/reset',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeamsRoute = TeamsRouteImport.update({
@@ -92,6 +178,126 @@ const VendorRoute = VendorRouteImport.update({
   path: '/vendor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const Admin2faRoute = Admin2faRouteImport.update({
+  id: '/2fa',
+  path: '/2fa',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBookingsRoute = AdminBookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDisputesRoute = AdminDisputesRouteImport.update({
+  id: '/disputes',
+  path: '/disputes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFinanceRoute = AdminFinanceRouteImport.update({
+  id: '/finance',
+  path: '/finance',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPayoutsRoute = AdminPayoutsRouteImport.update({
+  id: '/payouts',
+  path: '/payouts',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRatesRoute = AdminRatesRouteImport.update({
+  id: '/rates',
+  path: '/rates',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBookRoute = AppBookRouteImport.update({
+  id: '/book',
+  path: '/book',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBookingsRoute = AppBookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppExploreRoute = AppExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlanRoute = AppPlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWalletRoute = AppWalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => AppRoute,
+} as any)
+const JoinIndexRoute = JoinIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => JoinRoute,
+} as any)
+const JoinCodeRoute = JoinCodeRouteImport.update({
+  id: '/$code',
+  path: '/$code',
+  getParentRoute: () => JoinRoute,
+} as any)
+const JoinEmailRoute = JoinEmailRouteImport.update({
+  id: '/email',
+  path: '/email',
+  getParentRoute: () => JoinRoute,
+} as any)
+const JoinPayRoute = JoinPayRouteImport.update({
+  id: '/pay',
+  path: '/pay',
+  getParentRoute: () => JoinRoute,
+} as any)
+const JoinPlanRoute = JoinPlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
+  getParentRoute: () => JoinRoute,
+} as any)
+const JoinPreferencesRoute = JoinPreferencesRouteImport.update({
+  id: '/preferences',
+  path: '/preferences',
+  getParentRoute: () => JoinRoute,
+} as any)
+const JoinSuccessRoute = JoinSuccessRouteImport.update({
+  id: '/success',
+  path: '/success',
+  getParentRoute: () => JoinRoute,
+} as any)
+const JoinVerifyRoute = JoinVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => JoinRoute,
+} as any)
 const LegalDocRoute = LegalDocRouteImport.update({
   id: '/legal/$doc',
   path: '/legal/$doc',
@@ -101,6 +307,46 @@ const PSlugRoute = PSlugRouteImport.update({
   id: '/p/$slug',
   path: '/p/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ProviderIndexRoute = ProviderIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderCalendarRoute = ProviderCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderCheckInRoute = ProviderCheckInRouteImport.update({
+  id: '/check-in',
+  path: '/check-in',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderEarningsRoute = ProviderEarningsRouteImport.update({
+  id: '/earnings',
+  path: '/earnings',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderReviewsRoute = ProviderReviewsRouteImport.update({
+  id: '/reviews',
+  path: '/reviews',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderServicesRoute = ProviderServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderSettingsRoute = ProviderSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const ProviderTeamRoute = ProviderTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => ProviderRoute,
 } as any)
 const ProvidersIndexRoute = ProvidersIndexRouteImport.update({
   id: '/providers/',
@@ -112,64 +358,359 @@ const ProvidersApplyRoute = ProvidersApplyRouteImport.update({
   path: '/providers/apply',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProvidersStatusRoute = ProvidersStatusRouteImport.update({
+  id: '/providers/status',
+  path: '/providers/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamsIndexRoute = TeamsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TeamsRoute,
+} as any)
+const TeamsInvoicesRoute = TeamsInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => TeamsRoute,
+} as any)
+const TeamsSettingsRoute = TeamsSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => TeamsRoute,
+} as any)
+const TeamsSignupRoute = TeamsSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => TeamsRoute,
+} as any)
+const TeamsStaffRoute = TeamsStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => TeamsRoute,
+} as any)
+const AdminCompaniesIndexRoute = AdminCompaniesIndexRouteImport.update({
+  id: '/companies/',
+  path: '/companies/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCompaniesIdRoute = AdminCompaniesIdRouteImport.update({
+  id: '/companies/$id',
+  path: '/companies/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminGiftsIndexRoute = AdminGiftsIndexRouteImport.update({
+  id: '/gifts/',
+  path: '/gifts/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminGiftsIdRoute = AdminGiftsIdRouteImport.update({
+  id: '/gifts/$id',
+  path: '/gifts/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMembersIndexRoute = AdminMembersIndexRouteImport.update({
+  id: '/members/',
+  path: '/members/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMembersIdRoute = AdminMembersIdRouteImport.update({
+  id: '/members/$id',
+  path: '/members/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProvidersIndexRoute = AdminProvidersIndexRouteImport.update({
+  id: '/providers/',
+  path: '/providers/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProvidersSlugRoute = AdminProvidersSlugRouteImport.update({
+  id: '/providers/$slug',
+  path: '/providers/$slug',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AppBookIndexRoute = AppBookIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppBookRoute,
+} as any)
+const AppBookDoneRoute = AppBookDoneRouteImport.update({
+  id: '/done',
+  path: '/done',
+  getParentRoute: () => AppBookRoute,
+} as any)
+const AppBookReviewRoute = AppBookReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => AppBookRoute,
+} as any)
+const AppBookingsIndexRoute = AppBookingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppBookingsRoute,
+} as any)
+const AppBookingsIdRoute = AppBookingsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppBookingsRoute,
+} as any)
+const AppPSlugRoute = AppPSlugRouteImport.update({
+  id: '/p/$slug',
+  path: '/p/$slug',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWalletIndexRoute = AppWalletIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppWalletRoute,
+} as any)
+const AppWalletTopUpRoute = AppWalletTopUpRouteImport.update({
+  id: '/top-up',
+  path: '/top-up',
+  getParentRoute: () => AppWalletRoute,
+} as any)
+const ProviderBookingsIdRoute = ProviderBookingsIdRouteImport.update({
+  id: '/bookings/$id',
+  path: '/bookings/$id',
+  getParentRoute: () => ProviderRoute,
+} as any)
+const AppBookingsIdRateRoute = AppBookingsIdRateRouteImport.update({
+  id: '/rate',
+  path: '/rate',
+  getParentRoute: () => AppBookingsIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRoute
-  '/app': typeof AppRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
   '/coverage': typeof CoverageRoute
   '/explore': typeof ExploreRoute
+  '/forgot': typeof ForgotRoute
   '/gift': typeof GiftRoute
   '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRouteWithChildren
   '/pricing': typeof PricingRoute
-  '/teams': typeof TeamsRoute
+  '/provider': typeof ProviderRouteWithChildren
+  '/reset': typeof ResetRoute
+  '/sign-in': typeof SignInRoute
+  '/teams': typeof TeamsRouteWithChildren
   '/vendor': typeof VendorRoute
+  '/admin/2fa': typeof Admin2faRoute
+  '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/disputes': typeof AdminDisputesRoute
+  '/admin/finance': typeof AdminFinanceRoute
+  '/admin/payouts': typeof AdminPayoutsRoute
+  '/admin/rates': typeof AdminRatesRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/app/book': typeof AppBookRouteWithChildren
+  '/app/bookings': typeof AppBookingsRouteWithChildren
+  '/app/explore': typeof AppExploreRoute
+  '/app/notifications': typeof AppNotificationsRoute
+  '/app/plan': typeof AppPlanRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/wallet': typeof AppWalletRouteWithChildren
+  '/join/$code': typeof JoinCodeRoute
+  '/join/email': typeof JoinEmailRoute
+  '/join/pay': typeof JoinPayRoute
+  '/join/plan': typeof JoinPlanRoute
+  '/join/preferences': typeof JoinPreferencesRoute
+  '/join/success': typeof JoinSuccessRoute
+  '/join/verify': typeof JoinVerifyRoute
   '/legal/$doc': typeof LegalDocRoute
   '/p/$slug': typeof PSlugRoute
+  '/provider/calendar': typeof ProviderCalendarRoute
+  '/provider/check-in': typeof ProviderCheckInRoute
+  '/provider/earnings': typeof ProviderEarningsRoute
+  '/provider/reviews': typeof ProviderReviewsRoute
+  '/provider/services': typeof ProviderServicesRoute
+  '/provider/settings': typeof ProviderSettingsRoute
+  '/provider/team': typeof ProviderTeamRoute
   '/providers/apply': typeof ProvidersApplyRoute
+  '/providers/status': typeof ProvidersStatusRoute
+  '/teams/invoices': typeof TeamsInvoicesRoute
+  '/teams/settings': typeof TeamsSettingsRoute
+  '/teams/signup': typeof TeamsSignupRoute
+  '/teams/staff': typeof TeamsStaffRoute
+  '/admin/': typeof AdminIndexRoute
+  '/app/': typeof AppIndexRoute
+  '/join/': typeof JoinIndexRoute
+  '/provider/': typeof ProviderIndexRoute
   '/providers/': typeof ProvidersIndexRoute
+  '/teams/': typeof TeamsIndexRoute
+  '/admin/companies/$id': typeof AdminCompaniesIdRoute
+  '/admin/gifts/$id': typeof AdminGiftsIdRoute
+  '/admin/members/$id': typeof AdminMembersIdRoute
+  '/admin/providers/$slug': typeof AdminProvidersSlugRoute
+  '/app/book/done': typeof AppBookDoneRoute
+  '/app/book/review': typeof AppBookReviewRoute
+  '/app/bookings/$id': typeof AppBookingsIdRouteWithChildren
+  '/app/p/$slug': typeof AppPSlugRoute
+  '/app/wallet/top-up': typeof AppWalletTopUpRoute
+  '/provider/bookings/$id': typeof ProviderBookingsIdRoute
+  '/admin/companies/': typeof AdminCompaniesIndexRoute
+  '/admin/gifts/': typeof AdminGiftsIndexRoute
+  '/admin/members/': typeof AdminMembersIndexRoute
+  '/admin/providers/': typeof AdminProvidersIndexRoute
+  '/app/book/': typeof AppBookIndexRoute
+  '/app/bookings/': typeof AppBookingsIndexRoute
+  '/app/wallet/': typeof AppWalletIndexRoute
+  '/app/bookings/$id/rate': typeof AppBookingsIdRateRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRoute
-  '/app': typeof AppRoute
   '/contact': typeof ContactRoute
   '/coverage': typeof CoverageRoute
   '/explore': typeof ExploreRoute
+  '/forgot': typeof ForgotRoute
   '/gift': typeof GiftRoute
   '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
   '/pricing': typeof PricingRoute
-  '/teams': typeof TeamsRoute
+  '/reset': typeof ResetRoute
+  '/sign-in': typeof SignInRoute
   '/vendor': typeof VendorRoute
+  '/admin/2fa': typeof Admin2faRoute
+  '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/disputes': typeof AdminDisputesRoute
+  '/admin/finance': typeof AdminFinanceRoute
+  '/admin/payouts': typeof AdminPayoutsRoute
+  '/admin/rates': typeof AdminRatesRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/app/explore': typeof AppExploreRoute
+  '/app/notifications': typeof AppNotificationsRoute
+  '/app/plan': typeof AppPlanRoute
+  '/app/profile': typeof AppProfileRoute
+  '/join/$code': typeof JoinCodeRoute
+  '/join/email': typeof JoinEmailRoute
+  '/join/pay': typeof JoinPayRoute
+  '/join/plan': typeof JoinPlanRoute
+  '/join/preferences': typeof JoinPreferencesRoute
+  '/join/success': typeof JoinSuccessRoute
+  '/join/verify': typeof JoinVerifyRoute
   '/legal/$doc': typeof LegalDocRoute
   '/p/$slug': typeof PSlugRoute
+  '/provider/calendar': typeof ProviderCalendarRoute
+  '/provider/check-in': typeof ProviderCheckInRoute
+  '/provider/earnings': typeof ProviderEarningsRoute
+  '/provider/reviews': typeof ProviderReviewsRoute
+  '/provider/services': typeof ProviderServicesRoute
+  '/provider/settings': typeof ProviderSettingsRoute
+  '/provider/team': typeof ProviderTeamRoute
   '/providers/apply': typeof ProvidersApplyRoute
+  '/providers/status': typeof ProvidersStatusRoute
+  '/teams/invoices': typeof TeamsInvoicesRoute
+  '/teams/settings': typeof TeamsSettingsRoute
+  '/teams/signup': typeof TeamsSignupRoute
+  '/teams/staff': typeof TeamsStaffRoute
+  '/admin': typeof AdminIndexRoute
+  '/app': typeof AppIndexRoute
+  '/join': typeof JoinIndexRoute
+  '/provider': typeof ProviderIndexRoute
   '/providers': typeof ProvidersIndexRoute
+  '/teams': typeof TeamsIndexRoute
+  '/admin/companies/$id': typeof AdminCompaniesIdRoute
+  '/admin/gifts/$id': typeof AdminGiftsIdRoute
+  '/admin/members/$id': typeof AdminMembersIdRoute
+  '/admin/providers/$slug': typeof AdminProvidersSlugRoute
+  '/app/book/done': typeof AppBookDoneRoute
+  '/app/book/review': typeof AppBookReviewRoute
+  '/app/bookings/$id': typeof AppBookingsIdRouteWithChildren
+  '/app/p/$slug': typeof AppPSlugRoute
+  '/app/wallet/top-up': typeof AppWalletTopUpRoute
+  '/provider/bookings/$id': typeof ProviderBookingsIdRoute
+  '/admin/companies': typeof AdminCompaniesIndexRoute
+  '/admin/gifts': typeof AdminGiftsIndexRoute
+  '/admin/members': typeof AdminMembersIndexRoute
+  '/admin/providers': typeof AdminProvidersIndexRoute
+  '/app/book': typeof AppBookIndexRoute
+  '/app/bookings': typeof AppBookingsIndexRoute
+  '/app/wallet': typeof AppWalletIndexRoute
+  '/app/bookings/$id/rate': typeof AppBookingsIdRateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRoute
-  '/app': typeof AppRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
   '/coverage': typeof CoverageRoute
   '/explore': typeof ExploreRoute
+  '/forgot': typeof ForgotRoute
   '/gift': typeof GiftRoute
   '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/join': typeof JoinRouteWithChildren
   '/pricing': typeof PricingRoute
-  '/teams': typeof TeamsRoute
+  '/provider': typeof ProviderRouteWithChildren
+  '/reset': typeof ResetRoute
+  '/sign-in': typeof SignInRoute
+  '/teams': typeof TeamsRouteWithChildren
   '/vendor': typeof VendorRoute
+  '/admin/2fa': typeof Admin2faRoute
+  '/admin/bookings': typeof AdminBookingsRoute
+  '/admin/disputes': typeof AdminDisputesRoute
+  '/admin/finance': typeof AdminFinanceRoute
+  '/admin/payouts': typeof AdminPayoutsRoute
+  '/admin/rates': typeof AdminRatesRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/app/book': typeof AppBookRouteWithChildren
+  '/app/bookings': typeof AppBookingsRouteWithChildren
+  '/app/explore': typeof AppExploreRoute
+  '/app/notifications': typeof AppNotificationsRoute
+  '/app/plan': typeof AppPlanRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/wallet': typeof AppWalletRouteWithChildren
+  '/join/$code': typeof JoinCodeRoute
+  '/join/email': typeof JoinEmailRoute
+  '/join/pay': typeof JoinPayRoute
+  '/join/plan': typeof JoinPlanRoute
+  '/join/preferences': typeof JoinPreferencesRoute
+  '/join/success': typeof JoinSuccessRoute
+  '/join/verify': typeof JoinVerifyRoute
   '/legal/$doc': typeof LegalDocRoute
   '/p/$slug': typeof PSlugRoute
+  '/provider/calendar': typeof ProviderCalendarRoute
+  '/provider/check-in': typeof ProviderCheckInRoute
+  '/provider/earnings': typeof ProviderEarningsRoute
+  '/provider/reviews': typeof ProviderReviewsRoute
+  '/provider/services': typeof ProviderServicesRoute
+  '/provider/settings': typeof ProviderSettingsRoute
+  '/provider/team': typeof ProviderTeamRoute
   '/providers/apply': typeof ProvidersApplyRoute
+  '/providers/status': typeof ProvidersStatusRoute
+  '/teams/invoices': typeof TeamsInvoicesRoute
+  '/teams/settings': typeof TeamsSettingsRoute
+  '/teams/signup': typeof TeamsSignupRoute
+  '/teams/staff': typeof TeamsStaffRoute
+  '/admin/': typeof AdminIndexRoute
+  '/app/': typeof AppIndexRoute
+  '/join/': typeof JoinIndexRoute
+  '/provider/': typeof ProviderIndexRoute
   '/providers/': typeof ProvidersIndexRoute
+  '/teams/': typeof TeamsIndexRoute
+  '/admin/companies/$id': typeof AdminCompaniesIdRoute
+  '/admin/gifts/$id': typeof AdminGiftsIdRoute
+  '/admin/members/$id': typeof AdminMembersIdRoute
+  '/admin/providers/$slug': typeof AdminProvidersSlugRoute
+  '/app/book/done': typeof AppBookDoneRoute
+  '/app/book/review': typeof AppBookReviewRoute
+  '/app/bookings/$id': typeof AppBookingsIdRouteWithChildren
+  '/app/p/$slug': typeof AppPSlugRoute
+  '/app/wallet/top-up': typeof AppWalletTopUpRoute
+  '/provider/bookings/$id': typeof ProviderBookingsIdRoute
+  '/admin/companies/': typeof AdminCompaniesIndexRoute
+  '/admin/gifts/': typeof AdminGiftsIndexRoute
+  '/admin/members/': typeof AdminMembersIndexRoute
+  '/admin/providers/': typeof AdminProvidersIndexRoute
+  '/app/book/': typeof AppBookIndexRoute
+  '/app/bookings/': typeof AppBookingsIndexRoute
+  '/app/wallet/': typeof AppWalletIndexRoute
+  '/app/bookings/$id/rate': typeof AppBookingsIdRateRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -181,35 +722,149 @@ export interface FileRouteTypes {
     | '/contact'
     | '/coverage'
     | '/explore'
+    | '/forgot'
     | '/gift'
     | '/help'
     | '/how-it-works'
+    | '/join'
     | '/pricing'
+    | '/provider'
+    | '/reset'
+    | '/sign-in'
     | '/teams'
     | '/vendor'
+    | '/admin/2fa'
+    | '/admin/bookings'
+    | '/admin/disputes'
+    | '/admin/finance'
+    | '/admin/payouts'
+    | '/admin/rates'
+    | '/admin/settings'
+    | '/app/book'
+    | '/app/bookings'
+    | '/app/explore'
+    | '/app/notifications'
+    | '/app/plan'
+    | '/app/profile'
+    | '/app/wallet'
+    | '/join/$code'
+    | '/join/email'
+    | '/join/pay'
+    | '/join/plan'
+    | '/join/preferences'
+    | '/join/success'
+    | '/join/verify'
     | '/legal/$doc'
     | '/p/$slug'
+    | '/provider/calendar'
+    | '/provider/check-in'
+    | '/provider/earnings'
+    | '/provider/reviews'
+    | '/provider/services'
+    | '/provider/settings'
+    | '/provider/team'
     | '/providers/apply'
+    | '/providers/status'
+    | '/teams/invoices'
+    | '/teams/settings'
+    | '/teams/signup'
+    | '/teams/staff'
+    | '/admin/'
+    | '/app/'
+    | '/join/'
+    | '/provider/'
     | '/providers/'
+    | '/teams/'
+    | '/admin/companies/$id'
+    | '/admin/gifts/$id'
+    | '/admin/members/$id'
+    | '/admin/providers/$slug'
+    | '/app/book/done'
+    | '/app/book/review'
+    | '/app/bookings/$id'
+    | '/app/p/$slug'
+    | '/app/wallet/top-up'
+    | '/provider/bookings/$id'
+    | '/admin/companies/'
+    | '/admin/gifts/'
+    | '/admin/members/'
+    | '/admin/providers/'
+    | '/app/book/'
+    | '/app/bookings/'
+    | '/app/wallet/'
+    | '/app/bookings/$id/rate'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/admin'
-    | '/app'
     | '/contact'
     | '/coverage'
     | '/explore'
+    | '/forgot'
     | '/gift'
     | '/help'
     | '/how-it-works'
     | '/pricing'
-    | '/teams'
+    | '/reset'
+    | '/sign-in'
     | '/vendor'
+    | '/admin/2fa'
+    | '/admin/bookings'
+    | '/admin/disputes'
+    | '/admin/finance'
+    | '/admin/payouts'
+    | '/admin/rates'
+    | '/admin/settings'
+    | '/app/explore'
+    | '/app/notifications'
+    | '/app/plan'
+    | '/app/profile'
+    | '/join/$code'
+    | '/join/email'
+    | '/join/pay'
+    | '/join/plan'
+    | '/join/preferences'
+    | '/join/success'
+    | '/join/verify'
     | '/legal/$doc'
     | '/p/$slug'
+    | '/provider/calendar'
+    | '/provider/check-in'
+    | '/provider/earnings'
+    | '/provider/reviews'
+    | '/provider/services'
+    | '/provider/settings'
+    | '/provider/team'
     | '/providers/apply'
+    | '/providers/status'
+    | '/teams/invoices'
+    | '/teams/settings'
+    | '/teams/signup'
+    | '/teams/staff'
+    | '/admin'
+    | '/app'
+    | '/join'
+    | '/provider'
     | '/providers'
+    | '/teams'
+    | '/admin/companies/$id'
+    | '/admin/gifts/$id'
+    | '/admin/members/$id'
+    | '/admin/providers/$slug'
+    | '/app/book/done'
+    | '/app/book/review'
+    | '/app/bookings/$id'
+    | '/app/p/$slug'
+    | '/app/wallet/top-up'
+    | '/provider/bookings/$id'
+    | '/admin/companies'
+    | '/admin/gifts'
+    | '/admin/members'
+    | '/admin/providers'
+    | '/app/book'
+    | '/app/bookings'
+    | '/app/wallet'
+    | '/app/bookings/$id/rate'
   id:
     | '__root__'
     | '/'
@@ -219,35 +874,102 @@ export interface FileRouteTypes {
     | '/contact'
     | '/coverage'
     | '/explore'
+    | '/forgot'
     | '/gift'
     | '/help'
     | '/how-it-works'
+    | '/join'
     | '/pricing'
+    | '/provider'
+    | '/reset'
+    | '/sign-in'
     | '/teams'
     | '/vendor'
+    | '/admin/2fa'
+    | '/admin/bookings'
+    | '/admin/disputes'
+    | '/admin/finance'
+    | '/admin/payouts'
+    | '/admin/rates'
+    | '/admin/settings'
+    | '/app/book'
+    | '/app/bookings'
+    | '/app/explore'
+    | '/app/notifications'
+    | '/app/plan'
+    | '/app/profile'
+    | '/app/wallet'
+    | '/join/$code'
+    | '/join/email'
+    | '/join/pay'
+    | '/join/plan'
+    | '/join/preferences'
+    | '/join/success'
+    | '/join/verify'
     | '/legal/$doc'
     | '/p/$slug'
+    | '/provider/calendar'
+    | '/provider/check-in'
+    | '/provider/earnings'
+    | '/provider/reviews'
+    | '/provider/services'
+    | '/provider/settings'
+    | '/provider/team'
     | '/providers/apply'
+    | '/providers/status'
+    | '/teams/invoices'
+    | '/teams/settings'
+    | '/teams/signup'
+    | '/teams/staff'
+    | '/admin/'
+    | '/app/'
+    | '/join/'
+    | '/provider/'
     | '/providers/'
+    | '/teams/'
+    | '/admin/companies/$id'
+    | '/admin/gifts/$id'
+    | '/admin/members/$id'
+    | '/admin/providers/$slug'
+    | '/app/book/done'
+    | '/app/book/review'
+    | '/app/bookings/$id'
+    | '/app/p/$slug'
+    | '/app/wallet/top-up'
+    | '/provider/bookings/$id'
+    | '/admin/companies/'
+    | '/admin/gifts/'
+    | '/admin/members/'
+    | '/admin/providers/'
+    | '/app/book/'
+    | '/app/bookings/'
+    | '/app/wallet/'
+    | '/app/bookings/$id/rate'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AdminRoute: typeof AdminRoute
-  AppRoute: typeof AppRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AppRoute: typeof AppRouteWithChildren
   ContactRoute: typeof ContactRoute
   CoverageRoute: typeof CoverageRoute
   ExploreRoute: typeof ExploreRoute
+  ForgotRoute: typeof ForgotRoute
   GiftRoute: typeof GiftRoute
   HelpRoute: typeof HelpRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  JoinRoute: typeof JoinRouteWithChildren
   PricingRoute: typeof PricingRoute
-  TeamsRoute: typeof TeamsRoute
+  ProviderRoute: typeof ProviderRouteWithChildren
+  ResetRoute: typeof ResetRoute
+  SignInRoute: typeof SignInRoute
+  TeamsRoute: typeof TeamsRouteWithChildren
   VendorRoute: typeof VendorRoute
   LegalDocRoute: typeof LegalDocRoute
   PSlugRoute: typeof PSlugRoute
   ProvidersApplyRoute: typeof ProvidersApplyRoute
+  ProvidersStatusRoute: typeof ProvidersStatusRoute
   ProvidersIndexRoute: typeof ProvidersIndexRoute
 }
 
@@ -302,6 +1024,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExploreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forgot': {
+      id: '/forgot'
+      path: '/forgot'
+      fullPath: '/forgot'
+      preLoaderRoute: typeof ForgotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gift': {
       id: '/gift'
       path: '/gift'
@@ -323,11 +1052,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HowItWorksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/join': {
+      id: '/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof JoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
       fullPath: '/pricing'
       preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/provider': {
+      id: '/provider'
+      path: '/provider'
+      fullPath: '/provider'
+      preLoaderRoute: typeof ProviderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset': {
+      id: '/reset'
+      path: '/reset'
+      fullPath: '/reset'
+      preLoaderRoute: typeof ResetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/teams': {
@@ -344,6 +1101,174 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/2fa': {
+      id: '/admin/2fa'
+      path: '/2fa'
+      fullPath: '/admin/2fa'
+      preLoaderRoute: typeof Admin2faRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/bookings': {
+      id: '/admin/bookings'
+      path: '/bookings'
+      fullPath: '/admin/bookings'
+      preLoaderRoute: typeof AdminBookingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/disputes': {
+      id: '/admin/disputes'
+      path: '/disputes'
+      fullPath: '/admin/disputes'
+      preLoaderRoute: typeof AdminDisputesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/finance': {
+      id: '/admin/finance'
+      path: '/finance'
+      fullPath: '/admin/finance'
+      preLoaderRoute: typeof AdminFinanceRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/payouts': {
+      id: '/admin/payouts'
+      path: '/payouts'
+      fullPath: '/admin/payouts'
+      preLoaderRoute: typeof AdminPayoutsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/rates': {
+      id: '/admin/rates'
+      path: '/rates'
+      fullPath: '/admin/rates'
+      preLoaderRoute: typeof AdminRatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/book': {
+      id: '/app/book'
+      path: '/book'
+      fullPath: '/app/book'
+      preLoaderRoute: typeof AppBookRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/bookings': {
+      id: '/app/bookings'
+      path: '/bookings'
+      fullPath: '/app/bookings'
+      preLoaderRoute: typeof AppBookingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/explore': {
+      id: '/app/explore'
+      path: '/explore'
+      fullPath: '/app/explore'
+      preLoaderRoute: typeof AppExploreRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/notifications': {
+      id: '/app/notifications'
+      path: '/notifications'
+      fullPath: '/app/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/plan': {
+      id: '/app/plan'
+      path: '/plan'
+      fullPath: '/app/plan'
+      preLoaderRoute: typeof AppPlanRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/profile': {
+      id: '/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/wallet': {
+      id: '/app/wallet'
+      path: '/wallet'
+      fullPath: '/app/wallet'
+      preLoaderRoute: typeof AppWalletRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/join/': {
+      id: '/join/'
+      path: '/'
+      fullPath: '/join/'
+      preLoaderRoute: typeof JoinIndexRouteImport
+      parentRoute: typeof JoinRoute
+    }
+    '/join/$code': {
+      id: '/join/$code'
+      path: '/$code'
+      fullPath: '/join/$code'
+      preLoaderRoute: typeof JoinCodeRouteImport
+      parentRoute: typeof JoinRoute
+    }
+    '/join/email': {
+      id: '/join/email'
+      path: '/email'
+      fullPath: '/join/email'
+      preLoaderRoute: typeof JoinEmailRouteImport
+      parentRoute: typeof JoinRoute
+    }
+    '/join/pay': {
+      id: '/join/pay'
+      path: '/pay'
+      fullPath: '/join/pay'
+      preLoaderRoute: typeof JoinPayRouteImport
+      parentRoute: typeof JoinRoute
+    }
+    '/join/plan': {
+      id: '/join/plan'
+      path: '/plan'
+      fullPath: '/join/plan'
+      preLoaderRoute: typeof JoinPlanRouteImport
+      parentRoute: typeof JoinRoute
+    }
+    '/join/preferences': {
+      id: '/join/preferences'
+      path: '/preferences'
+      fullPath: '/join/preferences'
+      preLoaderRoute: typeof JoinPreferencesRouteImport
+      parentRoute: typeof JoinRoute
+    }
+    '/join/success': {
+      id: '/join/success'
+      path: '/success'
+      fullPath: '/join/success'
+      preLoaderRoute: typeof JoinSuccessRouteImport
+      parentRoute: typeof JoinRoute
+    }
+    '/join/verify': {
+      id: '/join/verify'
+      path: '/verify'
+      fullPath: '/join/verify'
+      preLoaderRoute: typeof JoinVerifyRouteImport
+      parentRoute: typeof JoinRoute
+    }
     '/legal/$doc': {
       id: '/legal/$doc'
       path: '/legal/$doc'
@@ -357,6 +1282,62 @@ declare module '@tanstack/react-router' {
       fullPath: '/p/$slug'
       preLoaderRoute: typeof PSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/provider/': {
+      id: '/provider/'
+      path: '/'
+      fullPath: '/provider/'
+      preLoaderRoute: typeof ProviderIndexRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/calendar': {
+      id: '/provider/calendar'
+      path: '/calendar'
+      fullPath: '/provider/calendar'
+      preLoaderRoute: typeof ProviderCalendarRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/check-in': {
+      id: '/provider/check-in'
+      path: '/check-in'
+      fullPath: '/provider/check-in'
+      preLoaderRoute: typeof ProviderCheckInRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/earnings': {
+      id: '/provider/earnings'
+      path: '/earnings'
+      fullPath: '/provider/earnings'
+      preLoaderRoute: typeof ProviderEarningsRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/reviews': {
+      id: '/provider/reviews'
+      path: '/reviews'
+      fullPath: '/provider/reviews'
+      preLoaderRoute: typeof ProviderReviewsRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/services': {
+      id: '/provider/services'
+      path: '/services'
+      fullPath: '/provider/services'
+      preLoaderRoute: typeof ProviderServicesRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/settings': {
+      id: '/provider/settings'
+      path: '/settings'
+      fullPath: '/provider/settings'
+      preLoaderRoute: typeof ProviderSettingsRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/provider/team': {
+      id: '/provider/team'
+      path: '/team'
+      fullPath: '/provider/team'
+      preLoaderRoute: typeof ProviderTeamRouteImport
+      parentRoute: typeof ProviderRoute
     }
     '/providers/': {
       id: '/providers/'
@@ -372,26 +1353,391 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProvidersApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/providers/status': {
+      id: '/providers/status'
+      path: '/providers/status'
+      fullPath: '/providers/status'
+      preLoaderRoute: typeof ProvidersStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teams/': {
+      id: '/teams/'
+      path: '/'
+      fullPath: '/teams/'
+      preLoaderRoute: typeof TeamsIndexRouteImport
+      parentRoute: typeof TeamsRoute
+    }
+    '/teams/invoices': {
+      id: '/teams/invoices'
+      path: '/invoices'
+      fullPath: '/teams/invoices'
+      preLoaderRoute: typeof TeamsInvoicesRouteImport
+      parentRoute: typeof TeamsRoute
+    }
+    '/teams/settings': {
+      id: '/teams/settings'
+      path: '/settings'
+      fullPath: '/teams/settings'
+      preLoaderRoute: typeof TeamsSettingsRouteImport
+      parentRoute: typeof TeamsRoute
+    }
+    '/teams/signup': {
+      id: '/teams/signup'
+      path: '/signup'
+      fullPath: '/teams/signup'
+      preLoaderRoute: typeof TeamsSignupRouteImport
+      parentRoute: typeof TeamsRoute
+    }
+    '/teams/staff': {
+      id: '/teams/staff'
+      path: '/staff'
+      fullPath: '/teams/staff'
+      preLoaderRoute: typeof TeamsStaffRouteImport
+      parentRoute: typeof TeamsRoute
+    }
+    '/admin/companies/': {
+      id: '/admin/companies/'
+      path: '/companies'
+      fullPath: '/admin/companies/'
+      preLoaderRoute: typeof AdminCompaniesIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/companies/$id': {
+      id: '/admin/companies/$id'
+      path: '/companies/$id'
+      fullPath: '/admin/companies/$id'
+      preLoaderRoute: typeof AdminCompaniesIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/gifts/': {
+      id: '/admin/gifts/'
+      path: '/gifts'
+      fullPath: '/admin/gifts/'
+      preLoaderRoute: typeof AdminGiftsIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/gifts/$id': {
+      id: '/admin/gifts/$id'
+      path: '/gifts/$id'
+      fullPath: '/admin/gifts/$id'
+      preLoaderRoute: typeof AdminGiftsIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/members/': {
+      id: '/admin/members/'
+      path: '/members'
+      fullPath: '/admin/members/'
+      preLoaderRoute: typeof AdminMembersIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/members/$id': {
+      id: '/admin/members/$id'
+      path: '/members/$id'
+      fullPath: '/admin/members/$id'
+      preLoaderRoute: typeof AdminMembersIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/providers/': {
+      id: '/admin/providers/'
+      path: '/providers'
+      fullPath: '/admin/providers/'
+      preLoaderRoute: typeof AdminProvidersIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/providers/$slug': {
+      id: '/admin/providers/$slug'
+      path: '/providers/$slug'
+      fullPath: '/admin/providers/$slug'
+      preLoaderRoute: typeof AdminProvidersSlugRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/app/book/': {
+      id: '/app/book/'
+      path: '/'
+      fullPath: '/app/book/'
+      preLoaderRoute: typeof AppBookIndexRouteImport
+      parentRoute: typeof AppBookRoute
+    }
+    '/app/book/done': {
+      id: '/app/book/done'
+      path: '/done'
+      fullPath: '/app/book/done'
+      preLoaderRoute: typeof AppBookDoneRouteImport
+      parentRoute: typeof AppBookRoute
+    }
+    '/app/book/review': {
+      id: '/app/book/review'
+      path: '/review'
+      fullPath: '/app/book/review'
+      preLoaderRoute: typeof AppBookReviewRouteImport
+      parentRoute: typeof AppBookRoute
+    }
+    '/app/bookings/': {
+      id: '/app/bookings/'
+      path: '/'
+      fullPath: '/app/bookings/'
+      preLoaderRoute: typeof AppBookingsIndexRouteImport
+      parentRoute: typeof AppBookingsRoute
+    }
+    '/app/bookings/$id': {
+      id: '/app/bookings/$id'
+      path: '/$id'
+      fullPath: '/app/bookings/$id'
+      preLoaderRoute: typeof AppBookingsIdRouteImport
+      parentRoute: typeof AppBookingsRoute
+    }
+    '/app/p/$slug': {
+      id: '/app/p/$slug'
+      path: '/p/$slug'
+      fullPath: '/app/p/$slug'
+      preLoaderRoute: typeof AppPSlugRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/wallet/': {
+      id: '/app/wallet/'
+      path: '/'
+      fullPath: '/app/wallet/'
+      preLoaderRoute: typeof AppWalletIndexRouteImport
+      parentRoute: typeof AppWalletRoute
+    }
+    '/app/wallet/top-up': {
+      id: '/app/wallet/top-up'
+      path: '/top-up'
+      fullPath: '/app/wallet/top-up'
+      preLoaderRoute: typeof AppWalletTopUpRouteImport
+      parentRoute: typeof AppWalletRoute
+    }
+    '/provider/bookings/$id': {
+      id: '/provider/bookings/$id'
+      path: '/bookings/$id'
+      fullPath: '/provider/bookings/$id'
+      preLoaderRoute: typeof ProviderBookingsIdRouteImport
+      parentRoute: typeof ProviderRoute
+    }
+    '/app/bookings/$id/rate': {
+      id: '/app/bookings/$id/rate'
+      path: '/rate'
+      fullPath: '/app/bookings/$id/rate'
+      preLoaderRoute: typeof AppBookingsIdRateRouteImport
+      parentRoute: typeof AppBookingsIdRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  Admin2faRoute: typeof Admin2faRoute
+  AdminBookingsRoute: typeof AdminBookingsRoute
+  AdminDisputesRoute: typeof AdminDisputesRoute
+  AdminFinanceRoute: typeof AdminFinanceRoute
+  AdminPayoutsRoute: typeof AdminPayoutsRoute
+  AdminRatesRoute: typeof AdminRatesRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  AdminCompaniesIdRoute: typeof AdminCompaniesIdRoute
+  AdminGiftsIdRoute: typeof AdminGiftsIdRoute
+  AdminMembersIdRoute: typeof AdminMembersIdRoute
+  AdminProvidersSlugRoute: typeof AdminProvidersSlugRoute
+  AdminCompaniesIndexRoute: typeof AdminCompaniesIndexRoute
+  AdminGiftsIndexRoute: typeof AdminGiftsIndexRoute
+  AdminMembersIndexRoute: typeof AdminMembersIndexRoute
+  AdminProvidersIndexRoute: typeof AdminProvidersIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  Admin2faRoute: Admin2faRoute,
+  AdminBookingsRoute: AdminBookingsRoute,
+  AdminDisputesRoute: AdminDisputesRoute,
+  AdminFinanceRoute: AdminFinanceRoute,
+  AdminPayoutsRoute: AdminPayoutsRoute,
+  AdminRatesRoute: AdminRatesRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  AdminCompaniesIdRoute: AdminCompaniesIdRoute,
+  AdminGiftsIdRoute: AdminGiftsIdRoute,
+  AdminMembersIdRoute: AdminMembersIdRoute,
+  AdminProvidersSlugRoute: AdminProvidersSlugRoute,
+  AdminCompaniesIndexRoute: AdminCompaniesIndexRoute,
+  AdminGiftsIndexRoute: AdminGiftsIndexRoute,
+  AdminMembersIndexRoute: AdminMembersIndexRoute,
+  AdminProvidersIndexRoute: AdminProvidersIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface AppBookRouteChildren {
+  AppBookDoneRoute: typeof AppBookDoneRoute
+  AppBookReviewRoute: typeof AppBookReviewRoute
+  AppBookIndexRoute: typeof AppBookIndexRoute
+}
+
+const AppBookRouteChildren: AppBookRouteChildren = {
+  AppBookDoneRoute: AppBookDoneRoute,
+  AppBookReviewRoute: AppBookReviewRoute,
+  AppBookIndexRoute: AppBookIndexRoute,
+}
+
+const AppBookRouteWithChildren =
+  AppBookRoute._addFileChildren(AppBookRouteChildren)
+
+interface AppBookingsIdRouteChildren {
+  AppBookingsIdRateRoute: typeof AppBookingsIdRateRoute
+}
+
+const AppBookingsIdRouteChildren: AppBookingsIdRouteChildren = {
+  AppBookingsIdRateRoute: AppBookingsIdRateRoute,
+}
+
+const AppBookingsIdRouteWithChildren = AppBookingsIdRoute._addFileChildren(
+  AppBookingsIdRouteChildren,
+)
+
+interface AppBookingsRouteChildren {
+  AppBookingsIdRoute: typeof AppBookingsIdRouteWithChildren
+  AppBookingsIndexRoute: typeof AppBookingsIndexRoute
+}
+
+const AppBookingsRouteChildren: AppBookingsRouteChildren = {
+  AppBookingsIdRoute: AppBookingsIdRouteWithChildren,
+  AppBookingsIndexRoute: AppBookingsIndexRoute,
+}
+
+const AppBookingsRouteWithChildren = AppBookingsRoute._addFileChildren(
+  AppBookingsRouteChildren,
+)
+
+interface AppWalletRouteChildren {
+  AppWalletTopUpRoute: typeof AppWalletTopUpRoute
+  AppWalletIndexRoute: typeof AppWalletIndexRoute
+}
+
+const AppWalletRouteChildren: AppWalletRouteChildren = {
+  AppWalletTopUpRoute: AppWalletTopUpRoute,
+  AppWalletIndexRoute: AppWalletIndexRoute,
+}
+
+const AppWalletRouteWithChildren = AppWalletRoute._addFileChildren(
+  AppWalletRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppBookRoute: typeof AppBookRouteWithChildren
+  AppBookingsRoute: typeof AppBookingsRouteWithChildren
+  AppExploreRoute: typeof AppExploreRoute
+  AppNotificationsRoute: typeof AppNotificationsRoute
+  AppPlanRoute: typeof AppPlanRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppWalletRoute: typeof AppWalletRouteWithChildren
+  AppIndexRoute: typeof AppIndexRoute
+  AppPSlugRoute: typeof AppPSlugRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppBookRoute: AppBookRouteWithChildren,
+  AppBookingsRoute: AppBookingsRouteWithChildren,
+  AppExploreRoute: AppExploreRoute,
+  AppNotificationsRoute: AppNotificationsRoute,
+  AppPlanRoute: AppPlanRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppWalletRoute: AppWalletRouteWithChildren,
+  AppIndexRoute: AppIndexRoute,
+  AppPSlugRoute: AppPSlugRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface JoinRouteChildren {
+  JoinCodeRoute: typeof JoinCodeRoute
+  JoinEmailRoute: typeof JoinEmailRoute
+  JoinPayRoute: typeof JoinPayRoute
+  JoinPlanRoute: typeof JoinPlanRoute
+  JoinPreferencesRoute: typeof JoinPreferencesRoute
+  JoinSuccessRoute: typeof JoinSuccessRoute
+  JoinVerifyRoute: typeof JoinVerifyRoute
+  JoinIndexRoute: typeof JoinIndexRoute
+}
+
+const JoinRouteChildren: JoinRouteChildren = {
+  JoinCodeRoute: JoinCodeRoute,
+  JoinEmailRoute: JoinEmailRoute,
+  JoinPayRoute: JoinPayRoute,
+  JoinPlanRoute: JoinPlanRoute,
+  JoinPreferencesRoute: JoinPreferencesRoute,
+  JoinSuccessRoute: JoinSuccessRoute,
+  JoinVerifyRoute: JoinVerifyRoute,
+  JoinIndexRoute: JoinIndexRoute,
+}
+
+const JoinRouteWithChildren = JoinRoute._addFileChildren(JoinRouteChildren)
+
+interface ProviderRouteChildren {
+  ProviderCalendarRoute: typeof ProviderCalendarRoute
+  ProviderCheckInRoute: typeof ProviderCheckInRoute
+  ProviderEarningsRoute: typeof ProviderEarningsRoute
+  ProviderReviewsRoute: typeof ProviderReviewsRoute
+  ProviderServicesRoute: typeof ProviderServicesRoute
+  ProviderSettingsRoute: typeof ProviderSettingsRoute
+  ProviderTeamRoute: typeof ProviderTeamRoute
+  ProviderIndexRoute: typeof ProviderIndexRoute
+  ProviderBookingsIdRoute: typeof ProviderBookingsIdRoute
+}
+
+const ProviderRouteChildren: ProviderRouteChildren = {
+  ProviderCalendarRoute: ProviderCalendarRoute,
+  ProviderCheckInRoute: ProviderCheckInRoute,
+  ProviderEarningsRoute: ProviderEarningsRoute,
+  ProviderReviewsRoute: ProviderReviewsRoute,
+  ProviderServicesRoute: ProviderServicesRoute,
+  ProviderSettingsRoute: ProviderSettingsRoute,
+  ProviderTeamRoute: ProviderTeamRoute,
+  ProviderIndexRoute: ProviderIndexRoute,
+  ProviderBookingsIdRoute: ProviderBookingsIdRoute,
+}
+
+const ProviderRouteWithChildren = ProviderRoute._addFileChildren(
+  ProviderRouteChildren,
+)
+
+interface TeamsRouteChildren {
+  TeamsInvoicesRoute: typeof TeamsInvoicesRoute
+  TeamsSettingsRoute: typeof TeamsSettingsRoute
+  TeamsSignupRoute: typeof TeamsSignupRoute
+  TeamsStaffRoute: typeof TeamsStaffRoute
+  TeamsIndexRoute: typeof TeamsIndexRoute
+}
+
+const TeamsRouteChildren: TeamsRouteChildren = {
+  TeamsInvoicesRoute: TeamsInvoicesRoute,
+  TeamsSettingsRoute: TeamsSettingsRoute,
+  TeamsSignupRoute: TeamsSignupRoute,
+  TeamsStaffRoute: TeamsStaffRoute,
+  TeamsIndexRoute: TeamsIndexRoute,
+}
+
+const TeamsRouteWithChildren = TeamsRoute._addFileChildren(TeamsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AdminRoute: AdminRoute,
-  AppRoute: AppRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AppRoute: AppRouteWithChildren,
   ContactRoute: ContactRoute,
   CoverageRoute: CoverageRoute,
   ExploreRoute: ExploreRoute,
+  ForgotRoute: ForgotRoute,
   GiftRoute: GiftRoute,
   HelpRoute: HelpRoute,
   HowItWorksRoute: HowItWorksRoute,
+  JoinRoute: JoinRouteWithChildren,
   PricingRoute: PricingRoute,
-  TeamsRoute: TeamsRoute,
+  ProviderRoute: ProviderRouteWithChildren,
+  ResetRoute: ResetRoute,
+  SignInRoute: SignInRoute,
+  TeamsRoute: TeamsRouteWithChildren,
   VendorRoute: VendorRoute,
   LegalDocRoute: LegalDocRoute,
   PSlugRoute: PSlugRoute,
   ProvidersApplyRoute: ProvidersApplyRoute,
+  ProvidersStatusRoute: ProvidersStatusRoute,
   ProvidersIndexRoute: ProvidersIndexRoute,
 }
 export const routeTree = rootRouteImport

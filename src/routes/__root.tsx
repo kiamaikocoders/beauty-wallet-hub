@@ -73,7 +73,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Radley:ital@0;1&display=swap",
       },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/icon-512.png" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
     ],
   }),
@@ -97,7 +97,7 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-const LEGACY_PORTALS = ["/app", "/vendor", "/admin"];
+const LEGACY_PORTALS = ["/app"];
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();

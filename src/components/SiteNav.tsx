@@ -4,7 +4,7 @@ import { Wallet } from "lucide-react";
 const roles = [
   { to: "/", label: "Public" },
   { to: "/app", label: "Subscriber" },
-  { to: "/vendor", label: "Vendor" },
+  { to: "/provider", label: "Provider" },
   { to: "/admin", label: "Admin" },
 ] as const;
 

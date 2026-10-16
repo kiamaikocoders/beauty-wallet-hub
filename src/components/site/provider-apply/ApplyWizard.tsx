@@ -630,7 +630,10 @@ function SubmittedView({
         </ol>
       </div>
       <div className="flex w-full flex-col gap-3 lg:flex-row">
-        <a href="/sign-in?as=provider" className={buttonClass({ variant: "emphasis", full: true })}>
+        <a
+          href={`/providers/status?ref=${encodeURIComponent(result.ref)}&name=${encodeURIComponent(name)}`}
+          className={buttonClass({ variant: "emphasis", full: true })}
+        >
           Check status
         </a>
         <Link to="/" className={buttonClass({ variant: "secondary", full: true })}>

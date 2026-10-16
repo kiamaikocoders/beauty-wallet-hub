@@ -650,6 +650,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      demo_provider_portal: {
+        Args: { p_slug?: string }
+        Returns: Json
+      }
+      provider_check_in: {
+        Args: { p_pin: string; p_provider_slug?: string }
+        Returns: Json
+      }
+      provider_start_visit: {
+        Args: { p_booking_id: string; p_provider_slug?: string }
+        Returns: Json
+      }
+      provider_mark_no_show: {
+        Args: { p_booking_id: string; p_provider_slug?: string }
+        Returns: Json
+      }
       apply_as_provider: {
         Args: {
           p_name: string
@@ -665,6 +681,16 @@ export type Database = {
           p_payout_method?: string
           p_payout_details?: string
           p_kyc_docs?: string[]
+        }
+        Returns: Json
+      }
+      create_payment_intent: {
+        Args: {
+          p_tier: string
+          p_amount_ksh: number
+          p_method: string
+          p_phone?: string | null
+          p_metadata?: Json
         }
         Returns: Json
       }
@@ -695,6 +721,14 @@ export type Database = {
           p_phone: string
         }
         Returns: string
+      }
+      update_payment_intent_status: {
+        Args: {
+          p_id: string
+          p_status: string
+          p_failure_reason?: string | null
+        }
+        Returns: Json
       }
     }
     Enums: {

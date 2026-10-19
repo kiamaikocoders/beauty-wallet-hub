@@ -1,8 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { OnboardingShell } from "@/components/site/auth/OnboardingShell";
+import { LocationPin } from "@/components/maps/LocationPin";
 import { Icon, buttonClass } from "@/components/site/primitives";
 import { upsertProfileMetadata } from "@/lib/auth";
+import { saveMyLocation, type SavedPin } from "@/lib/location";
 import { loadOnboarding, saveOnboarding } from "@/lib/onboarding";
 import { cn } from "@/lib/utils";
 
@@ -43,30 +45,49 @@ function PreferencesPage() {
   const [bookingSms, setBookingSms] = useState(existing.reminders.bookingSms);
   const [coinsAlerts, setCoinsAlerts] = useState(existing.reminders.coinsAlerts);
   const [offers, setOffers] = useState(existing.reminders.offers);
+  const [pin, setPin] = useState<SavedPin | null>(
+    existing.location
+      ? { ...existing.location, approximate: false }
+      : null,
+  );
+  const [pinError, setPinError] = useState<string | null>(null);
 
   const summary = useMemo(() => {
     const svc = `${services.length} service${services.length === 1 ? "" : "s"}`;
-    const area = areas[0] ?? "Anywhere";
+    const area = pin?.area ?? areas[0] ?? "Set your pin";
     return `${svc} · ${area}`;
-  }, [services, areas]);
+  }, [services, areas, pin]);
 
   function toggle(list: string[], item: string, set: (v: string[]) => void) {
     set(list.includes(item) ? list.filter((x) => x !== item) : [...list, item]);
   }
 
-  function persistAndGo() {
+  async function persistAndGo() {
+    if (!pin) {
+      setPinError("Drop a pin so nearby studios can start from where you are.");
+      return;
+    }
+    setPinError(null);
+    const nextAreas = areas.includes(pin.area) ? areas : [pin.area, ...areas];
     saveOnboarding({
       services,
-      areas,
+      areas: nextAreas,
+      location: { lat: pin.lat, lng: pin.lng, address: pin.address, area: pin.area },
       reminders: { bookingSms, coinsAlerts, offers },
       step: "payment",
     });
     void upsertProfileMetadata({
       onboarding_step: "payment",
       preferred_services: services,
-      preferred_areas: areas,
+      preferred_areas: nextAreas,
       reminders: { bookingSms, coinsAlerts, offers },
     });
+    try {
+      await saveMyLocation(pin);
+    } catch (err) {
+      setPinError(err instanceof Error ? err.message : "Could not save this pin.");
+      return;
+    }
     void navigate({ to: "/join/pay" });
   }
 
@@ -77,19 +98,12 @@ function PreferencesPage() {
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="hidden lg:block">
             <p className="type-body-s-semibold text-foreground">{summary}</p>
-            <p className="type-caption text-muted-foreground">You can skip this and set it later</p>
+            <p className="type-caption text-muted-foreground">A pin is required. Services are optional.</p>
           </div>
           <div className="flex w-full gap-3 lg:w-auto">
             <button
               type="button"
-              onClick={persistAndGo}
-              className={buttonClass({ variant: "ghost", className: "hidden lg:inline-flex" })}
-            >
-              Skip
-            </button>
-            <button
-              type="button"
-              onClick={persistAndGo}
+              onClick={() => void persistAndGo()}
               className={buttonClass({ variant: "emphasis", full: true, className: "lg:w-auto" })}
             >
               Continue
@@ -102,7 +116,7 @@ function PreferencesPage() {
         <div className="flex flex-col gap-2.5">
           <h1 className="type-h1 text-foreground">What are you into?</h1>
           <p className="type-body-m text-muted-foreground lg:type-body-l">
-            We use this to sort Explore for you. Change it any time in settings.
+            Services you book, and the place you start from.
           </p>
         </div>
 
@@ -118,6 +132,20 @@ function PreferencesPage() {
               />
             ))}
           </div>
+        </section>
+
+        <section className="mt-8">
+          <LocationPin
+            value={pin}
+            onChange={(next) => {
+              setPin(next);
+              setPinError(null);
+            }}
+            title="Where you are"
+            helper="Required. Nearby studios start from this pin."
+            note="Pin saved. Only Beauty Wallet sees the exact point."
+          />
+          {pinError && <p className="mt-2 type-caption text-destructive">{pinError}</p>}
         </section>
 
         <section className="mt-8 flex flex-col gap-3.5">

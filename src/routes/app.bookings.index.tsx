@@ -49,7 +49,13 @@ function BookingsList() {
 
       {rows.length === 0 ? (
         <div className="mt-16 text-center">
-          <h2 className="type-h2">No upcoming visits</h2>
+          <h2 className="type-h2">
+            {tab === "past"
+              ? "No past visits"
+              : tab === "cancelled"
+                ? "No cancelled visits"
+                : "No upcoming visits"}
+          </h2>
           <p className="mx-auto mt-2 max-w-md type-body-m text-muted-foreground">
             Your coins are ready. Book a visit and it shows up here with your arrival PIN.
           </p>

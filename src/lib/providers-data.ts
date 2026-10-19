@@ -55,6 +55,9 @@ export type ApplyAsProviderArgs = {
   payoutMethod?: string | undefined;
   payoutDetails?: string | undefined;
   kycDocs?: string[] | undefined;
+  locationLat?: number | undefined;
+  locationLng?: number | undefined;
+  addressText?: string | undefined;
 };
 
 export type ApplyAsProviderResult = {
@@ -83,6 +86,9 @@ export async function submitProviderApplication(
       p_payout_method: args.payoutMethod ?? null,
       p_payout_details: args.payoutDetails ?? null,
       p_kyc_docs: args.kycDocs ?? [],
+      p_location_lat: args.locationLat ?? null,
+      p_location_lng: args.locationLng ?? null,
+      p_address_text: args.addressText ?? null,
     } as never,
   );
 

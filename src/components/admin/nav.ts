@@ -1,5 +1,6 @@
 export type AdminNavKey =
   | "overview"
+  | "map"
   | "rates"
   | "providers"
   | "members"
@@ -19,6 +20,7 @@ export const ADMIN_NAV: {
   mobilePrimary?: boolean;
 }[] = [
   { key: "overview", label: "Overview", href: "/admin", icon: "home-admin", mobilePrimary: true },
+  { key: "map", label: "Map", href: "/admin/map", icon: "map-admin" },
   { key: "rates", label: "Rate bands", href: "/admin/rates", icon: "percent" },
   {
     key: "providers",
@@ -50,6 +52,7 @@ export const ADMIN_NAV: {
 ];
 
 export function navKeyFromPath(pathname: string): AdminNavKey {
+  if (pathname.startsWith("/admin/map")) return "map";
   if (pathname.startsWith("/admin/rates")) return "rates";
   if (pathname.startsWith("/admin/providers")) return "providers";
   if (pathname.startsWith("/admin/members")) return "members";
@@ -98,6 +101,7 @@ export function statusTone(status: string): "success" | "warning" | "error" | "i
 
 export const PAGE_TITLES: Record<AdminNavKey, string> = {
   overview: "Overview",
+  map: "Map",
   rates: "Rate bands",
   providers: "Providers",
   members: "Members",

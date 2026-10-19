@@ -458,6 +458,15 @@ export const BOOKINGS = [
     status: "No-show",
   },
   {
+    time: "16:30",
+    member: "Daniel Kariuki",
+    plan: "basic" as TierId,
+    service: "Beard Trim",
+    provider: "Kinyozi Republic",
+    coins: "90",
+    status: "Cancelled",
+  },
+  {
     time: "08:00",
     member: "Lilian Mwangi",
     plan: "premium" as TierId,

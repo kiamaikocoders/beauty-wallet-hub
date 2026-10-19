@@ -1,11 +1,13 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
+import { LocationPin } from "@/components/maps/LocationPin";
 import { Icon, Section, buttonClass } from "@/components/site/primitives";
+import type { SavedPin } from "@/lib/location";
 import { cn } from "@/lib/utils";
 import type { TierId } from "@/lib/pricing";
 import { submitProviderApplication, type ApplyAsProviderResult } from "@/lib/providers-data";
 import { Field, RadioRow, SelectField, fieldClass } from "./form-fields";
-import { AREAS, CATEGORIES, STUDIO_CLASSES, TEAM_SIZES } from "./options";
+import { CATEGORIES, STUDIO_CLASSES, TEAM_SIZES } from "./options";
 
 const STEPPER = [
   {
@@ -36,6 +38,9 @@ type FormState = {
   name: string;
   kind: string;
   area: string;
+  locationLat: number | null;
+  locationLng: number | null;
+  addressText: string;
   phone: string;
   email: string;
   social: string;
@@ -58,6 +63,9 @@ const INITIAL: FormState = {
   name: "",
   kind: "Barber",
   area: "Westlands",
+  locationLat: null,
+  locationLng: null,
+  addressText: "",
   phone: "",
   email: "",
   social: "",
@@ -90,6 +98,9 @@ export function ApplyWizard() {
   function validateStep(s: number): string | null {
     if (s === 1) {
       if (form.name.trim().length < 2) return "Enter your business name.";
+      if (form.locationLat == null || form.locationLng == null) {
+        return "Drop the pin on the studio door.";
+      }
       if (form.phone.trim().length < 7) return "Enter a valid business phone.";
       if (!form.email.includes("@")) return "Enter a valid email.";
       return null;
@@ -151,6 +162,9 @@ export function ApplyWizard() {
         kind: form.kind,
         area: form.area,
         phone: form.phone.trim(),
+        locationLat: form.locationLat ?? undefined,
+        locationLng: form.locationLng ?? undefined,
+        addressText: form.addressText,
         email: form.email.trim(),
         ...(social ? { social } : {}),
         homeVisits: form.homeVisits,
@@ -342,14 +356,31 @@ function Step1({ form, patch }: { form: FormState; patch: (p: Partial<FormState>
           options={CATEGORIES}
           className="flex-1"
         />
-        <SelectField
-          label="Area"
-          value={form.area}
-          onChange={(area) => patch({ area })}
-          options={AREAS}
-          className="flex-1"
-        />
       </div>
+      <LocationPin
+        value={
+          form.locationLat != null && form.locationLng != null
+            ? {
+                lat: form.locationLat,
+                lng: form.locationLng,
+                address: form.addressText,
+                area: form.area,
+                approximate: false,
+              }
+            : null
+        }
+        onChange={(pin: SavedPin) =>
+          patch({
+            locationLat: pin.lat,
+            locationLng: pin.lng,
+            addressText: pin.address,
+            area: pin.area,
+          })
+        }
+        title="Studio location"
+        helper="Drop the pin on the studio door, not the road."
+        note="Members see the neighbourhood. The pin is for the studio map."
+      />
       <div className="flex flex-col gap-5 lg:flex-row lg:gap-4">
         <Field label="Business phone" className="flex-1">
           <input

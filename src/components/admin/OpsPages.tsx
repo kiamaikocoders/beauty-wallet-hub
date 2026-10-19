@@ -24,8 +24,16 @@ import {
   Th,
 } from "./ui";
 
+function bookingTab(status: string, tab: string) {
+  if (tab.startsWith("Upcoming")) return status === "Booked";
+  if (tab.startsWith("Cancelled")) return status === "Cancelled";
+  if (tab.startsWith("No-show")) return status === "No-show";
+  return status !== "Cancelled";
+}
+
 export function BookingsPage() {
   const [tab, setTab] = useState("Today · 164");
+  const rows = BOOKINGS.filter((booking) => bookingTab(booking.status, tab));
   return (
     <div className="flex flex-col gap-5">
       <FilterChips
@@ -46,7 +54,7 @@ export function BookingsPage() {
               </tr>
             </thead>
             <tbody>
-              {BOOKINGS.map((b, i) => (
+              {rows.map((b, i) => (
                 <tr key={i} className="border-t border-border">
                   <Td className="type-body-s-semibold">{b.time}</Td>
                   <Td>
@@ -67,7 +75,7 @@ export function BookingsPage() {
           </table>
         </div>
         <p className="border-t border-border px-5 py-3 type-caption text-muted-foreground">
-          Showing 7 of 164 today, newest first
+          Showing {rows.length} of {BOOKINGS.length} on this list
         </p>
       </Panel>
     </div>

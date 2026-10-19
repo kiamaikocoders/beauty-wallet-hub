@@ -17,6 +17,7 @@ export type OnboardingState = {
   tier: TierId | null;
   services: string[];
   areas: string[];
+  location: { lat: number; lng: number; address: string; area: string } | null;
   reminders: {
     bookingSms: boolean;
     coinsAlerts: boolean;
@@ -43,6 +44,7 @@ export const DEFAULT_ONBOARDING: OnboardingState = {
   tier: "intermediate",
   services: [],
   areas: [],
+  location: null,
   reminders: {
     bookingSms: true,
     coinsAlerts: true,

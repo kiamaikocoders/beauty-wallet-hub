@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
+import { BookingThread } from "@/components/bookings/BookingThread";
 import { ProviderShell } from "@/components/provider/ProviderShell";
 import { StatusPill } from "@/components/provider/StatusPill";
 import { usePortal } from "@/components/provider/portal-context";
@@ -9,6 +10,7 @@ import {
   formatTime,
   initials,
   ksh,
+  completeVisit,
   markNoShow,
   minutesFor,
   serviceLabel,
@@ -122,10 +124,37 @@ function BookingDetailPage() {
           </ul>
         </section>
 
+        <div className="mt-4">
+          <BookingThread bookingId={booking.id} />
+        </div>
+
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Link to="/provider/check-in" className={buttonClass({ className: "flex-1" })}>
             Check in with PIN
           </Link>
+          {booking.status === "in_progress" && (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => {
+                setBusy(true);
+                void completeVisit(booking.id, data.provider.slug)
+                  .then((result) => {
+                    const over = result.overrun_minutes;
+                    toast.success(
+                      over > 0
+                        ? `Visit finished ${over} min over the booked time`
+                        : "Visit finished on time",
+                    );
+                  })
+                  .catch(() => toast.error("Could not finish this visit"))
+                  .finally(() => setBusy(false));
+              }}
+              className={buttonClass({ variant: "secondary", className: "flex-1" })}
+            >
+              Finish visit
+            </button>
+          )}
           {["booked", "arriving"].includes(booking.status) && (
             <button
               type="button"

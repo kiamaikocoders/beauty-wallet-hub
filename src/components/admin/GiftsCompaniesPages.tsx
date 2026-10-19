@@ -9,6 +9,11 @@ import { CardPanel, FilterChips, ModalShell, Panel, StatCard, StatusPill, Td, Th
 
 export function GiftsPage() {
   const [filter, setFilter] = useState("All");
+  const rows = GIFTS.filter((gift) => {
+    if (filter === "All") return true;
+    const key = filter.split(" ")[0]?.toLowerCase() ?? "";
+    return gift.status.toLowerCase().startsWith(key);
+  });
   return (
     <div className="flex flex-col gap-5">
       <div className="flex justify-end">
@@ -62,7 +67,7 @@ export function GiftsPage() {
               </tr>
             </thead>
             <tbody>
-              {GIFTS.map((g) => (
+              {rows.map((g) => (
                 <tr key={g.id} className="border-t border-border">
                   <Td>
                     <Link to="/admin/gifts/$id" params={{ id: g.id }} className="hover:underline">
@@ -89,7 +94,9 @@ export function GiftsPage() {
           </table>
         </div>
         <div className="flex items-center justify-between border-t border-border px-5 py-3">
-          <p className="type-caption text-muted-foreground">Showing 6 of 86 gifts this month</p>
+          <p className="type-caption text-muted-foreground">
+            Showing {rows.length} of {GIFTS.length} gifts on this list
+          </p>
           <button type="button" className={buttonClass({ variant: "ghost", size: "s" })}>
             Load more
           </button>
@@ -159,6 +166,13 @@ export function GiftDetailPage({ id }: { id: string }) {
   );
 }
 
+function companyMatches(status: string, filter: string) {
+  if (filter === "All") return true;
+  if (filter.startsWith("Active")) return status.startsWith("Active");
+  if (filter.startsWith("Setting")) return status.toLowerCase().includes("setting");
+  return /overdue|paused|unpaid/i.test(status);
+}
+
 export function CompaniesPage() {
   const [filter, setFilter] = useState("All");
   const [extendOpen, setExtendOpen] = useState(false);
@@ -222,7 +236,7 @@ export function CompaniesPage() {
               </tr>
             </thead>
             <tbody>
-              {COMPANIES.map((c) => (
+              {COMPANIES.filter((c) => companyMatches(c.status, filter)).map((c) => (
                 <tr key={c.id} className="border-t border-border">
                   <Td>
                     <Link

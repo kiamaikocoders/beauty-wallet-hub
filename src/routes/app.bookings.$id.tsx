@@ -3,6 +3,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { CancelSheet } from "@/components/app/Sheets";
+import { BookingThread } from "@/components/bookings/BookingThread";
 import { useMember } from "@/components/app/MemberContext";
 import { buttonClass, Icon } from "@/components/site/primitives";
 import {
@@ -46,6 +47,9 @@ function BookingDetail() {
 
   return (
     <div className="mx-auto grid max-w-4xl gap-8 lg:grid-cols-2">
+      <div className="lg:col-span-2">
+        <BookingThread bookingId={booking.id} />
+      </div>
       <div>
         <Link
           to="/app/bookings"

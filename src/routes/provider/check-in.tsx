@@ -1,12 +1,14 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Delete } from "lucide-react";
+import { toast } from "sonner";
 import { ProviderShell } from "@/components/provider/ProviderShell";
 import { StatusPill } from "@/components/provider/StatusPill";
 import { usePortal } from "@/components/provider/portal-context";
 import { buttonClass } from "@/components/site/primitives";
 import {
   checkInPin,
+  completeVisit,
   firstName,
   formatTime,
   initials,
@@ -96,6 +98,7 @@ function CheckInPage() {
   };
 
   if (phase.kind === "started") {
+    const started = phase.result;
     return (
       <ProviderShell data={data} hideSearch>
         <div className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center text-center">
@@ -104,14 +107,36 @@ function CheckInPage() {
           </div>
           <h2 className="mt-5 font-display text-[32px]">Visit started</h2>
           <p className="mt-2 type-body-m text-muted-foreground">
-            {phase.result.member_name} · {phase.result.services} with Wanjiku
+            {started.member_name} · {started.services} with Wanjiku
           </p>
           <div className="mt-8 w-full rounded-[20px] border border-border bg-card p-5 text-left">
-            <Row label="Checked in" value={formatTime(phase.result.checked_in_at)} />
-            <Row label="Added to payout" value={ksh(phase.result.payout_ksh)} />
-            <Row label="Tue 13 Oct payout so far" value={ksh(week + phase.result.payout_ksh)} />
+            <Row label="Checked in" value={formatTime(started.checked_in_at)} />
+            <Row label="Booked for" value={`${started.promised_minutes ?? 60} min`} />
+            <Row label="Added to payout" value={ksh(started.payout_ksh)} />
+            <Row label="Tue 13 Oct payout so far" value={ksh(week + started.payout_ksh)} />
           </div>
-          <Link to="/provider" className={buttonClass({ className: "mt-6 w-full" })}>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              setBusy(true);
+              void completeVisit(started.booking_id, data.provider.slug)
+                .then((result) => {
+                  toast(
+                    result.overrun_minutes > 0
+                      ? `Finished ${result.overrun_minutes} min over the booked time`
+                      : "Visit finished on time",
+                  );
+                  reset();
+                })
+                .catch(() => toast.error("Could not finish this visit"))
+                .finally(() => setBusy(false));
+            }}
+            className={buttonClass({ className: "mt-6 w-full" })}
+          >
+            Finish visit
+          </button>
+          <Link to="/provider" className={buttonClass({ variant: "secondary", className: "mt-3 w-full" })}>
             Back to today
           </Link>
           <button

@@ -27,7 +27,7 @@ export type ExploreFilters = {
 };
 
 const SERVICE_COLUMNS =
-  "id, name, minutes, cash_ksh, image_url, category, popular_rank, providers!inner(name, slug, area, class, status, home_visits)";
+  "id, name, minutes, cash_ksh, image_url, category, popular_rank, providers!inner(name, slug, area, class, status, home_visits, hours)";
 
 type ExploreServiceRow = {
   id: string;
@@ -44,8 +44,34 @@ type ExploreServiceRow = {
     class: TierId;
     status: string;
     home_visits: boolean;
+    hours: { days?: string; open?: string }[] | null;
   };
 };
+
+const WEEKDAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+
+function hoursCoverToday(hours: { days?: string }[] | null): boolean {
+  if (!hours?.length) return false;
+  const today = new Date()
+    .toLocaleDateString("en-US", { weekday: "short", timeZone: "Africa/Nairobi" })
+    .slice(0, 3)
+    .toLowerCase();
+  return hours.some((row) => {
+    const days = (row.days ?? "").toLowerCase();
+    if (!days) return true;
+    if (days.includes(today)) return true;
+    const parts = days.split(/–|-|to/).map((part) => part.trim().slice(0, 3));
+    if (parts.length !== 2) return false;
+    const start = WEEKDAYS.indexOf(parts[0] ?? "");
+    const end = WEEKDAYS.indexOf(parts[1] ?? "");
+    const now = WEEKDAYS.indexOf(today);
+    return start >= 0 && end >= 0 && now >= start && now <= end;
+  });
+}
+
+function opensBeforeEight(hours: { open?: string }[] | null): boolean {
+  return Boolean(hours?.some((row) => (row.open ?? "") < "08:00" && (row.open ?? "") !== ""));
+}
 
 export async function fetchExploreCategories(): Promise<ExploreCategory[]> {
   return supabase.from("categories").select("slug, name").order("sort").then(unwrap);
@@ -94,7 +120,11 @@ export async function fetchExploreServices(
     .order("sort")
     .then(unwrap);
 
-  let cards = (rows as unknown as ExploreServiceRow[]).map((r) => toServiceCard(r, rules));
+  let matched = rows as unknown as ExploreServiceRow[];
+  if (filters.today) matched = matched.filter((row) => hoursCoverToday(row.providers.hours));
+  if (filters.before8) matched = matched.filter((row) => opensBeforeEight(row.providers.hours));
+
+  let cards = matched.map((r) => toServiceCard(r, rules));
 
   if (filters.q?.trim()) {
     const q = filters.q.trim().toLowerCase();

@@ -238,6 +238,14 @@ export type StartVisitResult = {
   services: string;
   payout_ksh: number;
   checked_in_at: string;
+  promised_minutes?: number;
+};
+
+export type CompleteVisitResult = {
+  ok: true;
+  elapsed_minutes: number;
+  promised_minutes: number;
+  overrun_minutes: number;
 };
 
 async function fetchPortal(slug: string): Promise<PortalData | null> {
@@ -319,6 +327,21 @@ export async function startVisit(
   );
   if (error) throw error;
   return data as StartVisitResult;
+}
+
+export async function completeVisit(
+  bookingId: string,
+  slug = DEMO_PROVIDER_SLUG,
+): Promise<CompleteVisitResult> {
+  const { data, error } = await supabase.rpc(
+    "provider_complete_visit" as never,
+    {
+      p_booking_id: bookingId,
+      p_provider_slug: slug,
+    } as never,
+  );
+  if (error) throw error;
+  return data as CompleteVisitResult;
 }
 
 export async function markNoShow(

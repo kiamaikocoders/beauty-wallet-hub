@@ -86,24 +86,10 @@ export function AppShell() {
         <Logo tone="dark" />
         <h1 className="mt-8 type-h1 text-foreground">Sign in to your wallet</h1>
         <p className="mt-3 max-w-md text-center type-body-m text-muted-foreground">
-          Use email sign-in, or open a seeded demo member to walk the app without an account.
+          Sign in with the email and password on your Beauty Wallet account.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link
-            to="/app"
-            search={{ demo: "amani" }}
-            className={buttonClass({ variant: "emphasis" })}
-          >
-            Continue as Amani
-          </Link>
-          <Link
-            to="/app"
-            search={{ demo: "brian" }}
-            className={buttonClass({ variant: "secondary" })}
-          >
-            Continue as Brian (Basic)
-          </Link>
-          <a href="/sign-in" className={buttonClass({ variant: "ghost" })}>
+          <a href="/sign-in" className={buttonClass({ variant: "emphasis" })}>
             Sign in
           </a>
         </div>

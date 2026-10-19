@@ -50,10 +50,6 @@ export function AboutPage() {
           alt="The Beauty Wallet founding team around a table"
           className="h-[240px] w-full rounded-xl object-cover lg:h-[560px] lg:rounded-2xl"
         />
-        <p className="type-caption text-muted-foreground">
-          Left to right: Achieng Otieno, co-founder and CEO · David Kamau, co-founder and CTO ·
-          Faith Njeri, partnerships · Samuel Mutua, operations
-        </p>
       </Section>
 
       <Section inner="flex flex-col gap-6 py-14 lg:flex-row lg:items-start lg:gap-[96px] lg:py-24">

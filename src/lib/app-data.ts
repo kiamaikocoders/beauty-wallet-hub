@@ -55,11 +55,7 @@ async function rpc<T>(name: string, args: Record<string, unknown> = {}): Promise
   return data as T;
 }
 
-export function demoKeyFromSearch(demo?: string | null): string | null {
-  if (!demo) return null;
-  const k = demo.toLowerCase().trim();
-  if (k === "amani" || k === "amani-wanjiru") return "amani";
-  if (k === "brian" || k === "brian-otieno") return "brian";
+export function demoKeyFromSearch(_demo?: string | null): string | null {
   return null;
 }
 

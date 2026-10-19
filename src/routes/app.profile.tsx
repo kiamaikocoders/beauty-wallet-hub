@@ -94,14 +94,7 @@ function ProfilePage() {
         <Toggle label="Weekly picks by email" meta="Services we think you’ll like" defaultChecked />
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-3">
-        <Link
-          to="/app"
-          search={{ demo: demo === "brian" ? "amani" : "brian" }}
-          className={buttonClass({ variant: "secondary" })}
-        >
-          Switch demo to {demo === "brian" ? "Amani" : "Brian"}
-        </Link>
+      <div className="mt-8">
         <a href="/sign-in" className={buttonClass({ variant: "ghost" })}>
           Sign out
         </a>

@@ -17,6 +17,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CoverageRouteImport } from './routes/coverage'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ForgotRouteImport } from './routes/forgot'
+import { Route as FoundersRouteImport } from './routes/founders'
 import { Route as GiftRouteImport } from './routes/gift'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
@@ -126,6 +127,11 @@ const ExploreRoute = ExploreRouteImport.update({
 const ForgotRoute = ForgotRouteImport.update({
   id: '/forgot',
   path: '/forgot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FoundersRoute = FoundersRouteImport.update({
+  id: '/founders',
+  path: '/founders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GiftRoute = GiftRouteImport.update({
@@ -488,6 +494,7 @@ export interface FileRoutesByFullPath {
   '/coverage': typeof CoverageRoute
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
+  '/founders': typeof FoundersRoute
   '/gift': typeof GiftRoute
   '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -566,6 +573,7 @@ export interface FileRoutesByTo {
   '/coverage': typeof CoverageRoute
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
+  '/founders': typeof FoundersRoute
   '/gift': typeof GiftRoute
   '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -641,6 +649,7 @@ export interface FileRoutesById {
   '/coverage': typeof CoverageRoute
   '/explore': typeof ExploreRoute
   '/forgot': typeof ForgotRoute
+  '/founders': typeof FoundersRoute
   '/gift': typeof GiftRoute
   '/help': typeof HelpRoute
   '/how-it-works': typeof HowItWorksRoute
@@ -723,6 +732,7 @@ export interface FileRouteTypes {
     | '/coverage'
     | '/explore'
     | '/forgot'
+    | '/founders'
     | '/gift'
     | '/help'
     | '/how-it-works'
@@ -801,6 +811,7 @@ export interface FileRouteTypes {
     | '/coverage'
     | '/explore'
     | '/forgot'
+    | '/founders'
     | '/gift'
     | '/help'
     | '/how-it-works'
@@ -875,6 +886,7 @@ export interface FileRouteTypes {
     | '/coverage'
     | '/explore'
     | '/forgot'
+    | '/founders'
     | '/gift'
     | '/help'
     | '/how-it-works'
@@ -956,6 +968,7 @@ export interface RootRouteChildren {
   CoverageRoute: typeof CoverageRoute
   ExploreRoute: typeof ExploreRoute
   ForgotRoute: typeof ForgotRoute
+  FoundersRoute: typeof FoundersRoute
   GiftRoute: typeof GiftRoute
   HelpRoute: typeof HelpRoute
   HowItWorksRoute: typeof HowItWorksRoute
@@ -1029,6 +1042,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot'
       fullPath: '/forgot'
       preLoaderRoute: typeof ForgotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/founders': {
+      id: '/founders'
+      path: '/founders'
+      fullPath: '/founders'
+      preLoaderRoute: typeof FoundersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gift': {
@@ -1724,6 +1744,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoverageRoute: CoverageRoute,
   ExploreRoute: ExploreRoute,
   ForgotRoute: ForgotRoute,
+  FoundersRoute: FoundersRoute,
   GiftRoute: GiftRoute,
   HelpRoute: HelpRoute,
   HowItWorksRoute: HowItWorksRoute,

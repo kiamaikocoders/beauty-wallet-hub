@@ -63,6 +63,9 @@ export function SiteFooter() {
               <Link to="/about" className={linkClass}>
                 About us
               </Link>
+              <Link to="/founders" className={linkClass}>
+                Founders
+              </Link>
               <Link to="/contact" className={linkClass}>
                 Contact
               </Link>

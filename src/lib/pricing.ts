@@ -26,7 +26,7 @@ export const DEFAULT_RULES: CoinRules = {
   groupSavings: 0.08,
   vendorShare: 0.85,
   unlockFeePct: 0.1,
-  rolloverPct: 0.1,
+  rolloverPct: 0.8,
   tiers: {
     basic: {
       id: "basic",
@@ -34,7 +34,7 @@ export const DEFAULT_RULES: CoinRules = {
       priceKsh: 7000,
       monthlyCoins: 700,
       discount: 0,
-      rolloverPct: 0.1,
+      rolloverPct: 0.8,
       badge: null,
       perks: [
         "Budget salons, barbers and freelancers",
@@ -49,7 +49,7 @@ export const DEFAULT_RULES: CoinRules = {
       priceKsh: 15000,
       monthlyCoins: 1500,
       discount: 0.12,
-      rolloverPct: 0.1,
+      rolloverPct: 0.8,
       badge: "Most popular",
       perks: [
         "Basic + intermediate studios",
@@ -64,7 +64,7 @@ export const DEFAULT_RULES: CoinRules = {
       priceKsh: 20000,
       monthlyCoins: 2000,
       discount: 0.18,
-      rolloverPct: 0.1,
+      rolloverPct: 0.8,
       badge: "Best value",
       perks: [
         "Every provider, incl. premium spaces",

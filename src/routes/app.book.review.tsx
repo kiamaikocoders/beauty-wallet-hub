@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { useMember } from "@/components/app/MemberContext";
 import { buttonClass } from "@/components/site/primitives";
 import { createBooking, loadAppProvider } from "@/lib/app-data";
+import { bookingStudioContact } from "@/lib/command-center";
 import { firstName } from "@/lib/onboarding";
 import { ksh, num } from "@/lib/pricing";
 import { notifyEmail } from "@/lib/resend";
@@ -109,6 +110,26 @@ function BookReview() {
                 stylist: search.stylist ?? null,
                 demo,
               });
+              try {
+                const studio = await bookingStudioContact(r.id);
+                if (studio?.email) {
+                  notifyEmail({
+                    to: studio.email,
+                    template: "provider-new-booking",
+                    data: {
+                      firstName: firstName(studio.member),
+                      fullName: studio.member,
+                      service: studio.service,
+                      when: studio.when,
+                      stylist: r.stylist ?? "Any available",
+                      payout: ksh(studio.payout),
+                      ctaUrl: `${window.location.origin}/provider`,
+                    },
+                  });
+                }
+              } catch {
+                toast.error("Booked, but the studio email could not be prepared");
+              }
               if (member.email) {
                 const cancelBy = new Date(when.getTime() - 24 * 60 * 60_000);
                 notifyEmail({

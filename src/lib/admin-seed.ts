@@ -169,7 +169,7 @@ export const RATE_BANDS = {
   ],
   rules: [
     { label: "Coin value", value: "Ksh 10" },
-    { label: "Rollover", value: "10% of unused, for 1 month" },
+    { label: "Rollover", value: "80% of unused, for 1 month" },
     { label: "Unlock fee, Basic members", value: "10% of the price" },
     { label: "Margin floor", value: "5% per visit" },
   ],
@@ -364,7 +364,7 @@ export const MEMBER_DETAIL = {
   onHold: 836,
   holdNote: "2 bookings",
   rollover: 99,
-  rolloverNote: "10% of unused on 1 Nov",
+  rolloverNote: "80% of unused on 1 Nov",
   ledger: [
     {
       date: "10 Oct",
@@ -381,7 +381,7 @@ export const MEMBER_DETAIL = {
     },
     { date: "5 Oct", type: "Top-up", detail: "M-Pesa, Ksh 5,000", coins: "+500" },
     { date: "3 Oct", type: "Spent", detail: "Gel Manicure · Polished Kilimani", coins: "−132" },
-    { date: "1 Oct", type: "Rollover", detail: "10% of 1,180 unused", coins: "+118" },
+    { date: "1 Oct", type: "Rollover", detail: "80% of 1,180 unused", coins: "+944" },
     { date: "1 Oct", type: "Plan coins", detail: "Intermediate, October", coins: "+1,500" },
   ],
   planCard: {
@@ -625,7 +625,7 @@ export const FINANCE = {
     { label: "Revenue, October", value: "Ksh 15.9M", sub: "Plans, top-ups and unlock fees" },
     { label: "Paid to providers", value: "Ksh 4.9M", sub: "October so far" },
     { label: "Coins owed", value: "Ksh 11.0M", sub: "1,104,300 in wallets" },
-    { label: "Expired in September", value: "Ksh 412,000", sub: "After 10% rollover" },
+    { label: "Taken back in September", value: "Ksh 412,000", sub: "After 80% rollover" },
   ],
   marginRows: [
     { member: "Basic", provider: "Basic", visits: "23%", margin: "15.0%", tone: "ok" as const },
@@ -664,7 +664,7 @@ export const FINANCE = {
   liability: [
     { label: "In wallets", coins: "1,104,300 coins", value: "Ksh 11.0M" },
     { label: "On hold for bookings", coins: "186,240 coins", value: "Ksh 1.9M" },
-    { label: "Rolling over 1 Nov", coins: "about 64,000", value: "10% of unused, one month" },
+    { label: "Rolling over 1 Nov", coins: "about 512,000", value: "80% of unused, one month" },
     { label: "Expiring 1 Nov", coins: "about 410,000", value: "Kept as breakage" },
   ],
 };
@@ -703,7 +703,7 @@ export const SETTINGS = {
     { label: "Unlock fee for higher classes", value: "10% of price" },
     { label: "Free cancellation", value: "Until 24 hours before" },
     { label: "Late cancel or no-show", value: "Half of held coins to provider" },
-    { label: "Rollover", value: "10% of unused, lasts one month" },
+    { label: "Rollover", value: "80% of unused, lasts one month" },
     { label: "Margin floor", value: "5%" },
     { label: "Second admin needed above", value: "Ksh 500,000" },
   ],

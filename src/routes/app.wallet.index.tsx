@@ -60,8 +60,8 @@ function WalletPage() {
 
       <p className="type-body-s text-muted-foreground">
         On {formatRenews(m.renewsOn)}, {Math.round(rules.rolloverPct * 100)}% of whatever is unused
-        rolls over. Right now that would be{" "}
-        {coinsLabel(Math.round(m.wallet.available * rules.rolloverPct))}.
+        rolls over and the other {Math.round((1 - rules.rolloverPct) * 100)}% is taken back. Right
+        now that would be {coinsLabel(Math.round(m.wallet.available * rules.rolloverPct))}.
       </p>
 
       <div className="flex flex-wrap gap-2">

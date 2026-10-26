@@ -118,7 +118,7 @@ function Home() {
             coins="1,520"
             value="≈ Ksh 15,200 in service value"
             onHold="308 coins"
-            rollover="152 coins"
+            rollover="1,216 coins"
             rolloverLabel={`Rolls over (${rollover})`}
             renews="1 Nov"
           />
@@ -134,7 +134,7 @@ function Home() {
             coins="1,520"
             value="≈ Ksh 15,200 in service value"
             onHold="308 coins"
-            rollover="152 coins"
+            rollover="1,216 coins"
             rolloverLabel={`Rolls over (${rollover})`}
             renews="1 Nov"
           />

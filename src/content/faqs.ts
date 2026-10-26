@@ -10,7 +10,7 @@ export const HOME_FAQS = [
       desktop: "What happens to coins I don’t use?",
     },
     answer:
-      "10% of your unused coins roll over to next month and stay for one month. The rest expire on your renewal date, so plan a visit or two before then.",
+      "80% of your unused coins roll over to next month and stay for one month. The other 20% are taken back on your renewal date, so plan a visit or two before then.",
   },
   {
     question: {

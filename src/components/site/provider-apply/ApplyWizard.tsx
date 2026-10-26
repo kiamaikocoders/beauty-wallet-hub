@@ -5,7 +5,9 @@ import { Icon, Section, buttonClass } from "@/components/site/primitives";
 import type { SavedPin } from "@/lib/location";
 import { cn } from "@/lib/utils";
 import type { TierId } from "@/lib/pricing";
+import { uploadApplicationDocument } from "@/lib/command-center";
 import { submitProviderApplication, type ApplyAsProviderResult } from "@/lib/providers-data";
+import { sendTemplateEmail } from "@/lib/resend";
 import { Field, RadioRow, SelectField, fieldClass } from "./form-fields";
 import { CATEGORIES, STUDIO_CLASSES, TEAM_SIZES } from "./options";
 
@@ -54,8 +56,8 @@ type FormState = {
   payoutMethod: "M-Pesa till" | "Paybill" | "Bank";
   tillNumber: string;
   tillName: string;
-  permitUploaded: boolean;
-  idUploaded: boolean;
+  permitFile: File | null;
+  idFile: File | null;
   agreed: boolean;
 };
 
@@ -79,8 +81,8 @@ const INITIAL: FormState = {
   payoutMethod: "M-Pesa till",
   tillNumber: "",
   tillName: "",
-  permitUploaded: false,
-  idUploaded: false,
+  permitFile: null,
+  idFile: null,
   agreed: false,
 };
 
@@ -152,8 +154,8 @@ export function ApplyWizard() {
         .join(". ");
 
       const docs = [
-        form.permitUploaded ? "Business permit" : null,
-        form.idUploaded ? "Owner ID" : null,
+        form.permitFile ? "Business permit" : null,
+        form.idFile ? "Owner ID" : null,
       ].filter(Boolean) as string[];
 
       const social = form.social.trim();
@@ -175,7 +177,33 @@ export function ApplyWizard() {
         payoutDetails: `${form.tillNumber.trim()} · ${form.tillName.trim()}`,
         kycDocs: docs,
       });
+      const uploads = [
+        form.permitFile ? { label: "Business permit", file: form.permitFile } : null,
+        form.idFile ? { label: "Owner ID", file: form.idFile } : null,
+      ].filter((item): item is { label: string; file: File } => item !== null);
+      for (const item of uploads) {
+        await uploadApplicationDocument({
+          providerId: data.id,
+          slug: data.slug,
+          ref: data.ref,
+          label: item.label,
+          file: item.file,
+        });
+      }
       setResult(data);
+      const origin = window.location.origin;
+      void sendTemplateEmail({
+        data: {
+          to: form.email.trim(),
+          template: "provider-application",
+          data: {
+            firstName: form.name.trim().split(/\s+/)[0] || "there",
+            company: form.name.trim(),
+            reference: data.ref,
+            ctaUrl: `${origin}/providers/status?ref=${encodeURIComponent(data.ref)}&name=${encodeURIComponent(form.name.trim())}&area=${encodeURIComponent(form.area)}`,
+          },
+        },
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not submit. Try again.");
     } finally {
@@ -540,18 +568,15 @@ function Step3({ form, patch }: { form: FormState; patch: (p: Partial<FormState>
         />
       </Field>
       <p className={labelLike}>Documents</p>
-      <DocRow
+      <DocPicker
         title="Business permit"
-        done={form.permitUploaded}
-        hint={form.permitUploaded ? "permit-2026.pdf · uploaded" : "Tap to upload a photo or PDF"}
-        onToggle={() => patch({ permitUploaded: !form.permitUploaded })}
+        file={form.permitFile}
+        onFile={(file) => patch({ permitFile: file })}
       />
-      <DocRow
+      <DocPicker
         title="Owner ID (front and back)"
-        done={form.idUploaded}
-        hint={form.idUploaded ? "id-scan.pdf · uploaded" : "Tap to upload a photo or PDF"}
-        onToggle={() => patch({ idUploaded: !form.idUploaded })}
-        dashed={!form.idUploaded}
+        file={form.idFile}
+        onFile={(file) => patch({ idFile: file })}
       />
       <label className="flex min-h-11 cursor-pointer items-start gap-3">
         <button
@@ -582,43 +607,33 @@ function Step3({ form, patch }: { form: FormState; patch: (p: Partial<FormState>
   );
 }
 
-function DocRow({
+function DocPicker({
   title,
-  hint,
-  done,
-  onToggle,
-  dashed,
+  file,
+  onFile,
 }: {
   title: string;
-  hint: string;
-  done: boolean;
-  onToggle: () => void;
-  dashed?: boolean;
+  file: File | null;
+  onFile: (file: File | null) => void;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onToggle}
-      className={cn(
-        "flex min-h-[68px] w-full items-center gap-3 rounded-[14px] border bg-white p-3 text-left",
-        dashed && !done ? "border-dashed border-border" : "border-solid border-border",
-      )}
-    >
-      <span
-        className={cn(
-          "flex size-11 shrink-0 items-center justify-center rounded-md",
-          done ? "bg-success-bg" : "bg-blush",
-        )}
-      >
-        <Icon name={done ? "check" : "plus"} size={24} />
+    <label className="flex min-h-[68px] w-full cursor-pointer items-center gap-3 rounded-[14px] border border-border bg-white p-3 text-left">
+      <input
+        type="file"
+        accept="image/*,.pdf"
+        className="sr-only"
+        onChange={(event) => onFile(event.target.files?.[0] ?? null)}
+      />
+      <span className={cn("flex size-11 shrink-0 items-center justify-center rounded-md", file ? "bg-success-bg" : "bg-blush")}>
+        <Icon name={file ? "check" : "plus"} size={24} />
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className="type-body-s-medium text-foreground">{title}</span>
-        <span className={cn("type-caption", done ? "text-success" : "text-muted-foreground")}>
-          {hint}
+        <span className={cn("type-caption", file ? "text-success" : "text-muted-foreground")}>
+          {file ? file.name : "Choose a photo or PDF"}
         </span>
       </span>
-    </button>
+    </label>
   );
 }
 

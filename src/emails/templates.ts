@@ -63,8 +63,8 @@ const demo: Required<
   mpesaRef: "SJ41K7QX2P",
   date: "Thu 1 Oct, 06:00",
   coinsAdded: "1,500",
-  rolledOver: "118",
-  walletNow: "1,618",
+  rolledOver: "944",
+  walletNow: "2,444",
   amount: "Ksh 15,000",
   phone: "0712 345 678",
   reason: "M-Pesa request not approved",
@@ -118,8 +118,12 @@ export const EMAIL_NAMES: EmailName[] = [
   "gift-received",
   "provider-application",
   "provider-approved",
+  "provider-changes",
+  "provider-rejected",
   "provider-new-booking",
   "provider-weekly-payout",
+  "dispute-member",
+  "dispute-studio",
 ];
 
 export function renderEmail(name: EmailName, input?: TemplateInput): EmailPayload {
@@ -235,7 +239,7 @@ export function renderEmail(name: EmailName, input?: TemplateInput): EmailPayloa
               { label: "Charge date", value: d.renewalDate },
             ]) +
             small(
-              "Unused coins: 10% roll over for one month. The rest expire on Sat 31 Oct at midnight, so this is a good week to book.",
+              "Unused coins: 80% roll over for one month. The other 20% are taken back on Sat 31 Oct at midnight, so this is a good week to book.",
             ),
           cta: { label: "Book before 31 Oct", href: d.ctaUrl },
           afterCtaHtml: small("Change or pause my plan"),
@@ -405,8 +409,8 @@ export function renderEmail(name: EmailName, input?: TemplateInput): EmailPayloa
               { label: "Plan coins added", value: "1,500" },
               { label: "Spent on 2 visits", value: "−320" },
               { label: "Unused at month end", value: "1,180" },
-              { label: "Rolled into October (10%)", value: "+118" },
-              { label: "Expired", value: "1,062" },
+              { label: "Rolled into October (80%)", value: "+944" },
+              { label: "Taken back (20%)", value: "236" },
             ]) +
             small(
               "Rolled-over coins are spent first and last until Sat 31 Oct. Booking earlier in the month gets the most out of your plan.",
@@ -442,10 +446,10 @@ export function renderEmail(name: EmailName, input?: TemplateInput): EmailPayloa
         subject: `${d.giftFrom.split(" ")[0]} sent you ${d.coins} Beauty Wallet coins`,
         html: emailShell({
           eyebrow: "A GIFT FOR YOU",
-          title: `You’ve got a gift, ${d.firstName === "Amani" ? "Nadia" : d.firstName}`,
+          title: `You’ve got a gift, ${d.firstName}`,
           bodyHtml:
             p(
-              `${d.giftFrom} gave you a month of Intermediate: ${d.coins} coins to spend on hair, nails, spa and more across Nairobi.`,
+              `${d.giftFrom} gave you a ${d.tier} plan: ${d.coins} coins to spend on hair, nails, spa and more across Nairobi.`,
             ) +
             pHtml(`<em style="font-family:Georgia,serif;font-size:18px;">“${d.message}”</em>`) +
             summaryBox([
@@ -476,7 +480,7 @@ export function renderEmail(name: EmailName, input?: TemplateInput): EmailPayloa
               { label: "3. Go live", value: "Class and payout agreed" },
             ]) +
             p(
-              "We’ll call you on 0733 204 615 to book the studio visit. Have your business permit, KRA PIN certificate and ID ready.",
+              "Keep your business permit and owner ID ready. You can follow the decision on your application page.",
             ),
           cta: { label: "View application", href: d.ctaUrl },
         }),
@@ -493,17 +497,47 @@ export function renderEmail(name: EmailName, input?: TemplateInput): EmailPayloa
           bodyHtml:
             p("Members can find and book you from today. Here’s how you get paid:") +
             summaryBox([
-              { label: "Class", value: "Basic" },
-              { label: "Your payout", value: "85% of your cash price" },
-              { label: "Payouts", value: "Every Tuesday to your M-Pesa till" },
-              { label: "Class review", value: "Every quarter" },
+              { label: "Class", value: d.tier || "Set on approval" },
+              { label: "Your payout", value: d.payout || "Set on approval" },
+              { label: "Reference", value: d.reference || "—" },
+              { label: "Sign in", value: "Use the email on this application" },
             ]) +
             small(
               "Members pay in coins; you get paid in shillings. You never handle coins, and every visit starts with the member’s arrival PIN.",
             ),
           cta: { label: "Open provider portal", href: d.ctaUrl },
         }),
-        text: textFrom([`${d.company} is live`, "Open provider portal"]),
+        text: textFrom([`${d.company} is live`, d.ctaUrl]),
+      };
+
+    case "provider-changes":
+      return {
+        subject: `A change is needed on ${d.company}`,
+        html: emailShell({
+          providerTone: true,
+          eyebrow: "CHANGES REQUESTED",
+          title: `We need one update, ${d.company}`,
+          bodyHtml:
+            small(`Reference ${d.reference}`) +
+            p(d.message || "Open your application to see what we need before you can go live."),
+          cta: { label: "View application", href: d.ctaUrl },
+        }),
+        text: textFrom([`Changes requested · ${d.reference}`, d.message, d.ctaUrl]),
+      };
+
+    case "provider-rejected":
+      return {
+        subject: `Update on ${d.company}`,
+        html: emailShell({
+          providerTone: true,
+          eyebrow: "APPLICATION CLOSED",
+          title: `${d.company} will not go live`,
+          bodyHtml:
+            small(`Reference ${d.reference}`) +
+            p(d.message || "We’ve closed this application. The status page has the note."),
+          cta: { label: "View status", href: d.ctaUrl },
+        }),
+        text: textFrom([`Application closed · ${d.reference}`, d.message, d.ctaUrl]),
       };
 
     case "provider-new-booking":
@@ -520,11 +554,10 @@ export function renderEmail(name: EmailName, input?: TemplateInput): EmailPayloa
               { label: "When", value: d.when },
               { label: "Stylist", value: d.stylist },
               { label: "Your payout", value: d.payout },
-            ]) + small("Ask for Amani’s 4-digit arrival PIN at check-in to start the visit."),
-          cta: { label: "Open booking", href: d.ctaUrl },
-          afterCtaHtml: small(
-            `If ${d.firstName} cancels after ${d.cancelBy}, or doesn’t arrive within 20 minutes, you get Ksh 2,400.`,
-          ),
+            ]) +
+            small("Ask the member for their arrival PIN at check-in. The PIN is not in this email."),
+          cta: { label: "Open the studio", href: d.ctaUrl },
+          afterCtaHtml: small("A late cancellation or a no-show follows the visit rules already on the booking."),
         }),
         text: textFrom([`New booking · ${d.service}`, d.when, d.payout]),
       };
@@ -548,6 +581,43 @@ export function renderEmail(name: EmailName, input?: TemplateInput): EmailPayloa
           afterCtaHtml: small("Payouts for this week arrive on Tue 13 Oct."),
         }),
         text: textFrom(["Payout Ksh 71,200", d.period]),
+      };
+
+    case "dispute-member":
+      return {
+        subject: `Dispute ${d.code} is decided`,
+        html: emailShell({
+          eyebrow: "DISPUTE",
+          title: `${d.firstName}, your dispute is decided`,
+          bodyHtml:
+            p(d.message || "The operations team recorded a decision.") +
+            summaryBox([
+              { label: "Dispute", value: d.code },
+              { label: "Studio", value: d.provider },
+              { label: "Coins returned", value: d.coinsReturned || "0" },
+            ]),
+          cta: { label: "Open your wallet", href: d.ctaUrl },
+        }),
+        text: textFrom([`Dispute ${d.code}`, d.message, `Coins returned: ${d.coinsReturned}`]),
+      };
+
+    case "dispute-studio":
+      return {
+        subject: `Dispute ${d.code} is decided`,
+        html: emailShell({
+          providerTone: true,
+          eyebrow: "DISPUTE",
+          title: `A dispute on ${d.company} is decided`,
+          bodyHtml:
+            p(d.message || "The operations team recorded a decision.") +
+            summaryBox([
+              { label: "Dispute", value: d.code },
+              { label: "Member", value: d.fullName },
+              { label: "Coins returned to the member", value: d.coinsReturned || "0" },
+            ]),
+          cta: { label: "Open the studio", href: d.ctaUrl },
+        }),
+        text: textFrom([`Dispute ${d.code}`, d.message, `Coins returned: ${d.coinsReturned}`]),
       };
   }
 }

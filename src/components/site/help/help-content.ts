@@ -78,11 +78,11 @@ export const POPULAR_ARTICLES: HelpArticle[] = [
   },
   {
     id: "rollover",
-    question: "How does the 10% rollover work?",
+    question: "How does the 80% rollover work?",
     answer:
-      "At renewal, 10% of your unused coins carry into the new month and can be used until that month ends. The rest expire. One coin is worth Ksh 10 of service value.",
+      "At renewal, 80% of your unused coins carry into the new month and can be used until that month ends. The other 20% are taken back. One coin is worth Ksh 10 of service value.",
     topic: "coins",
-    keywords: ["rollover", "10%", "unused", "expire"],
+    keywords: ["rollover", "80%", "unused", "expire"],
   },
   {
     id: "basic-unlock",
@@ -113,11 +113,11 @@ export const POPULAR_ARTICLES: HelpArticle[] = [
 export const COIN_FAQS: HelpArticle[] = [
   {
     id: "rollover-faq",
-    question: "How does the 10% rollover work?",
+    question: "How does the 80% rollover work?",
     answer:
-      "At renewal, 10% of your unused coins carry into the new month and can be used until that month ends. The rest expire.",
+      "At renewal, 80% of your unused coins carry into the new month and can be used until that month ends. The other 20% are taken back.",
     topic: "coins",
-    keywords: ["rollover", "10%"],
+    keywords: ["rollover", "80%"],
   },
   {
     id: "pause",

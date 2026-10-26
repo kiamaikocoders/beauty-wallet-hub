@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { FaqRow, StepCard } from "@/components/site/cards";
 import { Icon, Responsive, Section, buttonClass, tierName } from "@/components/site/primitives";
+import { recordGift } from "@/lib/command-center";
+import { notifyEmail } from "@/lib/resend";
 import { ksh, num, pct, type CoinRules, type TierId, TIER_ORDER } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 
@@ -58,6 +60,10 @@ export function GiftPage({ rules }: { rules: CoinRules }) {
   const [when, setWhen] = useState<"now" | "date">("now");
   const [from, setFrom] = useState("");
   const [payWith, setPayWith] = useState<"mpesa" | "card">("mpesa");
+  const [arrive, setArrive] = useState("");
+  const [code, setCode] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [giftError, setGiftError] = useState<string | null>(null);
 
   const selected = rules.tiers[tier];
   const msgLen = message.length;
@@ -266,14 +272,63 @@ export function GiftPage({ rules }: { rules: CoinRules }) {
               </button>
             ))}
           </div>
-          <a
-            href={`/join?gift=${tier}`}
+          {when === "date" && (
+            <label className="flex flex-col gap-2">
+              <span className="type-body-s-medium text-foreground">Arrival date</span>
+              <input
+                type="date"
+                value={arrive}
+                onChange={(event) => setArrive(event.target.value)}
+                className="h-12 rounded-md border border-border bg-card px-4 outline-none"
+              />
+            </label>
+          )}
+          <button
+            type="button"
+            disabled={busy}
             className={buttonClass({ variant: "emphasis", full: true })}
+            onClick={() => {
+              setBusy(true);
+              setGiftError(null);
+              void recordGift({
+                fromName: from,
+                toName: name,
+                toPhone: phone,
+                toEmail: email,
+                message,
+                tier,
+                arriveOn: when === "date" ? arrive || null : null,
+              })
+                .then((saved) => {
+                  setCode(saved.code);
+                  if (email.includes("@")) {
+                    notifyEmail({
+                      to: email,
+                      template: "gift-received",
+                      data: {
+                        firstName: name.split(/\s+/)[0] || name,
+                        giftFrom: from || "Someone",
+                        code: saved.code,
+                        coins: num(saved.coins),
+                        tier: tierName[tier],
+                        claimBy: String(saved.claimBy),
+                        ctaUrl: `${window.location.origin}/join?gift=${tier}`,
+                      },
+                    });
+                  }
+                })
+                .catch((err) => setGiftError(err instanceof Error ? err.message : "Could not record the gift"))
+                .finally(() => setBusy(false));
+            }}
           >
-            Pay {ksh(selected.priceKsh)}
-          </a>
+            Record gift · {ksh(selected.priceKsh)}
+          </button>
+          {code && (
+            <p className="type-body-s-semibold text-foreground">Recorded as {code}. Payment is not taken yet.</p>
+          )}
+          {giftError && <p className="type-body-s text-destructive">{giftError}</p>}
           <p className="type-caption text-muted-foreground">
-            They have 30 days to claim. Unclaimed gifts are refunded to you.
+            This saves the gift for operations. M-Pesa and card collection are not connected, so nothing is charged.
           </p>
         </aside>
       </Section>

@@ -2,8 +2,9 @@ import { Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/site/primitives";
-import { ADMIN_USER, OVERVIEW } from "@/lib/admin-seed";
+import { ADMIN_USER } from "@/lib/admin-seed";
 import { fetchAdminSession } from "@/lib/auth";
+import { searchAdmin, type SearchGroup } from "@/lib/command-center";
 import { ADMIN_NAV, navKeyFromPath, PAGE_TITLES, type AdminNavKey } from "./nav";
 import { AdminIcon, SearchField } from "./ui";
 
@@ -70,13 +71,11 @@ function AdminSidebar({
       </div>
       <div className="mt-4 flex w-full shrink-0 flex-col gap-4">
         <Link
-          to="/admin/rates"
+          to="/admin/map"
           className="rounded-[14px] bg-primary-raised p-3.5 text-primary-foreground transition-colors hover:bg-primary-raised/80"
         >
-          <p className="type-body-s-semibold">Margin this month</p>
-          <p className="type-caption opacity-70">
-            {OVERVIEW.marginPct} · {OVERVIEW.marginWarning}
-          </p>
+          <p className="type-body-s-semibold">Live map</p>
+          <p className="type-caption opacity-70">Studios, members and density</p>
         </Link>
         <div className="flex items-center gap-2.5 border-t border-primary-raised pt-4">
           <img
@@ -96,6 +95,62 @@ function AdminSidebar({
   );
 }
 
+function HeaderSearch({ placeholder }: { placeholder: string }) {
+  const [query, setQuery] = useState("");
+  const [groups, setGroups] = useState<SearchGroup[]>([]);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const text = query.trim();
+    if (text.length < 2) {
+      setGroups([]);
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      void searchAdmin(text)
+        .then(setGroups)
+        .catch(() => setGroups([]));
+    }, 200);
+    return () => window.clearTimeout(timer);
+  }, [query]);
+
+  return (
+    <div className="relative hidden min-w-0 md:block">
+      <SearchField
+        placeholder={placeholder}
+        value={query}
+        onChange={(value) => {
+          setQuery(value);
+          setOpen(true);
+        }}
+      />
+      {open && query.trim().length >= 2 && (
+        <div className="absolute right-0 top-14 z-50 max-h-96 w-[360px] overflow-y-auto rounded-2xl border border-border bg-white p-2 shadow-lg">
+          {groups.length === 0 && (
+            <p className="px-3 py-3 type-body-s text-muted-foreground">No matches.</p>
+          )}
+          {groups.map((group) => (
+            <div key={group.title} className="py-1">
+              <p className="px-3 py-1 type-caption text-muted-foreground">{group.title}</p>
+              {group.hits.map((hit) => (
+                <a
+                  key={hit.href + hit.label}
+                  href={hit.href}
+                  className="block rounded-xl px-3 py-2 hover:bg-muted"
+                  onClick={() => setOpen(false)}
+                >
+                  <p className="type-body-s-semibold">{hit.label}</p>
+                  <p className="type-caption text-muted-foreground">{hit.hint}</p>
+                </a>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AdminTopBar({
   title,
   searchPlaceholder,
@@ -112,12 +167,7 @@ function AdminTopBar({
       <h1 className="min-w-0 flex-1 font-display text-[22px] leading-[1.2] text-foreground lg:text-[28px]">
         {title}
       </h1>
-      <SearchField
-        placeholder={searchPlaceholder}
-        className="hidden lg:flex"
-        readOnly
-        title="Search is not connected yet"
-      />
+      <HeaderSearch placeholder={searchPlaceholder} />
       {actions}
       <Link
         to="/admin/settings"

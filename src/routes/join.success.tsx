@@ -135,7 +135,7 @@ function SuccessPage() {
             <div className="h-px w-full bg-primary-raised" />
             <div className="flex gap-6">
               <Meta label="On hold" value="0 coins" />
-              <Meta label="Rolls over (10%)" value="0 coins" />
+              <Meta label={`Rolls over (${pct(rules.rolloverPct)})`} value="0 coins" />
               <Meta label="Renews" value={formatRenewalShort(renews)} />
             </div>
           </div>

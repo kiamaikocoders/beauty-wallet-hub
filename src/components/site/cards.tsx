@@ -173,7 +173,7 @@ export function WalletCard({
   value,
   onHold,
   rollover,
-  rolloverLabel = "Rolls over (10%)",
+  rolloverLabel = "Rolls over (80%)",
   renews,
   className,
 }: {

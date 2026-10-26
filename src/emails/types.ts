@@ -16,8 +16,12 @@ export type EmailName =
   | "gift-received"
   | "provider-application"
   | "provider-approved"
+  | "provider-changes"
+  | "provider-rejected"
   | "provider-new-booking"
-  | "provider-weekly-payout";
+  | "provider-weekly-payout"
+  | "dispute-member"
+  | "dispute-studio";
 
 export type EmailPayload = {
   subject: string;

@@ -15,7 +15,7 @@ export function pricingFaqs(rules: CoinRules) {
     },
     {
       question: "Do coins expire?",
-      answer: `Most unused coins expire on your renewal date. ${roll} roll over into next month and last one more month.`,
+      answer: `${roll} of unused coins roll over into next month and last one more month. The other 20% are taken back on your renewal date.`,
     },
     {
       question: "What payment methods do you accept?",

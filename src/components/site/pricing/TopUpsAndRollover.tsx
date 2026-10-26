@@ -64,7 +64,7 @@ export function TopUpsAndRollover({ rules }: { rules: CoinRules }) {
               </div>
             </div>
             <p className="type-body-s text-gold">
-              The other {num(expired)} coins expire when your new month starts.
+              The other {num(expired)} coins, 20% of what was left, are taken back when your new month starts.
             </p>
           </div>
         </div>

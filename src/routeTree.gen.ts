@@ -30,9 +30,11 @@ import { Route as TeamsRouteImport } from './routes/teams'
 import { Route as VendorRouteImport } from './routes/vendor'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as Admin2faRouteImport } from './routes/admin.2fa'
+import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminBookingsRouteImport } from './routes/admin.bookings'
 import { Route as AdminDisputesRouteImport } from './routes/admin.disputes'
 import { Route as AdminFinanceRouteImport } from './routes/admin.finance'
+import { Route as AdminHealthRouteImport } from './routes/admin.health'
 import { Route as AdminMapRouteImport } from './routes/admin.map'
 import { Route as AdminPayoutsRouteImport } from './routes/admin.payouts'
 import { Route as AdminRatesRouteImport } from './routes/admin.rates'
@@ -195,6 +197,11 @@ const Admin2faRoute = Admin2faRouteImport.update({
   path: '/2fa',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBookingsRoute = AdminBookingsRouteImport.update({
   id: '/bookings',
   path: '/bookings',
@@ -208,6 +215,11 @@ const AdminDisputesRoute = AdminDisputesRouteImport.update({
 const AdminFinanceRoute = AdminFinanceRouteImport.update({
   id: '/finance',
   path: '/finance',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHealthRoute = AdminHealthRouteImport.update({
+  id: '/health',
+  path: '/health',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminMapRoute = AdminMapRouteImport.update({
@@ -512,9 +524,11 @@ export interface FileRoutesByFullPath {
   '/teams': typeof TeamsRouteWithChildren
   '/vendor': typeof VendorRoute
   '/admin/2fa': typeof Admin2faRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/finance': typeof AdminFinanceRoute
+  '/admin/health': typeof AdminHealthRoute
   '/admin/map': typeof AdminMapRoute
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/rates': typeof AdminRatesRoute
@@ -589,9 +603,11 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/vendor': typeof VendorRoute
   '/admin/2fa': typeof Admin2faRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/finance': typeof AdminFinanceRoute
+  '/admin/health': typeof AdminHealthRoute
   '/admin/map': typeof AdminMapRoute
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/rates': typeof AdminRatesRoute
@@ -669,9 +685,11 @@ export interface FileRoutesById {
   '/teams': typeof TeamsRouteWithChildren
   '/vendor': typeof VendorRoute
   '/admin/2fa': typeof Admin2faRoute
+  '/admin/audit': typeof AdminAuditRoute
   '/admin/bookings': typeof AdminBookingsRoute
   '/admin/disputes': typeof AdminDisputesRoute
   '/admin/finance': typeof AdminFinanceRoute
+  '/admin/health': typeof AdminHealthRoute
   '/admin/map': typeof AdminMapRoute
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/rates': typeof AdminRatesRoute
@@ -753,9 +771,11 @@ export interface FileRouteTypes {
     | '/teams'
     | '/vendor'
     | '/admin/2fa'
+    | '/admin/audit'
     | '/admin/bookings'
     | '/admin/disputes'
     | '/admin/finance'
+    | '/admin/health'
     | '/admin/map'
     | '/admin/payouts'
     | '/admin/rates'
@@ -830,9 +850,11 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/vendor'
     | '/admin/2fa'
+    | '/admin/audit'
     | '/admin/bookings'
     | '/admin/disputes'
     | '/admin/finance'
+    | '/admin/health'
     | '/admin/map'
     | '/admin/payouts'
     | '/admin/rates'
@@ -909,9 +931,11 @@ export interface FileRouteTypes {
     | '/teams'
     | '/vendor'
     | '/admin/2fa'
+    | '/admin/audit'
     | '/admin/bookings'
     | '/admin/disputes'
     | '/admin/finance'
+    | '/admin/health'
     | '/admin/map'
     | '/admin/payouts'
     | '/admin/rates'
@@ -1147,6 +1171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Admin2faRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/bookings': {
       id: '/admin/bookings'
       path: '/bookings'
@@ -1166,6 +1197,13 @@ declare module '@tanstack/react-router' {
       path: '/finance'
       fullPath: '/admin/finance'
       preLoaderRoute: typeof AdminFinanceRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/health': {
+      id: '/admin/health'
+      path: '/health'
+      fullPath: '/admin/health'
+      preLoaderRoute: typeof AdminHealthRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/map': {
@@ -1565,9 +1603,11 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   Admin2faRoute: typeof Admin2faRoute
+  AdminAuditRoute: typeof AdminAuditRoute
   AdminBookingsRoute: typeof AdminBookingsRoute
   AdminDisputesRoute: typeof AdminDisputesRoute
   AdminFinanceRoute: typeof AdminFinanceRoute
+  AdminHealthRoute: typeof AdminHealthRoute
   AdminMapRoute: typeof AdminMapRoute
   AdminPayoutsRoute: typeof AdminPayoutsRoute
   AdminRatesRoute: typeof AdminRatesRoute
@@ -1585,9 +1625,11 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   Admin2faRoute: Admin2faRoute,
+  AdminAuditRoute: AdminAuditRoute,
   AdminBookingsRoute: AdminBookingsRoute,
   AdminDisputesRoute: AdminDisputesRoute,
   AdminFinanceRoute: AdminFinanceRoute,
+  AdminHealthRoute: AdminHealthRoute,
   AdminMapRoute: AdminMapRoute,
   AdminPayoutsRoute: AdminPayoutsRoute,
   AdminRatesRoute: AdminRatesRoute,

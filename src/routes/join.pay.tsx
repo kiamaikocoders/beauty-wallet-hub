@@ -13,7 +13,7 @@ import {
   saveOnboarding,
 } from "@/lib/onboarding";
 import { activateDemoPlan, createPaymentIntent, updatePaymentStatus } from "@/lib/payments";
-import { ksh, num, type TierId } from "@/lib/pricing";
+import { ksh, num, pct, type TierId } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/join/pay")({
@@ -178,7 +178,7 @@ function PayPage() {
       priceLabel={ksh(t.priceKsh)}
       coins={num(t.monthlyCoins)}
       renewal={formatRenewal(renews)}
-      note={`Cancel any time before ${formatRenewal(renews).replace(/ \d{4}$/, "")}. Up to 10% of unused coins roll over for one month.`}
+      note={`Cancel any time before ${formatRenewal(renews).replace(/ \d{4}$/, "")}. ${pct(rules.rolloverPct)} of unused coins roll over for one month. The other 20% are taken back.`}
     />
   );
 

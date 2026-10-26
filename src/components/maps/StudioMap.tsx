@@ -1,68 +1,118 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Map, { Layer, Marker, NavigationControl, Popup, Source, type MapRef } from "react-map-gl/mapbox";
-import type { MemberPoint, StudioPoint } from "@/lib/admin-map";
+import type { HeatmapLayerSpecification } from "mapbox-gl";
+import {
+  STUDIO_STATUS_RING,
+  studioFill,
+  type MapLayers,
+  type MemberPoint,
+  type StudioPoint,
+} from "@/lib/admin-map";
 import { MAP_STYLE_LIGHT, MAPBOX_TOKEN, NAIROBI } from "@/lib/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const GOLD_FOREST: [number, string][] = [
-  [0, "rgba(0,0,0,0)"],
-  [0.2, "#f5e6c8"],
-  [0.45, "#c6a15b"],
-  [0.7, "#6b1d38"],
-  [1, "#3d1020"],
-];
+type HeatPaint = NonNullable<HeatmapLayerSpecification["paint"]>;
+
+const HEAT: HeatPaint = {
+  "heatmap-radius": 36,
+  "heatmap-intensity": 1.05,
+  "heatmap-opacity": 0.72,
+  "heatmap-weight": 0.85,
+  "heatmap-color": [
+    "interpolate",
+    ["linear"],
+    ["heatmap-density"],
+    0,
+    "rgba(198,161,91,0)",
+    0.2,
+    "#f5e6c8",
+    0.45,
+    "#c6a15b",
+    0.72,
+    "#6b1d38",
+    1,
+    "#3d1020",
+  ],
+};
+
+export type MapSelection =
+  | { kind: "studio"; id: string }
+  | { kind: "member"; id: string };
 
 export function StudioMap({
   studios,
   members,
-  showStudios,
-  showMembers,
+  layers,
+  selected,
+  onSelect,
 }: {
   studios: StudioPoint[];
   members: MemberPoint[];
-  showStudios: boolean;
-  showMembers: boolean;
+  layers: MapLayers;
+  selected: MapSelection | null;
+  onSelect: (next: MapSelection | null) => void;
 }) {
   const mapRef = useRef<MapRef>(null);
   const [mounted, setMounted] = useState(false);
-  const [selected, setSelected] = useState<StudioPoint | null>(null);
-
   useEffect(() => setMounted(true), []);
 
-  const heat = useMemo(
-    () => ({
+  const studio = selected?.kind === "studio" ? studios.find((row) => row.id === selected.id) : null;
+  const member = selected?.kind === "member" ? members.find((row) => row.id === selected.id) : null;
+
+  const heat = useMemo(() => {
+    const points = layers.members
+      ? members.map((row) => [row.lng, row.lat] as const)
+      : studios.map((row) => [row.lng, row.lat] as const);
+    return {
       type: "FeatureCollection" as const,
-      features: members.map((m) => ({
+      features: points.map(([lng, lat]) => ({
         type: "Feature" as const,
         properties: { weight: 1 },
-        geometry: { type: "Point" as const, coordinates: [m.lng, m.lat] },
+        geometry: { type: "Point" as const, coordinates: [lng, lat] },
       })),
-    }),
-    [members],
-  );
+    };
+  }, [layers.members, members, studios]);
+
+  const focus = useMemo(() => {
+    const points: [number, number][] = [];
+    if (layers.studios) studios.forEach((row) => points.push([row.lng, row.lat]));
+    if (layers.members) members.forEach((row) => points.push([row.lng, row.lat]));
+    return points;
+  }, [layers.members, layers.studios, members, studios]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || studios.length === 0) return;
-    const lngs = studios.map((s) => s.lng);
-    const lats = studios.map((s) => s.lat);
+    if (!mounted || !map || focus.length === 0) return;
+    const lngs = focus.map((point) => point[0]);
+    const lats = focus.map((point) => point[1]);
+    if (Math.min(...lngs) === Math.max(...lngs) && Math.min(...lats) === Math.max(...lats)) {
+      map.flyTo({ center: [lngs[0]!, lats[0]!], zoom: 13, duration: 600 });
+      return;
+    }
     map.fitBounds(
       [
         [Math.min(...lngs), Math.min(...lats)],
         [Math.max(...lngs), Math.max(...lats)],
       ],
-      { padding: 80, maxZoom: 12, duration: 0 },
+      { padding: 72, maxZoom: 13, duration: 600 },
     );
-  }, [studios, mounted]);
+  }, [focus, mounted]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    const point = studio ?? member;
+    if (!map || !point) return;
+    map.flyTo({ center: [point.lng, point.lat], zoom: Math.max(map.getZoom(), 13), duration: 500 });
+  }, [studio, member]);
 
   if (!mounted) {
-    return <div className="h-full min-h-[320px] rounded-[20px] bg-blush-subtle" />;
+    return <div className="h-full min-h-[28rem] w-full animate-pulse bg-blush-subtle" />;
   }
 
   if (!MAPBOX_TOKEN) {
     return (
-      <div className="grid h-full min-h-[320px] place-items-center rounded-[20px] bg-blush-subtle px-6 text-center type-body-s text-muted-foreground">
-        Set VITE_MAPBOX_ACCESS_TOKEN to load the studio map.
+      <div className="grid h-full min-h-[28rem] place-items-center bg-blush-subtle px-6 text-center type-body-s text-muted-foreground">
+        Set VITE_MAPBOX_ACCESS_TOKEN to load the operations map.
       </div>
     );
   }
@@ -73,63 +123,79 @@ export function StudioMap({
       mapboxAccessToken={MAPBOX_TOKEN}
       mapStyle={MAP_STYLE_LIGHT}
       initialViewState={NAIROBI}
-      style={{ width: "100%", height: "100%", minHeight: 320, borderRadius: 20 }}
-      attributionControl={false}
+      style={{ width: "100%", height: "100%" }}
+      attributionControl
+      onClick={() => onSelect(null)}
     >
-      {showMembers && (
-        <Source id="members" type="geojson" data={heat}>
-          <Layer
-            id="member-heat"
-            type="heatmap"
-            paint={{
-              "heatmap-weight": ["get", "weight"],
-              "heatmap-intensity": 1,
-              "heatmap-radius": 28,
-              "heatmap-opacity": 0.7,
-              "heatmap-color": [
-                "interpolate",
-                ["linear"],
-                ["heatmap-density"],
-                ...GOLD_FOREST.flat(),
-              ],
-            }}
-          />
+      <NavigationControl position="bottom-right" showCompass={false} />
+      {layers.density && (
+        <Source id="density" type="geojson" data={heat}>
+          <Layer id="density-heat" type="heatmap" paint={HEAT} />
         </Source>
       )}
-      {showStudios &&
-        studios.map((studio) => (
+      {layers.members &&
+        members.map((row) => (
           <Marker
-            key={studio.id}
-            longitude={studio.lng}
-            latitude={studio.lat}
-            anchor="bottom"
+            key={row.id}
+            longitude={row.lng}
+            latitude={row.lat}
+            anchor="center"
             onClick={(event) => {
               event.originalEvent.stopPropagation();
-              setSelected(studio);
+              onSelect({ kind: "member", id: row.id });
             }}
           >
             <button
               type="button"
-              className="block size-3.5 rounded-full border-2 border-white bg-burgundy shadow"
-              aria-label={studio.name}
-            />
+              aria-label={`${row.name}, member`}
+              className="grid size-6 place-items-center"
+            >
+              <span className="size-2.5 rounded-full bg-[#c6a15b] ring-2 ring-white shadow" />
+            </button>
           </Marker>
         ))}
-      {selected && showStudios && (
-        <Popup
-          longitude={selected.lng}
-          latitude={selected.lat}
-          anchor="top"
-          onClose={() => setSelected(null)}
-          closeButton
-        >
-          <p className="text-sm font-semibold">{selected.name}</p>
+      {layers.studios &&
+        studios.map((row) => (
+          <Marker
+            key={row.id}
+            longitude={row.lng}
+            latitude={row.lat}
+            anchor="center"
+            onClick={(event) => {
+              event.originalEvent.stopPropagation();
+              onSelect({ kind: "studio", id: row.id });
+            }}
+          >
+            <button type="button" aria-label={`${row.name}, ${row.kind}`} className="relative grid size-7 place-items-center">
+              {row.status === "applied" && (
+                <span className="absolute size-6 animate-ping rounded-full bg-amber-400/50" />
+              )}
+              <span
+                className="relative size-3.5 rounded-full ring-2 ring-white"
+                style={{
+                  background: studioFill(row.kind),
+                  boxShadow: `0 0 0 2.5px ${STUDIO_STATUS_RING[row.status] ?? "#6b1d38"}`,
+                }}
+              />
+            </button>
+          </Marker>
+        ))}
+      {studio && layers.studios && (
+        <Popup longitude={studio.lng} latitude={studio.lat} anchor="bottom" offset={18} closeButton={false} closeOnClick={false}>
+          <p className="text-sm font-semibold">{studio.name}</p>
           <p className="text-xs text-neutral-600">
-            {selected.area} · {selected.kind} · {selected.status}
+            {studio.area} · {studio.kind} · {studio.status}
           </p>
         </Popup>
       )}
-      <NavigationControl position="top-right" showCompass={false} />
+      {member && layers.members && (
+        <Popup longitude={member.lng} latitude={member.lat} anchor="bottom" offset={14} closeButton={false} closeOnClick={false}>
+          <p className="text-sm font-semibold">{member.name}</p>
+          <p className="text-xs text-neutral-600">
+            {member.area} · {member.plan} · {member.status}
+          </p>
+        </Popup>
+      )}
     </Map>
   );
 }

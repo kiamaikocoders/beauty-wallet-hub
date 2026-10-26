@@ -3,6 +3,10 @@
     "vercel": {
       "type": "http",
       "url": "https://mcp.vercel.com"
+    },
+    "resend": {
+      "type": "streamable-http",
+      "url": "https://mcp.resend.com/mcp"
     }
   }
 }

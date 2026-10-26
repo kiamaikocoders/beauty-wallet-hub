@@ -47,7 +47,7 @@ export async function adminResolveDispute(input: {
   decision: "redo" | "half" | "full";
   note: string;
 }) {
-  return rpc<{ ok: boolean }>("admin_resolve_dispute", {
+  return rpc<{ ok: boolean; refundCoins?: number }>("admin_resolve_dispute", {
     p_code: input.code,
     p_decision: input.decision,
     p_note: input.note,
@@ -73,11 +73,23 @@ export async function adminReviewProvider(input: {
   decision: "approve" | "reject" | "ask_changes";
   classId?: TierId;
   payoutPct?: number;
+  note?: string;
 }) {
-  return rpc<{ ok: boolean }>("admin_review_provider", {
+  return rpc<{
+    ok: boolean;
+    status: string;
+    email: string | null;
+    phone: string | null;
+    name: string;
+    slug: string;
+    ref: string | null;
+    class: TierId;
+    payoutPct: number;
+  }>("admin_review_provider", {
     p_slug: input.slug,
     p_decision: input.decision,
     p_class: input.classId ?? null,
     p_payout_pct: input.payoutPct ?? null,
+    p_note: input.note ?? null,
   });
 }

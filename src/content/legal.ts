@@ -33,7 +33,7 @@ export const LEGAL_DOCS: Record<LegalSlug, LegalDoc> = {
     updated: "Last updated 1 October 2026",
     summaryTitle: "The short version",
     summary:
-      "Coins are for booking services, not cash. 10% of unused coins roll over for one month. Coins only reach a provider after your PIN check-in.",
+      "Coins are for booking services, not cash. 80% of unused coins roll over for one month, and 20% are taken back. Coins only reach a provider after your PIN check-in.",
     sections: [
       {
         id: "what-coins-are",
@@ -62,7 +62,7 @@ export const LEGAL_DOCS: Record<LegalSlug, LegalDoc> = {
         id: "rollover-and-expiry",
         title: "Rollover and expiry",
         paragraphs: [
-          "At renewal, 10% of your unused coins roll over to the new month. Rolled-over coins expire at the end of that month. All other unused coins expire at renewal.",
+          "At renewal, 80% of your unused coins roll over to the new month. Rolled-over coins expire at the end of that month. The other 20% are taken back at renewal.",
         ],
       },
       {
@@ -122,7 +122,7 @@ export const LEGAL_DOCS: Record<LegalSlug, LegalDoc> = {
         title: "Coins",
         paragraphs: [
           "Coins are an internal booking unit. They are not e-money, a stored-value facility or a claim for cash. Full rules are in the Coin policy, which forms part of these terms.",
-          "10% of unused coins may roll over for one month. Coins only leave your wallet for a provider after PIN check-in and completion of the service.",
+          "80% of unused coins roll over for one month. The other 20% are taken back at renewal. Coins only leave your wallet for a provider after PIN check-in and completion of the service.",
         ],
       },
       {

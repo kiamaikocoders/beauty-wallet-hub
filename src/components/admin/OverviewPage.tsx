@@ -1,98 +1,78 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { buttonClass } from "@/components/site/primitives";
-import { TierBadge } from "@/components/site/primitives";
-import { OVERVIEW } from "@/lib/admin-seed";
-import { fetchAdminDirectory } from "@/lib/admin-live";
-import { AdminIcon, CardPanel, Panel, SectionTitle, StatCard } from "./ui";
-
-const attentionIcons: Record<string, string> = {
-  apps: "store",
-  disputes: "flag",
-  holds: "banknote",
-  price: "pencil",
-};
+import { fetchOpsBoard, type OpsBoard } from "@/lib/admin-ops";
+import { Panel, SectionTitle, StatCard } from "./ui";
 
 export function OverviewPage() {
-  const [liveMembers, setLiveMembers] = useState<number | null>(null);
-  const [liveBookings, setLiveBookings] = useState<number | null>(null);
+  const [board, setBoard] = useState<OpsBoard | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    void fetchAdminDirectory().then((dir) => {
-      if (!dir) return;
-      setLiveMembers(dir.stats.members);
-      setLiveBookings(dir.stats.bookingsThisMonth);
-    });
+    void fetchOpsBoard()
+      .then((next) => {
+        if (!next) setError("The operations board did not load.");
+        else setBoard(next);
+      })
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : "The operations board did not load.");
+      });
   }, []);
 
-  const maxVisits = Math.max(...OVERVIEW.visitsPerDay.map((d) => d.count));
-  const maxPlan = Math.max(...OVERVIEW.membersByPlan.map((p) => p.count));
+  if (!board) {
+    return <p className="type-body-s text-muted-foreground">{error ?? "Loading the live board…"}</p>;
+  }
+
+  const maxVisits = Math.max(1, ...board.visits.map((day) => day.count));
+  const attention = [
+    {
+      title: `${board.applications} provider applications`,
+      detail: board.queue[0] ? `Newest: ${board.queue[0].name}` : "None waiting",
+      href: "/admin/providers" as const,
+      action: "Review",
+    },
+    {
+      title: `${board.openDisputes} open disputes`,
+      detail: "Resolve from the live dispute list",
+      href: "/admin/disputes" as const,
+      action: "Open",
+    },
+    {
+      title: `${board.missingPins} studios without a pin`,
+      detail: "They stay off the map until a location is saved",
+      href: "/admin/map" as const,
+      action: "Map",
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="type-body-s text-muted-foreground lg:hidden">{OVERVIEW.mobileDate}</p>
-
-      <div className="flex flex-col gap-3 rounded-lg border border-destructive bg-destructive-bg p-[18px] lg:flex-row lg:items-center lg:gap-3.5">
-        <AdminIcon name="alert-triangle" size={22} className="shrink-0" />
-        <div className="min-w-0 flex-1">
-          <p className="type-body-s-semibold text-foreground">{OVERVIEW.warningTitle}</p>
-          <p className="type-body-s text-foreground">{OVERVIEW.warningBody}</p>
-        </div>
-        <Link
-          to="/admin/rates"
-          className={buttonClass({ size: "s", className: "shrink-0 self-start lg:self-center" })}
-        >
-          Review rate bands
-        </Link>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 lg:hidden">
-        {OVERVIEW.mobileStats.map((s) => (
-          <CardPanel key={s.label} className="gap-1">
-            <p className="type-caption text-muted-foreground">{s.label}</p>
-            <p className="type-h3 text-foreground">{s.value}</p>
-          </CardPanel>
-        ))}
-      </div>
-
-      <div className="hidden gap-5 lg:flex">
-        {OVERVIEW.stats.map((s) => (
-          <StatCard
-            key={s.label}
-            label={s.label}
-            value={
-              s.label === "Active members" && liveMembers !== null
-                ? liveMembers.toLocaleString("en-KE")
-                : s.label.startsWith("Visits") && liveBookings !== null
-                  ? liveBookings.toLocaleString("en-KE")
-                  : s.value
-            }
-            delta={s.delta}
-            deltaTone={s.deltaTone}
-          />
-        ))}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label="Members" value={board.members.toLocaleString("en-KE")} />
+        <StatCard label="Live studios" value={String(board.liveProviders)} />
+        <StatCard
+          label="Applications"
+          value={String(board.applications)}
+          delta={board.applications > 0 ? "Waiting on a decision" : "Queue is clear"}
+          deltaTone={board.applications > 0 ? "warning" : "success"}
+        />
+        <StatCard label="Visits today" value={String(board.bookingsToday)} />
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
-        <Panel className="hidden lg:flex lg:flex-col lg:gap-3.5">
-          <SectionTitle
-            title="Visits per day"
-            action={<span className="type-body-s-semibold text-muted-foreground">October</span>}
-          />
+        <Panel className="flex flex-col gap-3.5">
+          <SectionTitle title="Visits, last 7 days" />
           <div className="flex items-end gap-3">
-            {OVERVIEW.visitsPerDay.map((d, i) => {
-              const h = Math.max(28, Math.round((d.count / maxVisits) * 150));
-              const last = i === OVERVIEW.visitsPerDay.length - 1;
+            {board.visits.map((day, index) => {
+              const height = Math.max(28, Math.round((day.count / maxVisits) * 150));
+              const last = index === board.visits.length - 1;
               return (
-                <div key={d.day} className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
-                  <span className="type-caption text-muted-foreground">{d.count}</span>
+                <div key={day.day + index} className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
+                  <span className="type-caption text-muted-foreground">{day.count}</span>
                   <div
-                    className={
-                      last ? "w-full rounded-md bg-burgundy" : "w-full rounded-md bg-blush"
-                    }
-                    style={{ height: h }}
+                    className={last ? "w-full rounded-md bg-burgundy" : "w-full rounded-md bg-blush"}
+                    style={{ height }}
                   />
-                  <span className="type-caption text-muted-foreground">{d.day}</span>
+                  <span className="type-caption text-muted-foreground">{day.day}</span>
                 </div>
               );
             })}
@@ -100,15 +80,12 @@ export function OverviewPage() {
         </Panel>
 
         <Panel className="flex flex-col gap-1">
-          <SectionTitle title="Needs attention" className="mb-3" />
-          {OVERVIEW.attention.map((item) => (
+          <SectionTitle title="Needs a decision" className="mb-3" />
+          {attention.map((item) => (
             <div
-              key={item.id}
+              key={item.title}
               className="flex items-center gap-3 border-t border-border py-3.5 first:border-t-0 first:pt-0"
             >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted">
-                <AdminIcon name={attentionIcons[item.id] ?? "alert-triangle"} size={18} />
-              </span>
               <div className="min-w-0 flex-1">
                 <p className="type-body-s-semibold">{item.title}</p>
                 <p className="type-caption text-muted-foreground">{item.detail}</p>
@@ -121,54 +98,66 @@ export function OverviewPage() {
         </Panel>
       </div>
 
-      <div className="hidden gap-5 lg:grid lg:grid-cols-3">
-        <Panel className="flex flex-col gap-4">
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Panel>
           <SectionTitle
-            title="Members by plan"
+            title="Applications in review"
             action={
-              <span className="type-body-s-semibold text-muted-foreground">1,284 active</span>
+              <Link to="/admin/providers" className="type-body-s-semibold text-burgundy">
+                All providers
+              </Link>
             }
           />
-          {OVERVIEW.membersByPlan.map((p) => (
-            <div key={p.tier} className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <TierBadge tier={p.tier} />
-                <span className="type-body-s-semibold">{p.count}</span>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full bg-muted">
-                <div
-                  className="h-full rounded-full bg-burgundy"
-                  style={{ width: `${Math.round((p.count / maxPlan) * 100)}%` }}
-                />
-              </div>
-            </div>
-          ))}
+          <ul className="mt-3">
+            {board.queue.length === 0 && (
+              <li className="type-body-s text-muted-foreground">No studio is waiting.</li>
+            )}
+            {board.queue.map((item) => (
+              <li key={item.slug} className="border-t border-border py-3 first:border-t-0">
+                <Link to="/admin/providers/$slug" params={{ slug: item.slug }} className="hover:underline">
+                  <p className="type-body-s-semibold">{item.name}</p>
+                  <p className="type-caption text-muted-foreground">
+                    {item.area} · {item.kind || "Studio"} · {item.appliedAt} · {item.ref || "no ref"}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </Panel>
 
-        <Panel className="flex flex-col gap-1">
-          <SectionTitle title="Coins right now" className="mb-3" />
-          {OVERVIEW.coins.map((c) => (
-            <div
-              key={c.label}
-              className="flex items-center justify-between gap-3 border-t border-border py-3 first:border-t-0 first:pt-0"
-            >
-              <span className="type-body-s text-muted-foreground">{c.label}</span>
-              <span className="type-body-s-semibold">{c.value}</span>
+        <Panel>
+          <SectionTitle
+            title="Latest operator actions"
+            action={
+              <Link to="/admin/audit" className="type-body-s-semibold text-burgundy">
+                Full log
+              </Link>
+            }
+          />
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="rounded-lg bg-muted/60 p-3">
+              <p className="type-caption text-muted-foreground">Coins in wallets</p>
+              <p className="type-body-s-semibold">{board.coinsOutstanding.toLocaleString("en-KE")}</p>
             </div>
-          ))}
-        </Panel>
-
-        <div className="flex flex-col justify-between rounded-[20px] bg-primary p-5 text-primary-foreground">
-          <p className="type-eyebrow text-gold">{OVERVIEW.nextPayout.eyebrow}</p>
-          <div>
-            <p className="mt-6 font-display text-[36px] leading-[1.15] tracking-[-0.02em]">
-              {OVERVIEW.nextPayout.amount}
-            </p>
-            <p className="mt-2 type-body-s text-primary-foreground/70">
-              {OVERVIEW.nextPayout.detail}
-            </p>
+            <div className="rounded-lg bg-muted/60 p-3">
+              <p className="type-caption text-muted-foreground">Coins on hold</p>
+              <p className="type-body-s-semibold">{board.coinsOnHold.toLocaleString("en-KE")}</p>
+            </div>
           </div>
-        </div>
+          <ul className="mt-3">
+            {board.audit.length === 0 && (
+              <li className="type-body-s text-muted-foreground">No admin actions recorded yet.</li>
+            )}
+            {board.audit.map((item, index) => (
+              <li key={item.at + index} className="border-t border-border py-3">
+                <p className="type-body-s-semibold">{item.action.replaceAll("_", " ")}</p>
+                <p className="type-caption text-muted-foreground">
+                  {item.at} · {item.detail}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Panel>
       </div>
     </div>
   );

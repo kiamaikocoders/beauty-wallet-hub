@@ -10,6 +10,8 @@ export type AdminNavKey =
   | "disputes"
   | "payouts"
   | "finance"
+  | "health"
+  | "audit"
   | "settings";
 
 export const ADMIN_NAV: {
@@ -48,6 +50,8 @@ export const ADMIN_NAV: {
     mobilePrimary: true,
   },
   { key: "finance", label: "Finance", href: "/admin/finance", icon: "bar-chart" },
+  { key: "health", label: "Health", href: "/admin/health", icon: "alert-triangle" },
+  { key: "audit", label: "Audit", href: "/admin/audit", icon: "clipboard-check" },
   { key: "settings", label: "Settings", href: "/admin/settings", icon: "settings-admin" },
 ];
 
@@ -62,6 +66,8 @@ export function navKeyFromPath(pathname: string): AdminNavKey {
   if (pathname.startsWith("/admin/disputes")) return "disputes";
   if (pathname.startsWith("/admin/payouts")) return "payouts";
   if (pathname.startsWith("/admin/finance")) return "finance";
+  if (pathname.startsWith("/admin/health")) return "health";
+  if (pathname.startsWith("/admin/audit")) return "audit";
   if (pathname.startsWith("/admin/settings")) return "settings";
   return "overview";
 }
@@ -111,5 +117,7 @@ export const PAGE_TITLES: Record<AdminNavKey, string> = {
   disputes: "Disputes",
   payouts: "Payouts",
   finance: "Finance",
+  health: "Health",
+  audit: "Audit log",
   settings: "Settings",
 };

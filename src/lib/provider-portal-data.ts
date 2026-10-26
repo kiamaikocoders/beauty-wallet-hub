@@ -269,37 +269,10 @@ async function fetchPortal(slug: string): Promise<PortalData | null> {
   };
 }
 
-export async function loadProviderPortal(slug = DEMO_PROVIDER_SLUG): Promise<PortalData> {
+export async function loadProviderPortal(slug: string): Promise<PortalData> {
   const data = await fetchPortal(slug);
-  if (data) return data;
-  // Hard fallback if RPC unavailable — still show a seeded owner shell.
-  return {
-    provider: {
-      id: "demo",
-      slug: DEMO_PROVIDER_SLUG,
-      name: "Braid Bar Ngong Rd",
-      area: "Kilimani",
-      kind: "Braiding salon",
-      class: "intermediate",
-      payout_pct: 0.8,
-      payout_method: "M-Pesa till ending 417",
-      owner_name: "Mercy Wambui",
-      rating: 4.8,
-      review_count: 231,
-      hours: [
-        { days: "Mon – Fri", open: "8:00", close: "19:00" },
-        { days: "Saturday", open: "8:00", close: "19:00" },
-        { days: "Sunday", open: "10:00", close: "16:00" },
-      ],
-      home_visits: false,
-      about: "Knotless braids, cornrows and protective styles.",
-      kyc_docs: ["Business permit", "KRA PIN"],
-      verified: false,
-    },
-    services: [],
-    bookings: [],
-    reviews: [],
-  };
+  if (!data) throw new Error("This studio is not live, so the portal has nothing to open.");
+  return data;
 }
 
 export async function checkInPin(pin: string, slug = DEMO_PROVIDER_SLUG): Promise<CheckInResult> {

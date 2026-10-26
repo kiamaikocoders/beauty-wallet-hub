@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Delete } from "lucide-react";
+import { MomentLottie } from "@/components/site/MomentLottie";
 import { toast } from "sonner";
 import { ProviderShell } from "@/components/provider/ProviderShell";
 import { StatusPill } from "@/components/provider/StatusPill";
@@ -102,9 +103,7 @@ function CheckInPage() {
     return (
       <ProviderShell data={data} hideSearch>
         <div className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center text-center">
-          <div className="grid size-16 place-items-center rounded-full bg-success-bg text-success">
-            <span className="font-display text-3xl">✓</span>
-          </div>
+          <MomentLottie name="check" size={72} />
           <h2 className="mt-5 font-display text-[32px]">Visit started</h2>
           <p className="mt-2 type-body-m text-muted-foreground">
             {started.member_name} · {started.services} with Wanjiku

@@ -1,8 +1,9 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { BottomSheet } from "@/components/app/Sheets";
 import { useMember } from "@/components/app/MemberContext";
+import { MomentLottie } from "@/components/site/MomentLottie";
 import { buttonClass } from "@/components/site/primitives";
 import { fetchBookingDetail, rateBooking, reportProblem } from "@/lib/app-data";
 import { cn } from "@/lib/utils";
@@ -36,12 +37,36 @@ function RateVisit() {
   const [reason, setReason] = useState(REASONS[1]!);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    if (!sent) return;
+    const timer = window.setTimeout(() => {
+      void navigate({
+        to: "/app/bookings",
+        search: { tab: "past", ...(demo ? { demo } : {}) } as never,
+      });
+    }, 1700);
+    return () => window.clearTimeout(timer);
+  }, [demo, navigate, sent]);
 
   const when = new Date(booking.scheduledAt).toLocaleDateString("en-GB", {
     weekday: "short",
     day: "numeric",
     month: "short",
   });
+
+  if (sent) {
+    return (
+      <div className="mx-auto flex max-w-lg flex-col items-center py-16 text-center">
+        <MomentLottie name="star" size={88} />
+        <h1 className="mt-2 type-h2">Thanks for rating</h1>
+        <p className="mt-2 type-body-m text-muted-foreground">
+          Your note is with {booking.providerName}.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-lg">
@@ -118,11 +143,7 @@ function RateVisit() {
           setBusy(true);
           try {
             await rateBooking({ id: booking.id, rating, body, tags, demo });
-            toast.success("Thanks for rating");
-            void navigate({
-              to: "/app/bookings",
-              search: { tab: "past", ...(demo ? { demo } : {}) } as never,
-            });
+            setSent(true);
           } catch (e) {
             toast.error(e instanceof Error ? e.message : "Could not submit");
           } finally {

@@ -3,6 +3,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useMember } from "@/components/app/MemberContext";
+import { MomentLottie } from "@/components/site/MomentLottie";
 import { buttonClass, Icon } from "@/components/site/primitives";
 import { fetchBookingDetail, firstName, refreshPin } from "@/lib/app-data";
 import { num } from "@/lib/pricing";
@@ -44,7 +45,8 @@ function BookDone() {
   return (
     <div className="mx-auto grid max-w-4xl gap-8 lg:grid-cols-2">
       <div>
-        <p className="type-eyebrow text-burgundy">Booking confirmed</p>
+        <MomentLottie name="check" size={72} />
+        <p className="mt-4 type-eyebrow text-burgundy">Booking confirmed</p>
         <h2 className="mt-2 type-h1">You’re booked, {firstName(member.fullName)}.</h2>
         <p className="mt-3 type-body-m text-muted-foreground">
           {booking.serviceName} at {booking.providerName}, {when}. We’ll remind you the day before.

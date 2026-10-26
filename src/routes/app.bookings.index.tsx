@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useMember } from "@/components/app/MemberContext";
+import { MomentLottie } from "@/components/site/MomentLottie";
 import { buttonClass } from "@/components/site/primitives";
 import { fetchMemberBookings, formatWhen } from "@/lib/app-data";
 import { cn } from "@/lib/utils";
@@ -48,8 +49,9 @@ function BookingsList() {
       </div>
 
       {rows.length === 0 ? (
-        <div className="mt-16 text-center">
-          <h2 className="type-h2">
+        <div className="mt-16 flex flex-col items-center text-center">
+          <MomentLottie name="calendar" size={72} />
+          <h2 className="mt-4 type-h2">
             {tab === "past"
               ? "No past visits"
               : tab === "cancelled"

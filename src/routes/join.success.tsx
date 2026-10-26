@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { OnboardingShell } from "@/components/site/auth/OnboardingShell";
-import { Icon, TierBadge, buttonClass } from "@/components/site/primitives";
+import { MomentLottie } from "@/components/site/MomentLottie";
+import { TierBadge, buttonClass } from "@/components/site/primitives";
 import { fetchRules } from "@/lib/catalog";
 import {
   firstName,
@@ -78,9 +79,7 @@ function SuccessPage() {
     <OnboardingShell step="payment" hideSaveExit>
       <div className="flex w-full flex-1 flex-col gap-10 px-5 py-8 lg:flex-row lg:items-center lg:justify-center lg:gap-16 lg:px-16 lg:py-12">
         <div className="flex w-full max-w-[536px] flex-col gap-5">
-          <div className="flex size-[72px] items-center justify-center rounded-[36px] bg-success-bg">
-            <Icon name="check" size={32} />
-          </div>
+          <MomentLottie name="check" size={72} />
           <p className="type-eyebrow text-success">Payment received</p>
           <div className="flex flex-col gap-2.5">
             <h1 className="type-h1 text-foreground">

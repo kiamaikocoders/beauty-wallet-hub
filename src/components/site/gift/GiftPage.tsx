@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { FaqRow, StepCard } from "@/components/site/cards";
+import { MomentLottie } from "@/components/site/MomentLottie";
 import { Icon, Responsive, Section, buttonClass, tierName } from "@/components/site/primitives";
 import { recordGift } from "@/lib/command-center";
 import { notifyEmail } from "@/lib/resend";
@@ -324,7 +325,12 @@ export function GiftPage({ rules }: { rules: CoinRules }) {
             Record gift · {ksh(selected.priceKsh)}
           </button>
           {code && (
-            <p className="type-body-s-semibold text-foreground">Recorded as {code}. Payment is not taken yet.</p>
+            <div className="flex items-center gap-3">
+              <MomentLottie name="gift" size={56} className="shrink-0" />
+              <p className="type-body-s-semibold text-foreground">
+                Recorded as {code}. Payment is not taken yet.
+              </p>
+            </div>
           )}
           {giftError && <p className="type-body-s text-destructive">{giftError}</p>}
           <p className="type-caption text-muted-foreground">

@@ -2,6 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { ProviderShell } from "@/components/provider/ProviderShell";
 import { StatusPill } from "@/components/provider/StatusPill";
 import { usePortal } from "@/components/provider/portal-context";
+import { MomentLottie } from "@/components/site/MomentLottie";
 import { buttonClass } from "@/components/site/primitives";
 import {
   firstName,
@@ -188,7 +189,8 @@ function TodayPage() {
 function EmptyToday() {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-2 text-center">
-      <h2 className="font-display text-[28px] leading-tight">Nothing booked yet today</h2>
+      <MomentLottie name="calendar" size={72} />
+      <h2 className="mt-4 font-display text-[28px] leading-tight">Nothing booked yet today</h2>
       <p className="mt-3 max-w-sm type-body-m text-muted-foreground">
         Most members book two or three days ahead. Make sure your hours and services are up to date
         so you show up on Explore.

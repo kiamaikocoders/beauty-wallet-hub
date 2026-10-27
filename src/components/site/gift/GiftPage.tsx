@@ -4,6 +4,7 @@ import { FaqRow, StepCard } from "@/components/site/cards";
 import { MomentLottie } from "@/components/site/MomentLottie";
 import { Icon, Responsive, Section, buttonClass, tierName } from "@/components/site/primitives";
 import { recordGift } from "@/lib/command-center";
+import { announce } from "@/lib/notices";
 import { notifyEmail } from "@/lib/resend";
 import { ksh, num, pct, type CoinRules, type TierId, TIER_ORDER } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
@@ -302,6 +303,7 @@ export function GiftPage({ rules }: { rules: CoinRules }) {
               })
                 .then((saved) => {
                   setCode(saved.code);
+                  announce("gift_sent", saved.id);
                   if (email.includes("@")) {
                     notifyEmail({
                       to: email,

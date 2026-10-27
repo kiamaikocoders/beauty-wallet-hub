@@ -6,6 +6,7 @@ import { buttonClass } from "@/components/site/primitives";
 import { topUpCoins } from "@/lib/app-data";
 import { firstName } from "@/lib/onboarding";
 import { ksh, num } from "@/lib/pricing";
+import { announce } from "@/lib/notices";
 import { notifyEmail } from "@/lib/resend";
 import { cn } from "@/lib/utils";
 
@@ -133,6 +134,7 @@ function TopUpPage() {
                 },
               });
             }
+            announce("top_up");
             refresh();
             toast.success(`${pack} coins added`);
             void navigate({

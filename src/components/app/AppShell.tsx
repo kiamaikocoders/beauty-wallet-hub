@@ -1,7 +1,9 @@
 import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Logo, Icon, CoinChip, buttonClass, tierName } from "@/components/site/primitives";
 import { cn } from "@/lib/utils";
 import { coinsLabel, formatRenews, type MemberSession } from "@/lib/app-data";
+import { announce, watchNotices } from "@/lib/notices";
 import { useMember } from "./MemberContext";
 
 export type AppNavId =
@@ -79,6 +81,26 @@ export function AppShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const active = activeFromPath(pathname);
   const title = titleFromPath(pathname);
+  const [unread, setUnread] = useState(0);
+
+  useEffect(() => {
+    if (!member) return;
+    let stop = () => {};
+    let cancelled = false;
+    void watchNotices((count) => {
+      if (!cancelled) setUnread(count);
+    }).then((cleanup) => {
+      if (cancelled) cleanup();
+      else {
+        stop = cleanup;
+        announce("sweep");
+      }
+    });
+    return () => {
+      cancelled = true;
+      stop();
+    };
+  }, [member?.id]);
 
   if (!member) {
     return (
@@ -152,7 +174,11 @@ export function AppShell() {
               aria-label="Notifications"
             >
               <Icon name="bell" size={22} />
-              <span className="absolute right-2.5 top-2.5 size-2 rounded-full bg-burgundy" />
+              {unread > 0 ? (
+                <span className="absolute right-2 top-2 min-w-4 rounded-full bg-burgundy px-1 text-center text-[10px] leading-4 text-white">
+                  {unread > 9 ? "9+" : unread}
+                </span>
+              ) : null}
             </Link>
             <CoinChip className="hidden sm:inline-flex">
               {coinsLabel(member.wallet.available)}

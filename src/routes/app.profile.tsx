@@ -27,7 +27,7 @@ function ProfilePage() {
       to: "/app/plan",
     },
     { label: "Services and areas", meta: `${member.area ?? "Nairobi"}` },
-    { label: "Notifications", meta: "SMS reminders on", to: "/app/notifications" },
+    { label: "Notifications", meta: "Push, bookings and wallet", to: "/app/notifications" },
     { label: "Security and devices", meta: "Phone code sign-in · 2 devices" },
     { label: "Help centre", meta: "Chat, call or email us", href: "/help" },
     { label: "Legal", meta: "Terms, privacy, coin policy", href: "/legal/terms" },

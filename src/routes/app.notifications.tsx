@@ -1,109 +1,102 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { PushCard } from "@/components/app/PushCard";
 import { useMember } from "@/components/app/MemberContext";
 import { buttonClass } from "@/components/site/primitives";
-import { fetchMemberHome } from "@/lib/app-data";
+import { loadNotices, markAllNoticesRead, markNoticeRead, type Notice } from "@/lib/notices";
 
 export const Route = createFileRoute("/app/notifications")({
   validateSearch: (raw: Record<string, unknown>) => ({
     demo: typeof raw["demo"] === "string" ? raw["demo"] : undefined,
   }),
-  loaderDeps: ({ search }) => search,
-  loader: async ({ deps }) => {
-    const home = await fetchMemberHome(deps.demo ?? null).catch(() => null);
-    return { home };
-  },
   component: NotificationsPage,
 });
 
-function NotificationsPage() {
-  const { home } = Route.useLoaderData();
-  const { member, demo } = useMember();
-  if (!member) return null;
+function whenLabel(iso: string) {
+  const date = new Date(iso);
+  const now = new Date();
+  const sameDay = date.toDateString() === now.toDateString();
+  if (sameDay) {
+    return date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  }
+  return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+}
 
-  const upcoming = home?.upcoming?.[0];
-  const items = [
-    upcoming
-      ? {
-          title: `${upcoming.serviceName} today`,
-          body: `${upcoming.providerName} · your arrival pass is ready`,
-          when: "08:00",
-          unread: true,
-          to: `/app/bookings/${upcoming.id}`,
-        }
-      : null,
-    {
-      title: "Top-up and plan updates",
-      body: "Low balance, rollover and renewal dates land here.",
-      when: "Earlier",
-      unread: true,
-      to: "/app/wallet",
-    },
-    ...(home?.activity ?? []).slice(0, 4).map((a) => ({
-      title: a.note ?? a.kind,
-      body: a.kind,
-      when: new Date(a.at).toLocaleDateString("en-GB", { day: "numeric", month: "short" }),
-      unread: false,
-      to: a.bookingId ? `/app/bookings/${a.bookingId}` : "/app/wallet",
-    })),
-  ].filter(Boolean) as {
-    title: string;
-    body: string;
-    when: string;
-    unread: boolean;
-    to: string;
-  }[];
+function NotificationsPage() {
+  const { member, demo } = useMember();
+  const [items, setItems] = useState<Notice[] | null>(null);
+
+  useEffect(() => {
+    if (!member) return;
+    let cancelled = false;
+    const load = () => {
+      void loadNotices().then((rows) => {
+        if (!cancelled) setItems(rows);
+      });
+    };
+    load();
+    window.addEventListener("focus", load);
+    const timer = window.setInterval(load, 15000);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("focus", load);
+      window.clearInterval(timer);
+    };
+  }, [member]);
+
+  if (!member) return null;
+  const unread = (items ?? []).filter((item) => !item.readAt).length;
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-3">
+      <PushCard signedIn={!demo} />
+      <div className="mt-6 flex items-center justify-between gap-3">
         <p className="type-body-s text-muted-foreground">
-          {items.filter((i) => i.unread).length} unread
+          {items === null ? "Loading…" : `${unread} unread`}
         </p>
-        <button type="button" className={buttonClass({ size: "s", variant: "ghost" })}>
+        <button
+          type="button"
+          className={buttonClass({ size: "s", variant: "ghost" })}
+          disabled={!unread}
+          onClick={() => {
+            void markAllNoticesRead().then(() => loadNotices().then(setItems));
+          }}
+        >
           Mark all as read
         </button>
       </div>
-      <ul className="mt-4 divide-y divide-border rounded-xl border border-border bg-card">
-        {items.map((n, i) => (
-          <li key={i}>
-            {n.to.startsWith("/app/bookings/") ? (
-              <Link
-                to="/app/bookings/$id"
-                params={{ id: n.to.split("/").pop()! }}
-                search={(demo ? { demo } : {}) as never}
+      {items && items.length === 0 ? (
+        <p className="mt-4 rounded-xl border border-border bg-card px-4 py-6 type-body-s text-muted-foreground">
+          You’re up to date. Booking reminders, wallet updates and plan news land here.
+        </p>
+      ) : (
+        <ul className="mt-4 divide-y divide-border rounded-xl border border-border bg-card">
+          {(items ?? []).map((notice) => (
+            <li key={notice.id}>
+              <a
+                href={notice.href}
                 className="flex gap-3 px-4 py-4"
+                onClick={() => {
+                  if (!notice.readAt) void markNoticeRead(notice.id);
+                }}
               >
-                <NotifBody n={n} />
-              </Link>
-            ) : (
-              <Link
-                to={n.to as "/app/wallet"}
-                search={(demo ? { demo } : {}) as never}
-                className="flex gap-3 px-4 py-4"
-              >
-                <NotifBody n={n} />
-              </Link>
-            )}
-          </li>
-        ))}
-      </ul>
+                <span
+                  className={`mt-2 size-2 shrink-0 rounded-full ${notice.readAt ? "bg-transparent" : "bg-burgundy"}`}
+                />
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-start justify-between gap-3">
+                    <span className="type-body-s-semibold">{notice.title}</span>
+                    <span className="shrink-0 type-caption text-muted-foreground">
+                      {whenLabel(notice.createdAt)}
+                    </span>
+                  </span>
+                  <span className="mt-0.5 block type-body-s text-muted-foreground">{notice.body}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
-  );
-}
-
-function NotifBody({ n }: { n: { title: string; body: string; when: string; unread: boolean } }) {
-  return (
-    <>
-      <span
-        className={`mt-2 size-2 shrink-0 rounded-full ${n.unread ? "bg-burgundy" : "bg-transparent"}`}
-      />
-      <span className="min-w-0 flex-1">
-        <span className="flex items-start justify-between gap-3">
-          <span className="type-body-s-semibold">{n.title}</span>
-          <span className="shrink-0 type-caption text-muted-foreground">{n.when}</span>
-        </span>
-        <span className="mt-0.5 block type-body-s text-muted-foreground">{n.body}</span>
-      </span>
-    </>
   );
 }

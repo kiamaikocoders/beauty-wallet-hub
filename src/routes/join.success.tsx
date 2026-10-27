@@ -12,6 +12,7 @@ import {
   renewalDate,
 } from "@/lib/onboarding";
 import { ksh, num, pct, type TierId } from "@/lib/pricing";
+import { announce } from "@/lib/notices";
 import { notifyEmail } from "@/lib/resend";
 
 export const Route = createFileRoute("/join/success")({
@@ -39,6 +40,7 @@ function SuccessPage() {
     const to = onboarding.email?.trim();
     if (!to || !to.includes("@")) return;
     mailed.current = true;
+    announce("plan_started");
     const origin = window.location.origin;
     const name = firstName(onboarding.fullName);
     notifyEmail({

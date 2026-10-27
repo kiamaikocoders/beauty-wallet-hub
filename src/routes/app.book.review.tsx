@@ -5,6 +5,7 @@ import { useMember } from "@/components/app/MemberContext";
 import { buttonClass } from "@/components/site/primitives";
 import { createBooking, loadAppProvider } from "@/lib/app-data";
 import { bookingStudioContact } from "@/lib/command-center";
+import { announce } from "@/lib/notices";
 import { firstName } from "@/lib/onboarding";
 import { ksh, num } from "@/lib/pricing";
 import { notifyEmail } from "@/lib/resend";
@@ -154,6 +155,7 @@ function BookReview() {
                   },
                 });
               }
+              announce("booking_confirmed", r.id);
               refresh();
               void navigate({
                 to: "/app/book/done",

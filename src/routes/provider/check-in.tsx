@@ -22,6 +22,7 @@ import {
   type CheckInResult,
   type StartVisitResult,
 } from "@/lib/provider-portal-data";
+import { announce } from "@/lib/notices";
 
 export const Route = createFileRoute("/provider/check-in")({
   component: CheckInPage,
@@ -121,6 +122,7 @@ function CheckInPage() {
               setBusy(true);
               void completeVisit(started.booking_id, data.provider.slug)
                 .then((result) => {
+                  announce("visit_done", started.booking_id);
                   toast(
                     result.overrun_minutes > 0
                       ? `Finished ${result.overrun_minutes} min over the booked time`

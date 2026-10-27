@@ -16,6 +16,7 @@ import {
 import { coinsLabel } from "@/lib/app-data";
 import { firstName } from "@/lib/onboarding";
 import { num } from "@/lib/pricing";
+import { announce } from "@/lib/notices";
 import { notifyEmail } from "@/lib/resend";
 
 export const Route = createFileRoute("/app/bookings/$id")({
@@ -184,6 +185,7 @@ function BookingDetail() {
                 },
               });
             }
+            announce("booking_cancelled", booking.id);
             toast.success("Booking cancelled");
             refresh();
             setCancelOpen(false);

@@ -45,6 +45,11 @@ function AppLayout() {
     };
   }, [demo, tick]);
 
+  useEffect(() => {
+    if (!member || demo) return;
+    void import("@/lib/push").then(({ syncPushIfAllowed }) => syncPushIfAllowed());
+  }, [member, demo]);
+
   if (member && !member.tier && !demo) {
     if (typeof window !== "undefined") window.location.href = "/join/plan";
     return (

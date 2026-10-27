@@ -12,6 +12,7 @@ import {
   signedDocumentUrl,
   type DocRow,
 } from "@/lib/command-center";
+import { announce } from "@/lib/notices";
 import { sendTemplateEmail } from "@/lib/resend";
 import type { TierId } from "@/lib/pricing";
 import { statusTone } from "./nav";
@@ -232,6 +233,14 @@ export function ProviderApplicationPage({ slug }: { slug: string }) {
         note,
       });
       const mailed = await mailDecision(result, decision, note);
+      announce(
+        decision === "approve"
+          ? "provider_approved"
+          : decision === "reject"
+            ? "provider_rejected"
+            : "provider_changes",
+        file.slug,
+      );
       const next = await fetchProviderFile(file.slug);
       if (next) setFile(next);
       toast.success(

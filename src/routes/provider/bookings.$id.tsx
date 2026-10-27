@@ -16,6 +16,7 @@ import {
   serviceLabel,
   tierLabel,
 } from "@/lib/provider-portal-data";
+import { announce } from "@/lib/notices";
 
 export const Route = createFileRoute("/provider/bookings/$id")({
   component: BookingDetailPage,
@@ -48,6 +49,7 @@ function BookingDetailPage() {
     setBusy(true);
     try {
       const res = await markNoShow(booking.id, data.provider.slug);
+      announce("no_show", booking.id);
       toast.success(`Marked no-show · ${ksh(res.payout_ksh)} payout`);
       setConfirmNoShow(false);
     } catch {
@@ -141,6 +143,7 @@ function BookingDetailPage() {
                 void completeVisit(booking.id, data.provider.slug)
                   .then((result) => {
                     const over = result.overrun_minutes;
+                    announce("visit_done", booking.id);
                     toast.success(
                       over > 0
                         ? `Visit finished ${over} min over the booked time`

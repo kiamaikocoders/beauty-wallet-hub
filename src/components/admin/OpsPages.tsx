@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { buttonClass, TierBadge } from "@/components/site/primitives";
 import { adminResolveDispute } from "@/lib/admin-api";
 import { disputeNotice } from "@/lib/command-center";
+import { announce } from "@/lib/notices";
 import { notifyEmail } from "@/lib/resend";
 import { fetchOpsBoard, type OpsBoard, type OpsDispute } from "@/lib/admin-ops";
 import { fetchFinance, fetchPayoutLines, fetchRoster, writeAdminNote, type FinanceSnapshot, type PayoutLine } from "@/lib/command-center";
@@ -183,6 +184,7 @@ export function DisputesPage() {
           },
         });
       }
+      announce("dispute_resolved", current.code);
       const mailed = [notice?.memberEmail, notice?.providerEmail].filter(Boolean).length;
       toast.success(
         result && "refundCoins" in result && Number(result.refundCoins) > 0
